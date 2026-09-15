@@ -2,1927 +2,1180 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CampusConnect Admin</title>
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="theme-color" content="#111827">
+<title>CampusConnect Admin Portal</title>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
-*{box-sizing:border-box}
+:root{
+  --primary:#6d28d9;
+  --primary2:#8b5cf6;
+  --dark:#111827;
+  --text:#201a2d;
+  --muted:#77728a;
+  --bg:#f6f6fa;
+  --card:#fff;
+  --line:#e9e6f0;
+  --green:#16a34a;
+  --red:#dc2626;
+  --orange:#ea580c;
+  --shadow:0 15px 45px rgba(20,10,50,.09);
+}
+*{box-sizing:border-box;margin:0;padding:0}
 body{
-  margin:0;
-  font-family:Arial,sans-serif;
-  background:#f5f5f7;
-  color:#222;
+  font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  background:var(--bg);color:var(--text);
 }
-button,input,textarea,select{
-  font:inherit;
-}
-button{
-  cursor:pointer;
-}
-.hidden{
-  display:none!important;
-}
+button,input,textarea,select{font:inherit}
+button{cursor:pointer;border:0}
+.hidden{display:none!important}
 
-.login-page{
+.login{
   min-height:100vh;
-  display:flex;
-  align-items:center;
-  justify-content:center;
+  display:grid;
+  place-items:center;
   padding:20px;
-  background:linear-gradient(135deg,#4a148c,#7b1fa2);
+  background:
+    radial-gradient(circle at 10% 10%,#ddd6fe,transparent 30%),
+    radial-gradient(circle at 90% 90%,#e9d5ff,transparent 30%),
+    #f7f7fb;
 }
-
-.login-box{
-  width:100%;
-  max-width:420px;
-  background:white;
-  padding:30px;
-  border-radius:18px;
-  box-shadow:0 15px 40px rgba(0,0,0,.2);
-}
-
-.logo{
-  text-align:center;
-  font-size:28px;
-  font-weight:bold;
-  color:#4a148c;
-  margin-bottom:8px;
-}
-
-.subtitle{
-  text-align:center;
-  color:#777;
-  margin-bottom:25px;
-}
-
-.field{
-  margin-bottom:15px;
-}
-
-.field label{
-  display:block;
-  font-weight:bold;
-  margin-bottom:6px;
-}
-
-.field input,
-.field textarea,
-.field select{
-  width:100%;
-  padding:12px;
-  border:1px solid #ddd;
-  border-radius:10px;
-  outline:none;
-}
-
-.field input:focus,
-.field textarea:focus,
-.field select:focus{
-  border-color:#7b1fa2;
-}
-
-.primary{
-  width:100%;
-  border:0;
-  padding:13px;
-  border-radius:10px;
-  background:#4a148c;
-  color:white;
-  font-weight:bold;
-}
-
-.primary:hover{
-  background:#6a1b9a;
-}
-
-.error{
-  color:#c62828;
-  background:#ffebee;
-  padding:10px;
-  border-radius:8px;
-  margin-bottom:15px;
-}
-
-.success{
-  color:#2e7d32;
-  background:#e8f5e9;
-  padding:10px;
-  border-radius:8px;
-  margin-bottom:15px;
-}
-
-/* APP */
-
-.app{
-  display:none;
-  min-height:100vh;
-}
-
-.sidebar{
-  position:fixed;
-  left:0;
-  top:0;
-  bottom:0;
-  width:240px;
-  background:#4a148c;
-  color:white;
-  padding:20px;
-  z-index:10;
-}
-
-.sidebar h2{
-  margin:0 0 25px;
-}
-
-.nav-btn{
-  width:100%;
-  text-align:left;
-  border:0;
-  background:transparent;
-  color:white;
-  padding:13px;
-  margin-bottom:6px;
-  border-radius:8px;
-}
-
-.nav-btn:hover,
-.nav-btn.active{
-  background:rgba(255,255,255,.15);
-}
-
-.logout{
-  position:absolute;
-  bottom:20px;
-  left:20px;
-  right:20px;
-  width:calc(100% - 40px);
-  padding:12px;
-  border:0;
-  border-radius:8px;
+.login-card{
+  width:min(440px,100%);
   background:#fff;
-  color:#4a148c;
-  font-weight:bold;
+  border:1px solid var(--line);
+  border-radius:30px;
+  padding:30px;
+  box-shadow:0 30px 80px rgba(30,10,70,.12);
+}
+.logo{
+  width:65px;height:65px;
+  border-radius:21px;
+  background:linear-gradient(135deg,#4c1d95,#8b5cf6);
+  color:white;
+  display:grid;place-items:center;
+  font-size:23px;font-weight:900;
+  margin:auto;
+}
+.login h1{text-align:center;margin-top:14px}
+.login p{text-align:center;color:var(--muted);font-size:12px;margin:6px 0 24px}
+
+.field{margin-bottom:14px}
+.field label{display:block;font-size:12px;font-weight:800;margin-bottom:7px}
+.field input,.field textarea,.field select{
+  width:100%;
+  border:1px solid var(--line);
+  border-radius:13px;
+  padding:12px 13px;
+  outline:0;
+  background:#fcfbfe;
+}
+.field textarea{min-height:100px;resize:vertical}
+.field input:focus,.field textarea:focus,.field select:focus{
+  border-color:var(--primary2);
+  box-shadow:0 0 0 4px #ede9fe;
+}
+
+.btn{
+  min-height:43px;
+  padding:0 15px;
+  border-radius:12px;
+  display:inline-flex;
+  justify-content:center;
+  align-items:center;
+  gap:7px;
+  font-weight:800;
+  transition:.2s;
+}
+.btn:active{transform:scale(.97)}
+.primary{background:var(--primary);color:white}
+.soft{background:#f0eaff;color:var(--primary)}
+.dark{background:var(--dark);color:white}
+.danger{background:#fee2e2;color:#b91c1c}
+.green{background:#dcfce7;color:#166534}
+.wide{width:100%}
+
+.layout{display:flex;min-height:100vh}
+.sidebar{
+  width:260px;
+  background:#17112b;
+  color:white;
+  padding:20px 14px;
+  position:fixed;
+  inset:0 auto 0 0;
+  z-index:100;
+}
+.admin-brand{
+  display:flex;align-items:center;gap:10px;
+  padding:5px 9px 24px;
+}
+.admin-brand .logo{
+  width:42px;height:42px;margin:0;
+  background:linear-gradient(135deg,#7c3aed,#a855f7);
+}
+.admin-brand strong{display:block}
+.admin-brand span{font-size:10px;opacity:.55}
+.menu{display:grid;gap:5px}
+.menu button{
+  width:100%;
+  background:transparent;
+  color:#bbb4c9;
+  text-align:left;
+  padding:13px 14px;
+  border-radius:13px;
+  font-weight:750;
+}
+.menu button.active,.menu button:hover{
+  background:rgba(139,92,246,.18);
+  color:white;
+}
+.sidebar-bottom{
+  position:absolute;
+  bottom:18px;left:14px;right:14px;
 }
 
 .main{
-  margin-left:240px;
-  padding:25px;
+  margin-left:260px;
+  width:calc(100% - 260px);
 }
-
-.topbar{
-  background:white;
-  padding:18px 20px;
-  border-radius:12px;
-  margin-bottom:20px;
+.header{
+  position:sticky;top:0;z-index:50;
+  height:72px;
+  background:rgba(247,247,251,.9);
+  backdrop-filter:blur(18px);
+  border-bottom:1px solid var(--line);
   display:flex;
   justify-content:space-between;
   align-items:center;
+  padding:0 28px;
 }
-
-.topbar h1{
-  margin:0;
-  font-size:23px;
+.header h1{font-size:21px}
+.header-right{display:flex;align-items:center;gap:10px}
+.admin-avatar{
+  width:38px;height:38px;border-radius:12px;
+  background:#ede9fe;color:var(--primary);
+  display:grid;place-items:center;font-weight:900;
 }
+.content{padding:25px}
 
-.section{
-  display:none;
-}
+.page{display:none}
+.page.active{display:block}
 
-.section.active{
-  display:block;
-}
-
-.cards{
+.stats{
   display:grid;
-  grid-template-columns:repeat(5,1fr);
-  gap:15px;
-  margin-bottom:25px;
+  grid-template-columns:repeat(4,1fr);
+  gap:13px;
 }
-
-.card{
+.stat{
   background:white;
-  padding:20px;
-  border-radius:14px;
-  box-shadow:0 2px 8px rgba(0,0,0,.05);
-}
-
-.card h3{
-  margin:0 0 8px;
-  font-size:14px;
-  color:#777;
-}
-
-.card strong{
-  font-size:28px;
-  color:#4a148c;
-}
-
-.panel{
-  background:white;
-  padding:20px;
-  border-radius:14px;
-  margin-bottom:20px;
-  box-shadow:0 2px 8px rgba(0,0,0,.05);
-}
-
-.panel h2{
-  margin-top:0;
-}
-
-.form-grid{
-  display:grid;
-  grid-template-columns:repeat(2,1fr);
-  gap:15px;
-}
-
-.full{
-  grid-column:1/-1;
-}
-
-.small-btn{
-  border:0;
-  padding:8px 12px;
-  border-radius:7px;
-  color:white;
-  background:#4a148c;
-  margin-right:5px;
-}
-
-.danger{
-  background:#c62828;
-}
-
-.gray{
-  background:#757575;
-}
-
-.green{
-  background:#2e7d32;
-}
-
-.table-wrap{
-  overflow-x:auto;
-}
-
-table{
-  width:100%;
-  border-collapse:collapse;
-  min-width:700px;
-}
-
-th,td{
-  padding:12px;
-  border-bottom:1px solid #eee;
-  text-align:left;
-}
-
-th{
-  background:#fafafa;
-}
-
-.badge{
-  padding:5px 8px;
+  border:1px solid var(--line);
   border-radius:20px;
-  font-size:12px;
-  background:#eee;
+  padding:18px;
+  box-shadow:0 5px 20px rgba(20,10,50,.03);
+}
+.stat-icon{
+  width:43px;height:43px;
+  border-radius:13px;
+  background:#f0eaff;color:var(--primary);
+  display:grid;place-items:center;
+  margin-bottom:14px;
+}
+.stat small{color:var(--muted)}
+.stat strong{display:block;font-size:26px;margin-top:3px}
+
+.toolbar{
+  margin:20px 0 14px;
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  align-items:center;
+}
+.search{
+  background:white;
+  border:1px solid var(--line);
+  border-radius:13px;
+  height:44px;
+  padding:0 13px;
+  min-width:250px;
+  outline:0;
 }
 
-.active-badge{
-  background:#e8f5e9;
-  color:#2e7d32;
+.table-card{
+  background:white;
+  border:1px solid var(--line);
+  border-radius:20px;
+  overflow:hidden;
+  box-shadow:0 6px 25px rgba(20,10,50,.04);
 }
-
-.inactive-badge{
-  background:#ffebee;
-  color:#c62828;
+.table-scroll{overflow:auto}
+table{border-collapse:collapse;width:100%;min-width:720px}
+th,td{
+  text-align:left;
+  padding:14px;
+  border-bottom:1px solid #f0edf4;
+  font-size:13px;
 }
+th{
+  background:#faf9fc;
+  color:#686174;
+  font-size:11px;
+  text-transform:uppercase;
+}
+td small{display:block;color:var(--muted);margin-top:3px}
+.actions{display:flex;gap:6px;flex-wrap:wrap}
 
-.file-box{
-  border:2px dashed #ccc;
-  padding:20px;
+.status{
+  display:inline-flex;
+  padding:6px 9px;
+  border-radius:999px;
+  font-size:10px;
+  font-weight:900;
+}
+.status.on{background:#dcfce7;color:#166534}
+.status.off{background:#fee2e2;color:#b91c1c}
+
+.modal-bg{
+  position:fixed;inset:0;z-index:500;
+  background:rgba(10,5,25,.6);
+  backdrop-filter:blur(5px);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:15px;
+}
+.modal-bg.show{display:flex}
+.modal{
+  width:min(600px,100%);
+  max-height:90vh;
+  overflow:auto;
+  background:white;
+  border-radius:25px;
+  padding:23px;
+}
+.modal-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:18px;
+}
+.close{
+  width:38px;height:38px;border-radius:11px;
+  background:#f5f3f8;
+}
+.modal-actions{
+  display:flex;gap:9px;margin-top:20px;
+}
+.modal-actions .btn{flex:1}
+
+.upload-box{
+  border:2px dashed #d8d0eb;
+  border-radius:18px;
+  padding:25px;
   text-align:center;
-  border-radius:10px;
+  background:#faf8ff;
+  margin-top:10px;
 }
+.upload-box input{margin-top:12px}
+
+.toast-wrap{
+  position:fixed;
+  z-index:1000;
+  top:15px;right:15px;
+  width:min(400px,calc(100% - 30px));
+  display:grid;gap:8px;
+}
+.toast{
+  background:#211a32;color:white;
+  padding:14px 16px;border-radius:14px;
+  box-shadow:var(--shadow);
+  font-size:13px;
+}
+.toast.success{background:#166534}
+.toast.error{background:#991b1b}
+
+.empty{
+  padding:45px 20px;
+  text-align:center;
+  color:var(--muted);
+}
+.mobile-menu{display:none}
+
+.footer{
+  text-align:center;
+  color:#9992a8;
+  font-size:11px;
+  padding:30px 0 5px;
+}
+.footer strong{color:var(--primary)}
 
 @media(max-width:900px){
-  .cards{
-    grid-template-columns:repeat(2,1fr);
-  }
-
-  .sidebar{
-    width:200px;
-  }
-
-  .main{
-    margin-left:200px;
-  }
+  .sidebar{width:220px}
+  .main{margin-left:220px;width:calc(100% - 220px)}
+  .stats{grid-template-columns:repeat(2,1fr)}
 }
-
-@media(max-width:650px){
+@media(max-width:700px){
   .sidebar{
-    position:relative;
-    width:100%;
-    height:auto;
+    transform:translateX(-100%);
+    transition:.25s;
+    width:270px;
   }
-
-  .logout{
-    position:static;
-    width:100%;
-    margin-top:10px;
-  }
-
-  .main{
-    margin-left:0;
-    padding:15px;
-  }
-
-  .cards{
-    grid-template-columns:1fr 1fr;
-  }
-
-  .form-grid{
-    grid-template-columns:1fr;
-  }
-
-  .full{
-    grid-column:auto;
-  }
+  .sidebar.open{transform:none}
+  .main{margin-left:0;width:100%}
+  .header{padding:0 15px}
+  .mobile-menu{display:grid}
+  .content{padding:16px}
+  .stats{grid-template-columns:1fr 1fr;gap:9px}
+  .stat{padding:14px}
+  .stat strong{font-size:21px}
+  .toolbar{align-items:stretch;flex-direction:column}
+  .search{width:100%;min-width:0}
 }
 </style>
 </head>
 
 <body>
 
-<!-- LOGIN -->
+<div id="loginScreen" class="login">
+  <div class="login-card">
+    <div class="logo">CC</div>
+    <h1>CampusConnect Admin</h1>
+    <p>Secure platform management portal</p>
 
-<div id="loginPage" class="login-page">
+    <form id="adminLogin">
+      <div class="field">
+        <label>Administrator email</label>
+        <input id="adminEmail" type="email" required placeholder="admin@example.com">
+      </div>
+      <div class="field">
+        <label>Password</label>
+        <input id="adminPassword" type="password" required placeholder="••••••••">
+      </div>
+      <button class="btn primary wide" type="submit">Enter Admin Portal</button>
+    </form>
 
-  <div class="login-box">
-
-    <div class="logo">CampusConnect</div>
-
-    <div class="subtitle">
-      Administrator Portal
+    <div class="footer">
+      CampusConnect<br>
+      <strong>Created & Published by Muhammad Bin Ali — GCR</strong>
     </div>
-
-    <div id="loginError" class="error hidden"></div>
-
-    <div class="field">
-      <label>Email</label>
-      <input
-        id="adminEmail"
-        type="email"
-        placeholder="Admin email"
-      >
-    </div>
-
-    <div class="field">
-      <label>Password</label>
-      <input
-        id="adminPassword"
-        type="password"
-        placeholder="Admin password"
-      >
-    </div>
-
-    <button class="primary" onclick="adminLogin()">
-      Login
-    </button>
-
   </div>
-
 </div>
 
+<div id="portal" class="layout hidden">
 
-<!-- ADMIN APP -->
+  <aside id="sidebar" class="sidebar">
+    <div class="admin-brand">
+      <div class="logo">CC</div>
+      <div>
+        <strong>CampusConnect</strong>
+        <span>ADMIN CONTROL</span>
+      </div>
+    </div>
 
-<div id="app" class="app">
+    <nav class="menu">
+      <button class="active" data-page="dashboard" onclick="page('dashboard')">▦ &nbsp; Dashboard</button>
+      <button data-page="courses" onclick="page('courses')">📚 &nbsp; Courses</button>
+      <button data-page="notes" onclick="page('notes')">📄 &nbsp; Notes & PDFs</button>
+      <button data-page="students" onclick="page('students')">👥 &nbsp; Students</button>
+      <button data-page="payments" onclick="page('payments')">💳 &nbsp; Payments</button>
+      <button data-page="purchases" onclick="page('purchases')">🛒 &nbsp; Purchases</button>
+      <button data-page="wallet" onclick="page('wallet')">💰 &nbsp; Wallet Ledger</button>
+    </nav>
 
-  <aside class="sidebar">
-
-    <h2>CampusConnect</h2>
-
-    <button class="nav-btn active" onclick="showSection('dashboard',this)">
-      📊 Dashboard
-    </button>
-
-    <button class="nav-btn" onclick="showSection('courses',this)">
-      📚 Courses
-    </button>
-
-    <button class="nav-btn" onclick="showSection('notes',this)">
-      📄 Notes
-    </button>
-
-    <button class="nav-btn" onclick="showSection('students',this)">
-      👥 Students
-    </button>
-
-    <button class="nav-btn" onclick="showSection('payments',this)">
-      💳 Payments
-    </button>
-
-    <button class="nav-btn" onclick="showSection('purchases',this)">
-      🛒 Purchases
-    </button>
-
-    <button class="nav-btn" onclick="showSection('transactions',this)">
-      💰 Wallet Transactions
-    </button>
-
-    <button class="logout" onclick="logout()">
-      Logout
-    </button>
-
+    <div class="sidebar-bottom">
+      <button class="btn danger wide" onclick="logout()">🚪 Logout</button>
+    </div>
   </aside>
 
+  <section class="main">
 
-  <main class="main">
-
-    <div class="topbar">
-      <h1 id="pageTitle">Dashboard</h1>
-      <span id="adminName"></span>
-    </div>
-
-
-    <!-- DASHBOARD -->
-
-    <section id="dashboard" class="section active">
-
-      <div class="cards">
-
-        <div class="card">
-          <h3>Students</h3>
-          <strong id="statStudents">0</strong>
+    <header class="header">
+      <div style="display:flex;align-items:center;gap:10px">
+        <button class="btn soft mobile-menu" onclick="toggleSidebar()">☰</button>
+        <div>
+          <h1 id="pageTitle">Dashboard</h1>
+          <small style="color:var(--muted)">CampusConnect management centre</small>
         </div>
-
-        <div class="card">
-          <h3>Courses</h3>
-          <strong id="statCourses">0</strong>
-        </div>
-
-        <div class="card">
-          <h3>Notes</h3>
-          <strong id="statNotes">0</strong>
-        </div>
-
-        <div class="card">
-          <h3>Payments</h3>
-          <strong id="statPayments">0</strong>
-        </div>
-
-        <div class="card">
-          <h3>Purchases</h3>
-          <strong id="statPurchases">0</strong>
-        </div>
-
       </div>
 
-      <div class="panel">
-
-        <h2>Welcome to CampusConnect Admin</h2>
-
-        <p>
-          From this portal you will control your courses,
-          notes, prices, students and transactions.
-        </p>
-
+      <div class="header-right">
+        <div class="admin-avatar" id="adminAvatar">M</div>
+        <div class="hide-mobile">
+          <strong id="adminName">Administrator</strong>
+        </div>
       </div>
+    </header>
 
-    </section>
+    <main class="content">
 
-
-    <!-- COURSES -->
-
-    <section id="courses" class="section">
-
-      <div class="panel">
-
-        <h2>Add Course</h2>
-
-        <div id="courseMessage"></div>
-
-        <div class="form-grid">
-
-          <div class="field">
-            <label>Course Code</label>
-            <input
-              id="courseCode"
-              placeholder="e.g. CSC 205"
-            >
+      <section id="dashboardPage" class="page active">
+        <div class="stats">
+          <div class="stat">
+            <div class="stat-icon">👥</div>
+            <small>Students</small>
+            <strong id="statStudents">0</strong>
           </div>
-
-          <div class="field">
-            <label>Course Title</label>
-            <input
-              id="courseTitle"
-              placeholder="e.g. Computer Architecture"
-            >
+          <div class="stat">
+            <div class="stat-icon">📚</div>
+            <small>Courses</small>
+            <strong id="statCourses">0</strong>
           </div>
-
-          <div class="field full">
-            <label>Description</label>
-            <textarea
-              id="courseDescription"
-              rows="3"
-              placeholder="Course description"
-            ></textarea>
+          <div class="stat">
+            <div class="stat-icon">📄</div>
+            <small>Notes</small>
+            <strong id="statNotes">0</strong>
           </div>
-
-        </div>
-
-        <button class="small-btn" onclick="addCourse()">
-          Add Course
-        </button>
-
-      </div>
-
-
-      <div class="panel">
-
-        <h2>Courses</h2>
-
-        <div class="table-wrap">
-
-          <table>
-
-            <thead>
-              <tr>
-                <th>Code</th>
-                <th>Title</th>
-                <th>Description</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-
-            <tbody id="coursesTable"></tbody>
-
-          </table>
-
-        </div>
-
-      </div>
-
-    </section>
-
-
-    <!-- NOTES -->
-
-    <section id="notes" class="section">
-
-      <div class="panel">
-
-        <h2>Add Note</h2>
-
-        <div id="noteMessage"></div>
-
-        <div class="form-grid">
-
-          <div class="field">
-            <label>Course</label>
-
-            <select id="noteCourse">
-              <option value="">Select course</option>
-            </select>
-
+          <div class="stat">
+            <div class="stat-icon">💳</div>
+            <small>Payments</small>
+            <strong id="statPayments">0</strong>
           </div>
+        </div>
 
-          <div class="field">
-            <label>Note Title</label>
-
-            <input
-              id="noteTitle"
-              placeholder="e.g. Week 1 Lecture Note"
-            >
-
+        <div class="toolbar">
+          <div>
+            <h2>Platform overview</h2>
+            <p style="color:var(--muted);font-size:12px;margin-top:3px">
+              Manage the entire CampusConnect ecosystem from here.
+            </p>
           </div>
+        </div>
 
-          <div class="field">
-            <label>Price (₦)</label>
-
-            <input
-              id="notePrice"
-              type="number"
-              min="0"
-              placeholder="1000"
-            >
-
+        <div class="table-card">
+          <div style="padding:22px">
+            <h3>Quick actions</h3>
+            <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:15px">
+              <button class="btn primary" onclick="openCourseModal()">＋ Add Course</button>
+              <button class="btn soft" onclick="openNoteModal()">＋ Add Note</button>
+              <button class="btn dark" onclick="page('students')">View Students</button>
+              <button class="btn green" onclick="page('payments')">View Payments</button>
+            </div>
           </div>
+        </div>
 
-          <div class="field">
-            <label>PDF File</label>
+        <div class="footer">
+          CampusConnect<br>
+          <strong>Created & Published by Muhammad Bin Ali — GCR</strong>
+        </div>
+      </section>
 
-            <input
-              id="noteFile"
-              type="file"
-              accept=".pdf,application/pdf"
-            >
-
+      <section id="coursesPage" class="page">
+        <div class="toolbar">
+          <div>
+            <h2>Course Management</h2>
+            <p style="color:var(--muted);font-size:12px">Add and manage courses dynamically.</p>
           </div>
+          <button class="btn primary" onclick="openCourseModal()">＋ Add Course</button>
+        </div>
 
-          <div class="field full">
-
-            <label>Description</label>
-
-            <textarea
-              id="noteDescription"
-              rows="3"
-              placeholder="Description of the note"
-            ></textarea>
-
+        <div class="table-card">
+          <div class="table-scroll">
+            <table>
+              <thead>
+                <tr><th>Course</th><th>Description</th><th>Created</th><th>Actions</th></tr>
+              </thead>
+              <tbody id="coursesTable"></tbody>
+            </table>
           </div>
+        </div>
+      </section>
 
+      <section id="notesPage" class="page">
+        <div class="toolbar">
+          <div>
+            <h2>Notes & PDF Management</h2>
+            <p style="color:var(--muted);font-size:12px">Upload, price and control academic materials.</p>
+          </div>
+          <button class="btn primary" onclick="openNoteModal()">＋ Add Note</button>
         </div>
 
-        <button
-          class="small-btn"
-          onclick="addNote()"
-        >
-          Add Note
-        </button>
+        <div class="table-card">
+          <div class="table-scroll">
+            <table>
+              <thead>
+                <tr><th>Note</th><th>Course</th><th>Price</th><th>Status</th><th>Actions</th></tr>
+              </thead>
+              <tbody id="notesTable"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
 
-      </div>
-
-
-      <div class="panel">
-
-        <h2>Notes</h2>
-
-        <div class="table-wrap">
-
-          <table>
-
-            <thead>
-
-              <tr>
-                <th>Course</th>
-                <th>Title</th>
-                <th>Price</th>
-                <th>Status</th>
-                <th>Action</th>
-              </tr>
-
-            </thead>
-
-            <tbody id="notesTable"></tbody>
-
-          </table>
-
+      <section id="studentsPage" class="page">
+        <div class="toolbar">
+          <div>
+            <h2>Students</h2>
+            <p style="color:var(--muted);font-size:12px">Monitor registered student accounts.</p>
+          </div>
+          <input id="studentSearch" class="search" oninput="renderStudents()" placeholder="Search students...">
         </div>
 
-      </div>
+        <div class="table-card">
+          <div class="table-scroll">
+            <table>
+              <thead>
+                <tr><th>Student</th><th>Phone</th><th>Wallet</th><th>Status</th><th>Joined</th><th>Action</th></tr>
+              </thead>
+              <tbody id="studentsTable"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
 
-    </section>
-
-
-    <!-- STUDENTS -->
-
-    <section id="students" class="section">
-
-      <div class="panel">
-
-        <h2>Registered Students</h2>
-
-        <div class="table-wrap">
-
-          <table>
-
-            <thead>
-
-              <tr>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Phone</th>
-                <th>Wallet</th>
-                <th>Status</th>
-                <th>Action</th>
-              </tr>
-
-            </thead>
-
-            <tbody id="studentsTable"></tbody>
-
-          </table>
-
+      <section id="paymentsPage" class="page">
+        <div class="toolbar">
+          <div>
+            <h2>Payments</h2>
+            <p style="color:var(--muted);font-size:12px">Paystack wallet funding records.</p>
+          </div>
         </div>
 
-      </div>
+        <div class="table-card">
+          <div class="table-scroll">
+            <table>
+              <thead>
+                <tr><th>Student</th><th>Reference</th><th>Amount</th><th>Status</th><th>Date</th></tr>
+              </thead>
+              <tbody id="paymentsTable"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
 
-    </section>
-
-
-    <!-- PAYMENTS -->
-
-    <section id="payments" class="section">
-
-      <div class="panel">
-
-        <h2>Payments</h2>
-
-        <div class="table-wrap">
-
-          <table>
-
-            <thead>
-
-              <tr>
-                <th>Student</th>
-                <th>Reference</th>
-                <th>Amount</th>
-                <th>Status</th>
-                <th>Date</th>
-              </tr>
-
-            </thead>
-
-            <tbody id="paymentsTable"></tbody>
-
-          </table>
-
+      <section id="purchasesPage" class="page">
+        <div class="toolbar">
+          <div>
+            <h2>Purchases</h2>
+            <p style="color:var(--muted);font-size:12px">Notes purchased by students.</p>
+          </div>
         </div>
 
-      </div>
+        <div class="table-card">
+          <div class="table-scroll">
+            <table>
+              <thead>
+                <tr><th>Student</th><th>Note</th><th>Amount</th><th>Date</th></tr>
+              </thead>
+              <tbody id="purchasesTable"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
 
-    </section>
-
-
-    <!-- PURCHASES -->
-
-    <section id="purchases" class="section">
-
-      <div class="panel">
-
-        <h2>Note Purchases</h2>
-
-        <div class="table-wrap">
-
-          <table>
-
-            <thead>
-
-              <tr>
-                <th>Student</th>
-                <th>Note</th>
-                <th>Amount</th>
-                <th>Date</th>
-              </tr>
-
-            </thead>
-
-            <tbody id="purchasesTable"></tbody>
-
-          </table>
-
+      <section id="walletPage" class="page">
+        <div class="toolbar">
+          <div>
+            <h2>Wallet Ledger</h2>
+            <p style="color:var(--muted);font-size:12px">Every wallet movement recorded by the platform.</p>
+          </div>
         </div>
 
-      </div>
-
-    </section>
-
-
-    <!-- TRANSACTIONS -->
-
-    <section id="transactions" class="section">
-
-      <div class="panel">
-
-        <h2>Wallet Transactions</h2>
-
-        <div class="table-wrap">
-
-          <table>
-
-            <thead>
-
-              <tr>
-                <th>Student</th>
-                <th>Type</th>
-                <th>Amount</th>
-                <th>Reference</th>
-                <th>Description</th>
-                <th>Date</th>
-              </tr>
-
-            </thead>
-
-            <tbody id="transactionsTable"></tbody>
-
-          </table>
-
+        <div class="table-card">
+          <div class="table-scroll">
+            <table>
+              <thead>
+                <tr><th>Student</th><th>Type</th><th>Amount</th><th>Reference</th><th>Description</th><th>Date</th></tr>
+              </thead>
+              <tbody id="walletTable"></tbody>
+            </table>
+          </div>
         </div>
+      </section>
 
-      </div>
-
-    </section>
-
-  </main>
-
+    </main>
+  </section>
 </div>
 
+<div id="modalBg" class="modal-bg" onclick="modalBackdrop(event)">
+  <div id="modal" class="modal"></div>
+</div>
+
+<div id="toastWrap" class="toast-wrap"></div>
 
 <script>
+const SUPABASE_URL="https://xhuagcmnufndavuhmrqo.supabase.co";
+const SUPABASE_KEY="sb_publishable_WWyyRz3SRE5BwHzD4TfGtQ_3mThtiDT";
+const API_BASE="https://campusconnect-backend-amhx.onrender.com";
 
-/* =========================================================
-   CONFIG
-========================================================= */
+const supabase=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 
-const SUPABASE_URL =
-  "https://xhuagcmnufndavuhmrqo.supabase.co";
+let admin=null;
+let courses=[];
+let notes=[];
+let students=[];
+let payments=[];
+let purchases=[];
+let walletTransactions=[];
 
-const SUPABASE_PUBLISHABLE_KEY =
-  "sb_publishable_WWyyRz3SRE5BwHzD4TfGtQ_3mThtiDT";
+const $=id=>document.getElementById(id);
 
-const API_BASE =
-  "https://campusconnect-backend-amhx.onrender.com";
-
-const supabaseClient =
-  supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_PUBLISHABLE_KEY
-  );
-
-
-/* =========================================================
-   HELPERS
-========================================================= */
-
-async function getToken(){
-
-  const {
-    data,
-    error
-  } = await supabaseClient.auth.getSession();
-
-  if(error || !data.session){
-    return null;
-  }
-
-  return data.session.access_token;
+function money(kobo){
+  return "₦"+((Number(kobo)||0)/100).toLocaleString("en-NG",{minimumFractionDigits:2});
 }
 
+function escapeHtml(value){
+  return String(value??"").replace(/[&<>"']/g,m=>({
+    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
+  }[m]));
+}
 
-async function api(url, options = {}){
+function toast(msg,type=""){
+  const el=document.createElement("div");
+  el.className="toast "+type;
+  el.textContent=msg;
+  $("toastWrap").appendChild(el);
+  setTimeout(()=>el.remove(),3500);
+}
 
-  const token = await getToken();
+function showModal(html){
+  $("modal").innerHTML=html;
+  $("modalBg").classList.add("show");
+}
+function closeModal(){
+  $("modalBg").classList.remove("show");
+}
+function modalBackdrop(e){
+  if(e.target.id==="modalBg")closeModal();
+}
 
-  if(!token){
-    throw new Error("Your session has expired. Please login again.");
-  }
+async function api(path,options={}){
+  const {data:{session}}=await supabase.auth.getSession();
+  if(!session?.access_token)throw new Error("Admin session expired.");
 
-  const response = await fetch(
-    API_BASE + url,
-    {
-      ...options,
+  const headers={
+    ...(options.body?{"Content-Type":"application/json"}:{}),
+    ...(options.headers||{}),
+    Authorization:"Bearer "+session.access_token
+  };
 
-      headers:{
-        "Content-Type":"application/json",
-        ...(options.headers || {}),
-        "Authorization":"Bearer " + token
-      }
-    }
-  );
+  const res=await fetch(API_BASE+path,{...options,headers});
+  const text=await res.text();
 
-  const data = await response.json();
+  let data={};
+  try{data=text?JSON.parse(text):{}}catch{data={message:text}};
 
-  if(!response.ok){
-    throw new Error(
-      data.message || "Request failed."
-    );
-  }
-
+  if(!res.ok)throw new Error(data.message||data.error||"Request failed");
   return data;
 }
 
-
-/* =========================================================
-   LOGIN
-========================================================= */
-
-async function adminLogin(){
-
-  const email =
-    document.getElementById("adminEmail").value.trim();
-
-  const password =
-    document.getElementById("adminPassword").value;
-
-  const errorBox =
-    document.getElementById("loginError");
-
-  errorBox.classList.add("hidden");
-
-  if(!email || !password){
-
-    errorBox.textContent =
-      "Enter your admin email and password.";
-
-    errorBox.classList.remove("hidden");
-
-    return;
+async function adminCheck(){
+  try{
+    const result=await api("/api/admin/me");
+    admin=result.admin||result.data||result;
+    return true;
+  }catch{
+    return false;
   }
+}
+
+$("adminLogin").addEventListener("submit",async e=>{
+  e.preventDefault();
+
+  const btn=e.submitter;
+  btn.disabled=true;
+  btn.textContent="Authenticating...";
 
   try{
-
-    const {
-      data,
-      error
-    } = await supabaseClient.auth.signInWithPassword({
-      email,
-      password
+    const {error}=await supabase.auth.signInWithPassword({
+      email:$("adminEmail").value.trim(),
+      password:$("adminPassword").value
     });
 
-    if(error){
-      throw error;
+    if(error)throw error;
+
+    const ok=await adminCheck();
+    if(!ok){
+      await supabase.auth.signOut({scope:"local"});
+      throw new Error("This account is not authorized as a CampusConnect administrator.");
     }
 
-    const result =
-      await api("/api/admin/me");
+    $("loginScreen").classList.add("hidden");
+    $("portal").classList.remove("hidden");
 
-    document.getElementById("adminName").textContent =
-      result.admin.full_name || "Administrator";
+    $("adminName").textContent=admin?.full_name||"Administrator";
+    $("adminAvatar").textContent=(admin?.full_name||"A").split(" ").map(x=>x[0]).slice(0,2).join("").toUpperCase();
 
-    document.getElementById("loginPage").style.display =
-      "none";
-
-    document.getElementById("app").style.display =
-      "block";
-
-    await loadDashboard();
-    await loadCourses();
-    await loadNotes();
-
-  }catch(error){
-
-    errorBox.textContent =
-      error.message || "Login failed.";
-
-    errorBox.classList.remove("hidden");
-
-    await supabaseClient.auth.signOut();
+    await loadAdminData();
+    toast("Welcome to the CampusConnect Admin Portal.","success");
+  }catch(err){
+    toast(err.message||"Login failed","error");
+  }finally{
+    btn.disabled=false;
+    btn.textContent="Enter Admin Portal";
   }
+});
 
+async function loadAdminData(){
+  try{
+    const [
+      dashboardResult,
+      coursesResult,
+      notesResult,
+      studentsResult,
+      paymentsResult,
+      purchasesResult,
+      walletResult
+    ]=await Promise.all([
+      api("/api/admin/dashboard"),
+      api("/api/admin/courses"),
+      api("/api/admin/notes"),
+      api("/api/admin/students"),
+      api("/api/admin/payments"),
+      api("/api/admin/purchases"),
+      api("/api/admin/wallet-transactions")
+    ]);
+
+    courses=coursesResult.courses||coursesResult.data||[];
+    notes=notesResult.notes||notesResult.data||[];
+    students=studentsResult.students||studentsResult.data||[];
+    payments=paymentsResult.payments||paymentsResult.data||[];
+    purchases=purchasesResult.purchases||purchasesResult.data||[];
+    walletTransactions=walletResult.transactions||walletResult.wallet_transactions||walletResult.data||[];
+
+    const d=dashboardResult.dashboard||dashboardResult.data||dashboardResult;
+
+    $("statStudents").textContent=d.students_count??students.length;
+    $("statCourses").textContent=d.courses_count??courses.length;
+    $("statNotes").textContent=d.notes_count??notes.length;
+    $("statPayments").textContent=d.payments_count??payments.length;
+
+    renderAll();
+  }catch(e){
+    toast(e.message||"Could not load admin data","error");
+  }
 }
 
-
-/* =========================================================
-   LOGOUT
-========================================================= */
-
-async function logout(){
-
-  await supabaseClient.auth.signOut();
-
-  location.reload();
+function renderAll(){
+  renderCourses();
+  renderNotes();
+  renderStudents();
+  renderPayments();
+  renderPurchases();
+  renderWallet();
 }
 
+function page(name){
+  document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+  $(name+"Page").classList.add("active");
 
-/* =========================================================
-   NAVIGATION
-========================================================= */
+  document.querySelectorAll(".menu button").forEach(b=>{
+    b.classList.toggle("active",b.dataset.page===name);
+  });
 
-function showSection(id, button){
-
-  document.querySelectorAll(".section")
-    .forEach(section =>
-      section.classList.remove("active")
-    );
-
-  document.querySelectorAll(".nav-btn")
-    .forEach(btn =>
-      btn.classList.remove("active")
-    );
-
-  document.getElementById(id)
-    .classList.add("active");
-
-  button.classList.add("active");
-
-  const titles = {
+  const titles={
     dashboard:"Dashboard",
-    courses:"Courses",
-    notes:"Notes",
+    courses:"Course Management",
+    notes:"Notes & PDFs",
     students:"Students",
     payments:"Payments",
     purchases:"Purchases",
-    transactions:"Wallet Transactions"
+    wallet:"Wallet Ledger"
   };
 
-  document.getElementById("pageTitle")
-    .textContent =
-    titles[id] || "CampusConnect";
-
-  if(id === "students")
-    loadStudents();
-
-  if(id === "payments")
-    loadPayments();
-
-  if(id === "purchases")
-    loadPurchases();
-
-  if(id === "transactions")
-    loadTransactions();
+  $("pageTitle").textContent=titles[name]||"CampusConnect";
+  $("sidebar").classList.remove("open");
+  window.scrollTo({top:0,behavior:"smooth"});
 }
 
-
-/* =========================================================
-   DASHBOARD
-========================================================= */
-
-async function loadDashboard(){
-
-  try{
-
-    const result =
-      await api("/api/admin/dashboard");
-
-    document.getElementById("statStudents")
-      .textContent = result.stats.students;
-
-    document.getElementById("statCourses")
-      .textContent = result.stats.courses;
-
-    document.getElementById("statNotes")
-      .textContent = result.stats.notes;
-
-    document.getElementById("statPayments")
-      .textContent = result.stats.payments;
-
-    document.getElementById("statPurchases")
-      .textContent = result.stats.purchases;
-
-  }catch(error){
-
-    console.error(error);
-
-  }
+function toggleSidebar(){
+  $("sidebar").classList.toggle("open");
 }
 
-
-/* =========================================================
-   COURSES
-========================================================= */
-
-async function loadCourses(){
-
-  try{
-
-    const result =
-      await api("/api/admin/courses");
-
-    const table =
-      document.getElementById("coursesTable");
-
-    const select =
-      document.getElementById("noteCourse");
-
-    table.innerHTML = "";
-    select.innerHTML =
-      '<option value="">Select course</option>';
-
-    result.courses.forEach(course => {
-
-      const row =
-        document.createElement("tr");
-
-      row.innerHTML = `
-        <td>${escapeHtml(course.course_code)}</td>
-
-        <td>${escapeHtml(course.course_title)}</td>
-
-        <td>${escapeHtml(course.description || "")}</td>
-
+function renderCourses(){
+  $("coursesTable").innerHTML=courses.length
+    ?courses.map(c=>`
+      <tr>
         <td>
-          <button
-            class="small-btn"
-            onclick="editCourse('${course.id}')">
-            Edit
-          </button>
-
-          <button
-            class="small-btn danger"
-            onclick="deleteCourse('${course.id}')">
-            Delete
-          </button>
+          <strong>${escapeHtml(c.course_code)}</strong>
+          <small>${escapeHtml(c.course_title)}</small>
         </td>
-      `;
-
-      table.appendChild(row);
-
-      const option =
-        document.createElement("option");
-
-      option.value = course.id;
-
-      option.textContent =
-        course.course_code +
-        " — " +
-        course.course_title;
-
-      select.appendChild(option);
-
-    });
-
-  }catch(error){
-
-    console.error(error);
-
-  }
-}
-
-
-async function addCourse(){
-
-  const course_code =
-    document.getElementById("courseCode")
-      .value.trim();
-
-  const course_title =
-    document.getElementById("courseTitle")
-      .value.trim();
-
-  const description =
-    document.getElementById("courseDescription")
-      .value.trim();
-
-  if(!course_code || !course_title){
-
-    alert("Enter course code and course title.");
-
-    return;
-  }
-
-  try{
-
-    await api(
-      "/api/admin/courses",
-      {
-        method:"POST",
-        body:JSON.stringify({
-          course_code,
-          course_title,
-          description
-        })
-      }
-    );
-
-    alert("Course added successfully.");
-
-    document.getElementById("courseCode").value = "";
-    document.getElementById("courseTitle").value = "";
-    document.getElementById("courseDescription").value = "";
-
-    await loadCourses();
-    await loadDashboard();
-
-  }catch(error){
-
-    alert(error.message);
-
-  }
-}
-
-
-async function editCourse(id){
-
-  const title =
-    prompt("Enter the new course title:");
-
-  if(title === null)
-    return;
-
-  const description =
-    prompt("Enter the new description:");
-
-  if(description === null)
-    return;
-
-  try{
-
-    await api(
-      "/api/admin/courses/" + id,
-      {
-        method:"PATCH",
-        body:JSON.stringify({
-          course_title:title,
-          description
-        })
-      }
-    );
-
-    alert("Course updated.");
-
-    await loadCourses();
-
-  }catch(error){
-
-    alert(error.message);
-
-  }
-}
-
-
-async function deleteCourse(id){
-
-  if(!confirm(
-    "Delete this course? This may fail if notes still belong to it."
-  )){
-    return;
-  }
-
-  try{
-
-    await api(
-      "/api/admin/courses/" + id,
-      {
-        method:"DELETE"
-      }
-    );
-
-    alert("Course deleted.");
-
-    await loadCourses();
-    await loadDashboard();
-
-  }catch(error){
-
-    alert(error.message);
-
-  }
-}
-
-
-/* =========================================================
-   NOTES
-========================================================= */
-
-async function loadNotes(){
-
-  try{
-
-    const result =
-      await api("/api/admin/notes");
-
-    const table =
-      document.getElementById("notesTable");
-
-    table.innerHTML = "";
-
-    result.notes.forEach(note => {
-
-      const course =
-        note.courses?.course_code || "—";
-
-      const price =
-        Number(note.price_kobo || 0) / 100;
-
-      const status =
-        note.is_active
-        ? `<span class="badge active-badge">Active</span>`
-        : `<span class="badge inactive-badge">Inactive</span>`;
-
-      const row =
-        document.createElement("tr");
-
-      row.innerHTML = `
-
-        <td>${escapeHtml(course)}</td>
-
-        <td>${escapeHtml(note.title)}</td>
-
-        <td>₦${price.toLocaleString()}</td>
-
-        <td>${status}</td>
-
+        <td>${escapeHtml(c.description||"—")}</td>
+        <td>${c.created_at?new Date(c.created_at).toLocaleDateString():"—"}</td>
         <td>
-
-          <button
-            class="small-btn"
-            onclick="editNote('${note.id}', ${price})">
-            Edit
-          </button>
-
-          <button
-            class="small-btn gray"
-            onclick="toggleNote('${note.id}', ${note.is_active})">
-            ${note.is_active ? "Deactivate" : "Activate"}
-          </button>
-
-          <button
-            class="small-btn danger"
-            onclick="deleteNote('${note.id}')">
-            Delete
-          </button>
-
+          <div class="actions">
+            <button class="btn soft" onclick="editCourse('${c.id}')">Edit</button>
+            <button class="btn danger" onclick="deleteCourse('${c.id}')">Remove</button>
+          </div>
         </td>
-      `;
-
-      table.appendChild(row);
-
-    });
-
-  }catch(error){
-
-    console.error(error);
-
-  }
+      </tr>`).join("")
+    :`<tr><td colspan="4"><div class="empty">No courses yet. Add your first course.</div></td></tr>`;
 }
 
+function openCourseModal(id=null){
+  const c=id?courses.find(x=>x.id===id):null;
 
-/* =========================================================
-   PDF UPLOAD
-========================================================= */
+  showModal(`
+    <div class="modal-head">
+      <h2>${c?"Edit course":"Add new course"}</h2>
+      <button class="close" onclick="closeModal()">✕</button>
+    </div>
 
-async function uploadPdf(file){
+    <div class="field">
+      <label>Course code</label>
+      <input id="courseCode" value="${escapeHtml(c?.course_code||"")}" placeholder="CSC 201">
+    </div>
 
-  const uploadInfo =
-    await api(
-      "/api/admin/notes/upload-url",
-      {
-        method:"POST",
-        body:JSON.stringify({
-          file_name:file.name
-        })
-      }
-    );
+    <div class="field">
+      <label>Course title</label>
+      <input id="courseTitle" value="${escapeHtml(c?.course_title||"")}" placeholder="Data Structures">
+    </div>
 
-  const {
-    path,
-    token
-  } = uploadInfo;
+    <div class="field">
+      <label>Description</label>
+      <textarea id="courseDescription" placeholder="Short course description">${escapeHtml(c?.description||"")}</textarea>
+    </div>
 
-  const {
-    error
-  } = await supabaseClient.storage
-    .from("notes-pdfs")
-    .uploadToSignedUrl(
-      path,
-      token,
-      file
-    );
-
-  if(error){
-    throw error;
-  }
-
-  return path;
+    <div class="modal-actions">
+      <button class="btn soft" onclick="closeModal()">Cancel</button>
+      <button class="btn primary" onclick="saveCourse('${id||""}')">${c?"Save changes":"Create course"}</button>
+    </div>
+  `);
 }
 
+function editCourse(id){openCourseModal(id)}
 
-/* =========================================================
-   ADD NOTE
-========================================================= */
+async function saveCourse(id){
+  const body={
+    course_code:$("courseCode").value.trim().toUpperCase(),
+    course_title:$("courseTitle").value.trim(),
+    description:$("courseDescription").value.trim()
+  };
 
-async function addNote(){
-
-  const course_id =
-    document.getElementById("noteCourse").value;
-
-  const title =
-    document.getElementById("noteTitle")
-      .value.trim();
-
-  const price_naira =
-    Number(
-      document.getElementById("notePrice").value
-    );
-
-  const description =
-    document.getElementById("noteDescription")
-      .value.trim();
-
-  const file =
-    document.getElementById("noteFile").files[0];
-
-  if(!course_id){
-    alert("Select a course.");
-    return;
-  }
-
-  if(!title){
-    alert("Enter the note title.");
-    return;
-  }
-
-  if(!Number.isFinite(price_naira) || price_naira < 0){
-    alert("Enter a valid price.");
-    return;
-  }
-
-  if(!file){
-    alert("Select a PDF file.");
-    return;
-  }
-
-  if(file.type !== "application/pdf"){
-    alert("Only PDF files are allowed.");
+  if(!body.course_code||!body.course_title){
+    toast("Course code and title are required.","error");
     return;
   }
 
   try{
-
-    const filePath =
-      await uploadPdf(file);
-
-    await api(
-      "/api/admin/notes",
-      {
-        method:"POST",
-        body:JSON.stringify({
-          course_id,
-          title,
-          description,
-          price_naira,
-          file_path:filePath
-        })
-      }
-    );
-
-    alert("Note and PDF uploaded successfully.");
-
-    document.getElementById("noteTitle").value = "";
-    document.getElementById("notePrice").value = "";
-    document.getElementById("noteDescription").value = "";
-    document.getElementById("noteFile").value = "";
-
-    await loadNotes();
-    await loadDashboard();
-
-  }catch(error){
-
-    alert(
-      "Upload failed: " +
-      error.message
-    );
-
-  }
-}
-
-
-/* =========================================================
-   EDIT NOTE
-========================================================= */
-
-async function editNote(id,currentPrice){
-
-  const title =
-    prompt("New note title:");
-
-  if(title === null)
-    return;
-
-  const price =
-    prompt(
-      "New price in Naira:",
-      currentPrice
-    );
-
-  if(price === null)
-    return;
-
-  const numericPrice =
-    Number(price);
-
-  if(!Number.isFinite(numericPrice) || numericPrice < 0){
-
-    alert("Invalid price.");
-
-    return;
-  }
-
-  try{
-
-    await api(
-      "/api/admin/notes/" + id,
-      {
-        method:"PATCH",
-        body:JSON.stringify({
-          title,
-          price_naira:numericPrice
-        })
-      }
-    );
-
-    alert("Note updated.");
-
-    await loadNotes();
-
-  }catch(error){
-
-    alert(error.message);
-
-  }
-}
-
-
-/* =========================================================
-   TOGGLE NOTE
-========================================================= */
-
-async function toggleNote(id,current){
-
-  try{
-
-    await api(
-      "/api/admin/notes/" + id,
-      {
-        method:"PATCH",
-        body:JSON.stringify({
-          is_active:!current
-        })
-      }
-    );
-
-    await loadNotes();
-
-  }catch(error){
-
-    alert(error.message);
-
-  }
-}
-
-
-/* =========================================================
-   DELETE NOTE
-========================================================= */
-
-async function deleteNote(id){
-
-  if(!confirm(
-    "Delete this note?"
-  )){
-    return;
-  }
-
-  try{
-
-    await api(
-      "/api/admin/notes/" + id,
-      {
-        method:"DELETE"
-      }
-    );
-
-    alert("Note deleted.");
-
-    await loadNotes();
-    await loadDashboard();
-
-  }catch(error){
-
-    alert(error.message);
-
-  }
-}
-
-
-/* =========================================================
-   STUDENTS
-========================================================= */
-
-async function loadStudents(){
-
-  try{
-
-    const result =
-      await api("/api/admin/students");
-
-    const table =
-      document.getElementById("studentsTable");
-
-    table.innerHTML = "";
-
-    result.students.forEach(student => {
-
-      const balance =
-        Number(student.wallet_balance_kobo || 0) / 100;
-
-      const status =
-        student.is_active
-        ? `<span class="badge active-badge">Active</span>`
-        : `<span class="badge inactive-badge">Inactive</span>`;
-
-      const row =
-        document.createElement("tr");
-
-      row.innerHTML = `
-
-        <td>${escapeHtml(student.full_name || "")}</td>
-
-        <td>${escapeHtml(student.email || "")}</td>
-
-        <td>${escapeHtml(student.phone || "—")}</td>
-
-        <td>₦${balance.toLocaleString()}</td>
-
-        <td>${status}</td>
-
-        <td>
-
-          <button
-            class="small-btn"
-            onclick="toggleStudent('${student.id}', ${student.is_active})">
-
-            ${student.is_active
-              ? "Deactivate"
-              : "Activate"}
-
-          </button>
-
-        </td>
-
-      `;
-
-      table.appendChild(row);
-
-    });
-
-  }catch(error){
-
-    console.error(error);
-
-  }
-}
-
-
-async function toggleStudent(id,current){
-
-  const action =
-    current
-    ? "deactivate"
-    : "activate";
-
-  if(!confirm(
-    "Are you sure you want to " +
-    action +
-    " this student?"
-  )){
-    return;
-  }
-
-  try{
-
-    await api(
-      "/api/admin/students/" +
-      id +
-      "/status",
-      {
-        method:"PATCH",
-        body:JSON.stringify({
-          is_active:!current
-        })
-      }
-    );
-
-    await loadStudents();
-
-  }catch(error){
-
-    alert(error.message);
-
-  }
-}
-
-
-/* =========================================================
-   PAYMENTS
-========================================================= */
-
-async function loadPayments(){
-
-  try{
-
-    const result =
-      await api("/api/admin/payments");
-
-    const table =
-      document.getElementById("paymentsTable");
-
-    table.innerHTML = "";
-
-    result.payments.forEach(payment => {
-
-      const amount =
-        Number(payment.amount_kobo || 0) / 100;
-
-      const student =
-        payment.students?.full_name || "—";
-
-      const row =
-        document.createElement("tr");
-
-      row.innerHTML = `
-
-        <td>${escapeHtml(student)}</td>
-
-        <td>${escapeHtml(payment.reference)}</td>
-
-        <td>₦${amount.toLocaleString()}</td>
-
-        <td>${escapeHtml(payment.status)}</td>
-
-        <td>${formatDate(payment.created_at)}</td>
-
-      `;
-
-      table.appendChild(row);
-
-    });
-
-  }catch(error){
-
-    console.error(error);
-
-  }
-}
-
-
-/* =========================================================
-   PURCHASES
-========================================================= */
-
-async function loadPurchases(){
-
-  try{
-
-    const result =
-      await api("/api/admin/purchases");
-
-    const table =
-      document.getElementById("purchasesTable");
-
-    table.innerHTML = "";
-
-    result.purchases.forEach(purchase => {
-
-      const student =
-        purchase.students?.full_name || "—";
-
-      const note =
-        purchase.notes?.title || "—";
-
-      const amount =
-        Number(purchase.amount_kobo || 0) / 100;
-
-      const row =
-        document.createElement("tr");
-
-      row.innerHTML = `
-
-        <td>${escapeHtml(student)}</td>
-
-        <td>${escapeHtml(note)}</td>
-
-        <td>₦${amount.toLocaleString()}</td>
-
-        <td>${formatDate(purchase.created_at)}</td>
-
-      `;
-
-      table.appendChild(row);
-
-    });
-
-  }catch(error){
-
-    console.error(error);
-
-  }
-}
-
-
-/* =========================================================
-   TRANSACTIONS
-========================================================= */
-
-async function loadTransactions(){
-
-  try{
-
-    const result =
-      await api(
-        "/api/admin/wallet-transactions"
-      );
-
-    const table =
-      document.getElementById(
-        "transactionsTable"
-      );
-
-    table.innerHTML = "";
-
-    result.transactions.forEach(transaction => {
-
-      const student =
-        transaction.students?.full_name || "—";
-
-      const amount =
-        Number(
-          transaction.amount_kobo || 0
-        ) / 100;
-
-      const row =
-        document.createElement("tr");
-
-      row.innerHTML = `
-
-        <td>${escapeHtml(student)}</td>
-
-        <td>${escapeHtml(transaction.type)}</td>
-
-        <td>₦${amount.toLocaleString()}</td>
-
-        <td>${escapeHtml(transaction.reference || "—")}</td>
-
-        <td>${escapeHtml(transaction.description || "—")}</td>
-
-        <td>${formatDate(transaction.created_at)}</td>
-
-      `;
-
-      table.appendChild(row);
-
-    });
-
-  }catch(error){
-
-    console.error(error);
-
-  }
-}
-
-
-/* =========================================================
-   UTILITIES
-========================================================= */
-
-function escapeHtml(value){
-
-  return String(value ?? "")
-    .replace(/&/g,"&amp;")
-    .replace(/</g,"&lt;")
-    .replace(/>/g,"&gt;")
-    .replace(/"/g,"&quot;")
-    .replace(/'/g,"&#039;");
-}
-
-
-function formatDate(date){
-
-  if(!date)
-    return "—";
-
-  return new Date(date)
-    .toLocaleString();
-}
-
-
-/* =========================================================
-   AUTO SESSION CHECK
-========================================================= */
-
-(async function(){
-
-  const {
-    data
-  } = await supabaseClient.auth.getSession();
-
-  if(data.session){
-
-    try{
-
-      const result =
-        await api("/api/admin/me");
-
-      document.getElementById("adminName")
-        .textContent =
-        result.admin.full_name ||
-        "Administrator";
-
-      document.getElementById("loginPage")
-        .style.display = "none";
-
-      document.getElementById("app")
-        .style.display = "block";
-
-      await loadDashboard();
-      await loadCourses();
-      await loadNotes();
-
-    }catch(error){
-
-      await supabaseClient.auth.signOut();
-
+    if(id){
+      await api("/api/admin/courses/"+id,{method:"PATCH",body:JSON.stringify(body)});
+      toast("Course updated.","success");
+    }else{
+      await api("/api/admin/courses",{method:"POST",body:JSON.stringify(body)});
+      toast("Course created successfully.","success");
     }
 
+    closeModal();
+    await loadAdminData();
+  }catch(e){
+    toast(e.message||"Unable to save course","error");
+  }
+}
+
+async function deleteCourse(id){
+  if(!confirm("Remove this course? Notes connected to it may also be affected."))return;
+
+  try{
+    await api("/api/admin/courses/"+id,{method:"DELETE"});
+    toast("Course removed.","success");
+    await loadAdminData();
+  }catch(e){
+    toast(e.message||"Unable to remove course","error");
+  }
+}
+
+function renderNotes(){
+  $("notesTable").innerHTML=notes.length
+    ?notes.map(n=>`
+      <tr>
+        <td>
+          <strong>${escapeHtml(n.title)}</strong>
+          <small>${escapeHtml(n.description||"")}</small>
+        </td>
+        <td>${escapeHtml(n.course?.course_code||n.course_code||"—")}</td>
+        <td><strong>${money(n.price_kobo)}</strong></td>
+        <td>
+          <span class="status ${n.is_active!==false?"on":"off"}">
+            ${n.is_active!==false?"ACTIVE":"DISABLED"}
+          </span>
+        </td>
+        <td>
+          <div class="actions">
+            <button class="btn soft" onclick="editNote('${n.id}')">Edit</button>
+            <button class="btn danger" onclick="deleteNote('${n.id}')">Remove</button>
+          </div>
+        </td>
+      </tr>`).join("")
+    :`<tr><td colspan="5"><div class="empty">No notes yet. Upload your first PDF.</div></td></tr>`;
+}
+
+function openNoteModal(id=null){
+  const n=id?notes.find(x=>x.id===id):null;
+
+  showModal(`
+    <div class="modal-head">
+      <h2>${n?"Edit note":"Add academic note"}</h2>
+      <button class="close" onclick="closeModal()">✕</button>
+    </div>
+
+    <div class="field">
+      <label>Course</label>
+      <select id="noteCourse">
+        <option value="">Select course</option>
+        ${courses.map(c=>`
+          <option value="${c.id}" ${n?.course_id===c.id?"selected":""}>
+            ${escapeHtml(c.course_code)} — ${escapeHtml(c.course_title)}
+          </option>`).join("")}
+      </select>
+    </div>
+
+    <div class="field">
+      <label>Note title</label>
+      <input id="noteTitle" value="${escapeHtml(n?.title||"")}" placeholder="CSC 201 Complete Lecture Note">
+    </div>
+
+    <div class="field">
+      <label>Description</label>
+      <textarea id="noteDescription" placeholder="Describe the note">${escapeHtml(n?.description||"")}</textarea>
+    </div>
+
+    <div class="field">
+      <label>Price in Naira</label>
+      <input id="notePrice" type="number" min="0" value="${n?Number(n.price_kobo)/100:""}" placeholder="500">
+    </div>
+
+    ${n?`
+      <div class="upload-box">
+        <strong>PDF already attached</strong>
+        <p style="font-size:12px;color:var(--muted);margin-top:5px">
+          Upload a new PDF below only if you want to replace it.
+        </p>
+        <input id="noteFile" type="file" accept="application/pdf">
+      </div>
+    `:`
+      <div class="upload-box">
+        <strong>📄 Select PDF</strong>
+        <p style="font-size:12px;color:var(--muted);margin-top:5px">
+          The PDF will be uploaded into the private notes storage.
+        </p>
+        <input id="noteFile" type="file" accept="application/pdf">
+      </div>
+    `}
+
+    <div class="modal-actions">
+      <button class="btn soft" onclick="closeModal()">Cancel</button>
+      <button class="btn primary" onclick="saveNote('${id||""}')">${n?"Save changes":"Upload note"}</button>
+    </div>
+  `);
+}
+
+function editNote(id){openNoteModal(id)}
+
+async function saveNote(id){
+  const course_id=$("noteCourse").value;
+  const title=$("noteTitle").value.trim();
+  const description=$("noteDescription").value.trim();
+  const price=Number($("notePrice").value);
+  const file=$("noteFile").files[0];
+
+  if(!course_id||!title||!price||price<0){
+    toast("Complete the course, title and price fields.","error");
+    return;
   }
 
-})();
+  try{
+    let file_url=null;
 
+    if(file){
+      if(file.type!=="application/pdf"){
+        throw new Error("Only PDF files are allowed.");
+      }
+
+      const upload=await api("/api/admin/notes/upload-url",{
+        method:"POST",
+        body:JSON.stringify({
+          file_name:file.name,
+          content_type:"application/pdf"
+        })
+      });
+
+      const path=upload.path;
+      const token=upload.token;
+
+      const {error}=await supabase.storage
+        .from("notes-pdfs")
+        .uploadToSignedUrl(path,token,file,{
+          contentType:"application/pdf",
+          upsert:true
+        });
+
+      if(error)throw error;
+      file_url=path;
+    }
+
+    const body={
+      course_id,
+      title,
+      description,
+      price_kobo:Math.round(price*100)
+    };
+
+    if(file_url)body.file_url=file_url;
+
+    if(id){
+      await api("/api/admin/notes/"+id,{
+        method:"PATCH",
+        body:JSON.stringify(body)
+      });
+      toast("Note updated.","success");
+    }else{
+      if(!file_url)throw new Error("Please select a PDF.");
+      await api("/api/admin/notes",{
+        method:"POST",
+        body:JSON.stringify(body)
+      });
+      toast("PDF note uploaded successfully.","success");
+    }
+
+    closeModal();
+    await loadAdminData();
+  }catch(e){
+    toast(e.message||"Unable to save note","error");
+  }
+}
+
+async function deleteNote(id){
+  if(!confirm("Remove this note from CampusConnect?"))return;
+
+  try{
+    await api("/api/admin/notes/"+id,{method:"DELETE"});
+    toast("Note removed.","success");
+    await loadAdminData();
+  }catch(e){
+    toast(e.message||"Unable to remove note","error");
+  }
+}
+
+function renderStudents(){
+  const q=($("studentSearch")?.value||"").toLowerCase();
+
+  const list=students.filter(s=>
+    !q ||
+    String(s.full_name||"").toLowerCase().includes(q) ||
+    String(s.email||"").toLowerCase().includes(q) ||
+    String(s.phone||"").toLowerCase().includes(q)
+  );
+
+  $("studentsTable").innerHTML=list.length
+    ?list.map(s=>`
+      <tr>
+        <td>
+          <strong>${escapeHtml(s.full_name||"Unnamed")}</strong>
+          <small>${escapeHtml(s.email||"")}</small>
+        </td>
+        <td>${escapeHtml(s.phone||"—")}</td>
+        <td><strong>${money(s.wallet_balance_kobo)}</strong></td>
+        <td>
+          <span class="status ${s.is_active!==false?"on":"off"}">
+            ${s.is_active!==false?"ACTIVE":"DISABLED"}
+          </span>
+        </td>
+        <td>${s.created_at?new Date(s.created_at).toLocaleDateString():"—"}</td>
+        <td>
+          <button class="btn ${s.is_active!==false?"danger":"green"}"
+            onclick="toggleStudent('${s.id}',${s.is_active!==false})">
+            ${s.is_active!==false?"Deactivate":"Activate"}
+          </button>
+        </td>
+      </tr>`).join("")
+    :`<tr><td colspan="6"><div class="empty">No students found.</div></td></tr>`;
+}
+
+async function toggleStudent(id,isActive){
+  const action=isActive?"deactivate":"activate";
+  if(!confirm(`Are you sure you want to ${action} this student?`))return;
+
+  try{
+    await api("/api/admin/students/"+id+"/status",{
+      method:"PATCH",
+      body:JSON.stringify({is_active:!isActive})
+    });
+    toast("Student status updated.","success");
+    await loadAdminData();
+  }catch(e){
+    toast(e.message||"Unable to update student","error");
+  }
+}
+
+function renderPayments(){
+  $("paymentsTable").innerHTML=payments.length
+    ?payments.map(p=>`
+      <tr>
+        <td>
+          <strong>${escapeHtml(p.student?.full_name||p.full_name||"Student")}</strong>
+          <small>${escapeHtml(p.student?.email||p.email||"")}</small>
+        </td>
+        <td>${escapeHtml(p.reference||"—")}</td>
+        <td><strong>${money(p.amount_kobo)}</strong></td>
+        <td>
+          <span class="status ${p.status==="success"?"on":"off"}">
+            ${escapeHtml(p.status||"unknown").toUpperCase()}
+          </span>
+        </td>
+        <td>${p.created_at?new Date(p.created_at).toLocaleString():"—"}</td>
+      </tr>`).join("")
+    :`<tr><td colspan="5"><div class="empty">No payment records yet.</div></td></tr>`;
+}
+
+function renderPurchases(){
+  $("purchasesTable").innerHTML=purchases.length
+    ?purchases.map(p=>`
+      <tr>
+        <td>
+          <strong>${escapeHtml(p.student?.full_name||p.full_name||"Student")}</strong>
+          <small>${escapeHtml(p.student?.email||p.email||"")}</small>
+        </td>
+        <td>${escapeHtml(p.note?.title||p.notes?.title||p.note_title||"Note")}</td>
+        <td><strong>${money(p.amount_kobo)}</strong></td>
+        <td>${p.created_at?new Date(p.created_at).toLocaleString():"—"}</td>
+      </tr>`).join("")
+    :`<tr><td colspan="4"><div class="empty">No purchases yet.</div></td></tr>`;
+}
+
+function renderWallet(){
+  $("walletTable").innerHTML=walletTransactions.length
+    ?walletTransactions.map(t=>`
+      <tr>
+        <td>
+          <strong>${escapeHtml(t.student?.full_name||t.full_name||"Student")}</strong>
+          <small>${escapeHtml(t.student?.email||t.email||"")}</small>
+        </td>
+        <td>${escapeHtml(t.type||"—")}</td>
+        <td><strong>${money(t.amount_kobo)}</strong></td>
+        <td>${escapeHtml(t.reference||"—")}</td>
+        <td>${escapeHtml(t.description||"—")}</td>
+        <td>${t.created_at?new Date(t.created_at).toLocaleString():"—"}</td>
+      </tr>`).join("")
+    :`<tr><td colspan="6"><div class="empty">No wallet transactions yet.</div></td></tr>`;
+}
+
+async function logout(){
+  await supabase.auth.signOut({scope:"local"});
+  location.reload();
+}
+
+supabase.auth.onAuthStateChange((event)=>{
+  if(event==="SIGNED_OUT")location.reload();
+});
+
+window.addEventListener("load",async()=>{
+  const {data:{session}}=await supabase.auth.getSession();
+
+  if(!session)return;
+
+  if(await adminCheck()){
+    $("loginScreen").classList.add("hidden");
+    $("portal").classList.remove("hidden");
+
+    $("adminName").textContent=admin?.full_name||"Administrator";
+    $("adminAvatar").textContent=(admin?.full_name||"A").split(" ").map(x=>x[0]).slice(0,2).join("").toUpperCase();
+
+    await loadAdminData();
+  }else{
+    await supabase.auth.signOut({scope:"local"});
+  }
+});
 </script>
-
 </body>
 </html>
