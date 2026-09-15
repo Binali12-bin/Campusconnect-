@@ -1,0 +1,21 @@
+{
+  "name": "campusconnect-backend",
+  "version": "1.0.0",
+  "description": "CampusConnect university notes marketplace backend",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "jsonwebtoken": "^9.0.2",
+    "morgan": "^1.10.0",
+    "paystack-api": "^2.0.6",
+    "@supabase/supabase-js": "^2.49.1"
+  }
+}
