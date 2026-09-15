@@ -622,6 +622,303 @@
     </nav>
 
 </div>
+<script>
+    /*
+    ==========================================
+       CAMPUSCONNECT FRONTEND CONFIGURATION
+    ==========================================
+    */
 
+    const API_URL = "https://campusconnect-backend-ggru.onrender.com";
+
+    /*
+    ==========================================
+       APPLICATION STATE
+    ==========================================
+    */
+
+    const CampusConnect = {
+        user: null,
+        token: localStorage.getItem("campusconnect_token"),
+        walletBalance: 0,
+        courses: [],
+        notes: [],
+        library: []
+    };
+
+
+    /*
+    ==========================================
+       API HELPER
+    ==========================================
+    */
+
+    async function apiRequest(endpoint, options = {}) {
+
+        const headers = {
+            "Content-Type": "application/json",
+            ...(options.headers || {})
+        };
+
+        if (CampusConnect.token) {
+            headers.Authorization =
+                `Bearer ${CampusConnect.token}`;
+        }
+
+        try {
+
+            const response = await fetch(
+                API_URL + endpoint,
+                {
+                    ...options,
+                    headers
+                }
+            );
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(
+                    data.message || "Something went wrong"
+                );
+            }
+
+            return data;
+
+        } catch (error) {
+
+            console.error(
+                "CampusConnect API Error:",
+                error
+            );
+
+            throw error;
+        }
+    }
+
+
+    /*
+    ==========================================
+       LOAD CURRENT USER
+    ==========================================
+    */
+
+    async function loadCurrentUser() {
+
+        if (!CampusConnect.token) {
+            console.log("No student session found.");
+            return;
+        }
+
+        try {
+
+            const result =
+                await apiRequest("/api/auth/me");
+
+            CampusConnect.user =
+                result.user || result;
+
+            console.log(
+                "Logged in user:",
+                CampusConnect.user
+            );
+
+        } catch (error) {
+
+            console.log(
+                "Session expired or unavailable."
+            );
+
+            localStorage.removeItem(
+                "campusconnect_token"
+            );
+
+            CampusConnect.token = null;
+            CampusConnect.user = null;
+        }
+    }
+
+
+    /*
+    ==========================================
+       LOAD COURSES
+    ==========================================
+    */
+
+    async function loadCourses() {
+
+        try {
+
+            const result =
+                await apiRequest("/api/courses");
+
+            CampusConnect.courses =
+                result.courses || result || [];
+
+            console.log(
+                "Courses loaded:",
+                CampusConnect.courses
+            );
+
+        } catch (error) {
+
+            console.error(
+                "Unable to load courses:",
+                error.message
+            );
+        }
+    }
+
+
+    /*
+    ==========================================
+       LOAD NOTES
+    ==========================================
+    */
+
+    async function loadNotes() {
+
+        if (!CampusConnect.token) {
+            console.log(
+                "Student login required for notes."
+            );
+            return;
+        }
+
+        try {
+
+            const result =
+                await apiRequest("/api/notes");
+
+            CampusConnect.notes =
+                result.notes || result || [];
+
+            console.log(
+                "Notes loaded:",
+                CampusConnect.notes
+            );
+
+        } catch (error) {
+
+            console.error(
+                "Unable to load notes:",
+                error.message
+            );
+        }
+    }
+
+
+    /*
+    ==========================================
+       LOAD WALLET
+    ==========================================
+    */
+
+    async function loadWallet() {
+
+        if (!CampusConnect.token) {
+            return;
+        }
+
+        try {
+
+            const result =
+                await apiRequest(
+                    "/api/student/wallet"
+                );
+
+            CampusConnect.walletBalance =
+                result.balance_kobo
+                ? result.balance_kobo / 100
+                : 0;
+
+            console.log(
+                "Wallet:",
+                CampusConnect.walletBalance
+            );
+
+        } catch (error) {
+
+            console.error(
+                "Unable to load wallet:",
+                error.message
+            );
+        }
+    }
+
+
+    /*
+    ==========================================
+       LOAD LIBRARY
+    ==========================================
+    */
+
+    async function loadLibrary() {
+
+        if (!CampusConnect.token) {
+            return;
+        }
+
+        try {
+
+            const result =
+                await apiRequest(
+                    "/api/student/library"
+                );
+
+            CampusConnect.library =
+                result.library || result || [];
+
+            console.log(
+                "Library:",
+                CampusConnect.library
+            );
+
+        } catch (error) {
+
+            console.error(
+                "Unable to load library:",
+                error.message
+            );
+        }
+    }
+
+
+    /*
+    ==========================================
+       INITIALIZE CAMPUSCONNECT
+    ==========================================
+    */
+
+    async function initializeCampusConnect() {
+
+        console.log(
+            "🚀 Starting CampusConnect..."
+        );
+
+        await loadCurrentUser();
+        await loadCourses();
+        await loadNotes();
+        await loadWallet();
+        await loadLibrary();
+
+        console.log(
+            "✅ CampusConnect initialized."
+        );
+    }
+
+
+    /*
+    ==========================================
+       START APPLICATION
+    ==========================================
+    */
+
+    document.addEventListener(
+        "DOMContentLoaded",
+        initializeCampusConnect
+    );
+
+</script>
 </body>
 </html>
