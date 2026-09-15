@@ -1,0 +1,2595 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>CampusConnect</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://js.paystack.co/v2/inline.js"></script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: #f5f5fa;
+      color: #222;
+    }
+
+    button,
+    input {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 1100px;
+      margin: auto;
+      padding: 20px;
+    }
+
+    /* ================= LOGIN ================= */
+
+    #authPage {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      background: linear-gradient(135deg, #4a148c, #7b1fa2);
+    }
+
+    .auth-box {
+      background: white;
+      width: 100%;
+      max-width: 430px;
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 15px 40px rgba(0,0,0,.2);
+    }
+
+    .logo {
+      text-align: center;
+      color: #4a148c;
+      font-size: 32px;
+      font-weight: bold;
+      margin-bottom: 8px;
+    }
+
+    .tagline {
+      text-align: center;
+      color: #777;
+      margin-bottom: 25px;
+    }
+
+    .auth-tabs {
+      display: flex;
+      margin-bottom: 20px;
+      background: #f0eaf5;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .auth-tabs button {
+      flex: 1;
+      border: 0;
+      padding: 12px;
+      background: transparent;
+      color: #555;
+    }
+
+    .auth-tabs button.active {
+      background: #4a148c;
+      color: white;
+    }
+
+    .input-group {
+      margin-bottom: 15px;
+    }
+
+    .input-group label {
+      display: block;
+      font-size: 14px;
+      font-weight: bold;
+      margin-bottom: 6px;
+    }
+
+    .input-group input {
+      width: 100%;
+      padding: 13px;
+      border: 1px solid #ddd;
+      border-radius: 9px;
+      outline: none;
+    }
+
+    .input-group input:focus {
+      border-color: #4a148c;
+    }
+
+    .primary-btn {
+      width: 100%;
+      padding: 13px;
+      border: 0;
+      border-radius: 9px;
+      background: #4a148c;
+      color: white;
+      font-weight: bold;
+      margin-top: 5px;
+    }
+
+    .primary-btn:hover {
+      background: #6a1b9a;
+    }
+
+    .secondary-btn {
+      border: 1px solid #4a148c;
+      background: white;
+      color: #4a148c;
+      padding: 10px 15px;
+      border-radius: 8px;
+    }
+
+    .forgot {
+      text-align: right;
+      margin: 10px 0;
+      color: #4a148c;
+      font-size: 13px;
+      cursor: pointer;
+    }
+
+    .message {
+      padding: 10px;
+      border-radius: 8px;
+      margin-bottom: 15px;
+      font-size: 14px;
+      display: none;
+    }
+
+    .message.success {
+      display: block;
+      background: #e8f5e9;
+      color: #2e7d32;
+    }
+
+    .message.error {
+      display: block;
+      background: #ffebee;
+      color: #c62828;
+    }
+
+    /* ================= APP ================= */
+
+    #appPage {
+      min-height: 100vh;
+    }
+
+    header {
+      background: #4a148c;
+      color: white;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+
+    .header-inner {
+      max-width: 1100px;
+      margin: auto;
+      padding: 15px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .header-logo {
+      font-size: 22px;
+      font-weight: bold;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .wallet-small {
+      background: rgba(255,255,255,.15);
+      padding: 9px 12px;
+      border-radius: 8px;
+      font-size: 13px;
+    }
+
+    .logout-btn {
+      border: 0;
+      background: white;
+      color: #4a148c;
+      padding: 9px 12px;
+      border-radius: 8px;
+      font-weight: bold;
+    }
+
+    /* ================= NAV ================= */
+
+    .nav {
+      background: white;
+      border-bottom: 1px solid #ddd;
+      position: sticky;
+      top: 61px;
+      z-index: 40;
+    }
+
+    .nav-inner {
+      max-width: 1100px;
+      margin: auto;
+      display: flex;
+      overflow-x: auto;
+    }
+
+    .nav button {
+      border: 0;
+      background: white;
+      padding: 15px 18px;
+      color: #555;
+      white-space: nowrap;
+    }
+
+    .nav button.active {
+      color: #4a148c;
+      border-bottom: 3px solid #4a148c;
+      font-weight: bold;
+    }
+
+    /* ================= HOME ================= */
+
+    .welcome {
+      background: linear-gradient(135deg, #4a148c, #7b1fa2);
+      color: white;
+      padding: 25px;
+      border-radius: 16px;
+      margin-bottom: 20px;
+    }
+
+    .welcome h1 {
+      font-size: 25px;
+      margin-bottom: 8px;
+    }
+
+    .welcome p {
+      opacity: .9;
+    }
+
+    .search-box {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .search-box input {
+      flex: 1;
+      padding: 14px;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      outline: none;
+    }
+
+    .search-btn {
+      border: 0;
+      background: #4a148c;
+      color: white;
+      padding: 0 18px;
+      border-radius: 10px;
+    }
+
+    /* ================= CARDS ================= */
+
+    .section-title {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 25px 0 15px;
+    }
+
+    .section-title h2 {
+      font-size: 20px;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 15px;
+    }
+
+    .course-card,
+    .note-card,
+    .library-card {
+      background: white;
+      padding: 18px;
+      border-radius: 13px;
+      box-shadow: 0 3px 12px rgba(0,0,0,.06);
+    }
+
+    .course-code {
+      color: #4a148c;
+      font-weight: bold;
+      font-size: 17px;
+      margin-bottom: 7px;
+    }
+
+    .course-title {
+      font-weight: bold;
+      margin-bottom: 7px;
+    }
+
+    .muted {
+      color: #777;
+      font-size: 13px;
+    }
+
+    .note-card h3 {
+      margin-bottom: 8px;
+    }
+
+    .note-course {
+      color: #4a148c;
+      font-weight: bold;
+      font-size: 13px;
+      margin-bottom: 7px;
+    }
+
+    .note-price {
+      font-size: 20px;
+      font-weight: bold;
+      margin: 12px 0;
+    }
+
+    .buy-btn,
+    .download-btn {
+      width: 100%;
+      border: 0;
+      padding: 11px;
+      border-radius: 8px;
+      background: #4a148c;
+      color: white;
+      font-weight: bold;
+    }
+
+    .buy-btn:disabled {
+      background: #aaa;
+      cursor: not-allowed;
+    }
+
+    /* ================= WALLET ================= */
+
+    .wallet-card {
+      background: linear-gradient(135deg, #4a148c, #7b1fa2);
+      color: white;
+      padding: 25px;
+      border-radius: 16px;
+      margin-bottom: 20px;
+    }
+
+    .wallet-label {
+      opacity: .8;
+      margin-bottom: 8px;
+    }
+
+    .wallet-balance {
+      font-size: 35px;
+      font-weight: bold;
+      margin-bottom: 18px;
+    }
+
+    .fund-btn {
+      border: 0;
+      background: white;
+      color: #4a148c;
+      padding: 12px 18px;
+      border-radius: 8px;
+      font-weight: bold;
+    }
+
+    /* ================= PROFILE ================= */
+
+    .profile-card {
+      background: white;
+      border-radius: 14px;
+      padding: 20px;
+    }
+
+    .profile-row {
+      padding: 14px 0;
+      border-bottom: 1px solid #eee;
+    }
+
+    .profile-row:last-child {
+      border-bottom: 0;
+    }
+
+    .profile-label {
+      font-size: 12px;
+      color: #777;
+      margin-bottom: 4px;
+    }
+
+    /* ================= MODAL ================= */
+
+    .modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 100;
+    }
+
+    .modal-box {
+      background: white;
+      width: 100%;
+      max-width: 420px;
+      border-radius: 15px;
+      padding: 25px;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+
+    .close-btn {
+      border: 0;
+      background: #eee;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+    }
+
+    /* ================= EMPTY ================= */
+
+    .empty {
+      background: white;
+      border-radius: 12px;
+      padding: 30px;
+      text-align: center;
+      color: #777;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 25px;
+      color: #777;
+    }
+
+    /* ================= MOBILE ================= */
+
+    @media(max-width:600px) {
+
+      .container {
+        padding: 14px;
+      }
+
+      .header-inner {
+        padding: 12px 14px;
+      }
+
+      .header-logo {
+        font-size: 18px;
+      }
+
+      .wallet-small {
+        display: none;
+      }
+
+      .welcome h1 {
+        font-size: 21px;
+      }
+
+      .cards {
+        grid-template-columns: 1fr;
+      }
+
+      .search-box {
+        flex-direction: column;
+      }
+
+      .search-btn {
+        padding: 12px;
+      }
+
+      .nav button {
+        padding: 13px 14px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<!-- =========================================================
+     AUTH PAGE
+========================================================= -->
+
+<div id="authPage">
+
+  <div class="auth-box">
+
+    <div class="logo">CampusConnect</div>
+
+    <div class="tagline">
+      Your university notes marketplace
+    </div>
+
+    <div id="authMessage" class="message"></div>
+
+    <div class="auth-tabs">
+
+      <button id="loginTab"
+              class="active"
+              onclick="showLogin()">
+        Login
+      </button>
+
+      <button id="registerTab"
+              onclick="showRegister()">
+        Register
+      </button>
+
+    </div>
+
+    <!-- LOGIN -->
+
+    <form id="loginForm">
+
+      <div class="input-group">
+        <label>Email</label>
+        <input
+          id="loginEmail"
+          type="email"
+          placeholder="Enter your email"
+          required>
+      </div>
+
+      <div class="input-group">
+        <label>Password</label>
+        <input
+          id="loginPassword"
+          type="password"
+          placeholder="Enter your password"
+          required>
+      </div>
+
+      <div class="forgot" onclick="forgotPassword()">
+        Forgot password?
+      </div>
+
+      <button class="primary-btn" type="submit">
+        Login
+      </button>
+
+    </form>
+
+    <!-- REGISTER -->
+
+    <form id="registerForm" class="hidden">
+
+      <div class="input-group">
+        <label>Full Name</label>
+        <input
+          id="registerName"
+          type="text"
+          placeholder="Enter your full name"
+          required>
+      </div>
+
+      <div class="input-group">
+        <label>Email</label>
+        <input
+          id="registerEmail"
+          type="email"
+          placeholder="Enter your email"
+          required>
+      </div>
+
+      <div class="input-group">
+        <label>Phone Number</label>
+        <input
+          id="registerPhone"
+          type="tel"
+          placeholder="Enter your phone number">
+      </div>
+
+      <div class="input-group">
+        <label>Password</label>
+        <input
+          id="registerPassword"
+          type="password"
+          placeholder="Create a password"
+          minlength="6"
+          required>
+      </div>
+
+      <button class="primary-btn" type="submit">
+        Create Account
+      </button>
+
+    </form>
+
+  </div>
+
+</div>
+
+
+<!-- =========================================================
+     MAIN APP
+========================================================= -->
+
+<div id="appPage" class="hidden">
+
+  <header>
+
+    <div class="header-inner">
+
+      <div class="header-logo">
+        CampusConnect
+      </div>
+
+      <div class="header-actions">
+
+        <div class="wallet-small">
+          Wallet:
+          <strong id="headerWallet">
+            ₦0.00
+          </strong>
+        </div>
+
+        <button class="logout-btn"
+                onclick="logout()">
+          Logout
+        </button>
+
+      </div>
+
+    </div>
+
+  </header>
+
+
+  <!-- NAVIGATION -->
+
+  <div class="nav">
+
+    <div class="nav-inner">
+
+      <button
+        id="navHome"
+        class="active"
+        onclick="showPage('home')">
+        Home
+      </button>
+
+      <button
+        id="navCourses"
+        onclick="showPage('courses')">
+        Courses
+      </button>
+
+      <button
+        id="navNotes"
+        onclick="showPage('notes')">
+        Notes
+      </button>
+
+      <button
+        id="navWallet"
+        onclick="showPage('wallet')">
+        Wallet
+      </button>
+
+      <button
+        id="navLibrary"
+        onclick="showPage('library')">
+        My Library
+      </button>
+
+      <button
+        id="navProfile"
+        onclick="showPage('profile')">
+        Profile
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <main class="container">
+
+    <!-- =====================================================
+         HOME
+    ====================================================== -->
+
+    <section id="homePage">
+
+      <div class="welcome">
+
+        <h1>
+          Welcome, <span id="welcomeName">Student</span> 👋
+        </h1>
+
+        <p>
+          Find, buy and access university study materials.
+        </p>
+
+      </div>
+
+
+      <div class="search-box">
+
+        <input
+          id="homeSearch"
+          type="search"
+          placeholder="Search by course code or note title..."
+          oninput="searchNotes()">
+
+        <button
+          class="search-btn"
+          onclick="searchNotes()">
+          Search
+        </button>
+
+      </div>
+
+
+      <div class="section-title">
+
+        <h2>Available Notes</h2>
+
+        <button
+          class="secondary-btn"
+          onclick="showPage('notes')">
+          View All
+        </button>
+
+      </div>
+
+      <div id="homeNotes"
+           class="cards">
+
+        <div class="loading">
+          Loading notes...
+        </div>
+
+      </div>
+
+
+      <div class="section-title">
+
+        <h2>Courses</h2>
+
+        <button
+          class="secondary-btn"
+          onclick="showPage('courses')">
+          View All
+        </button>
+
+      </div>
+
+      <div id="homeCourses"
+           class="cards">
+
+        <div class="loading">
+          Loading courses...
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         COURSES
+    ====================================================== -->
+
+    <section id="coursesPage"
+             class="hidden">
+
+      <div class="section-title">
+        <h2>Available Courses</h2>
+      </div>
+
+      <div id="coursesList"
+           class="cards">
+
+        <div class="loading">
+          Loading courses...
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         NOTES
+    ====================================================== -->
+
+    <section id="notesPage"
+             class="hidden">
+
+      <div class="section-title">
+        <h2>Notes Marketplace</h2>
+      </div>
+
+      <div class="search-box">
+
+        <input
+          id="notesSearch"
+          type="search"
+          placeholder="Search course code or note title..."
+          oninput="loadNotes()">
+
+      </div>
+
+      <div id="notesList"
+           class="cards">
+
+        <div class="loading">
+          Loading notes...
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         WALLET
+    ====================================================== -->
+
+    <section id="walletPage"
+             class="hidden">
+
+      <div class="section-title">
+        <h2>My Wallet</h2>
+      </div>
+
+      <div class="wallet-card">
+
+        <div class="wallet-label">
+          Available Balance
+        </div>
+
+        <div class="wallet-balance"
+             id="walletBalance">
+          ₦0.00
+        </div>
+
+        <button
+          class="fund-btn"
+          onclick="openFundModal()">
+          + Fund Wallet
+        </button>
+
+      </div>
+
+      <div class="section-title">
+        <h2>Wallet Transactions</h2>
+      </div>
+
+      <div id="transactionsList">
+
+        <div class="loading">
+          Loading transactions...
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         LIBRARY
+    ====================================================== -->
+
+    <section id="libraryPage"
+             class="hidden">
+
+      <div class="section-title">
+        <h2>My Library</h2>
+      </div>
+
+      <div id="libraryList"
+           class="cards">
+
+        <div class="loading">
+          Loading your library...
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         PROFILE
+    ====================================================== -->
+
+    <section id="profilePage"
+             class="hidden">
+
+      <div class="section-title">
+        <h2>My Profile</h2>
+      </div>
+
+      <div class="profile-card">
+
+        <div class="profile-row">
+
+          <div class="profile-label">
+            Full Name
+          </div>
+
+          <div id="profileName">
+            -
+          </div>
+
+        </div>
+
+
+        <div class="profile-row">
+
+          <div class="profile-label">
+            Email
+          </div>
+
+          <div id="profileEmail">
+            -
+          </div>
+
+        </div>
+
+
+        <div class="profile-row">
+
+          <div class="profile-label">
+            Phone
+          </div>
+
+          <div id="profilePhone">
+            -
+          </div>
+
+        </div>
+
+
+        <div class="profile-row">
+
+          <div class="profile-label">
+            Wallet Balance
+          </div>
+
+          <div id="profileWallet">
+            ₦0.00
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+</div>
+
+
+<!-- =========================================================
+     FUND WALLET MODAL
+========================================================= -->
+
+<div id="fundModal"
+     class="modal hidden">
+
+  <div class="modal-box">
+
+    <div class="modal-header">
+
+      <h2>Fund Wallet</h2>
+
+      <button
+        class="close-btn"
+        onclick="closeFundModal()">
+        ×
+      </button>
+
+    </div>
+
+    <div id="fundMessage"
+         class="message"></div>
+
+    <div class="input-group">
+
+      <label>
+        Amount (₦)
+      </label>
+
+      <input
+        id="fundAmount"
+        type="number"
+        min="100"
+        placeholder="e.g. 1000">
+
+    </div>
+
+    <button
+      class="primary-btn"
+      onclick="fundWallet()">
+      Continue to Payment
+    </button>
+
+  </div>
+
+</div>
+
+
+<script>
+
+  /* ========================================================
+     CONFIGURATION
+  ======================================================== */
+
+  const SUPABASE_URL =
+    "https://xhuagcmnufndavuhmrqo.supabase.co";
+
+  const SUPABASE_PUBLISHABLE_KEY =
+    "sb_publishable_WWyyRz3SRE5BwHzD4TfGtQ_3mThtiDT";
+
+  const PAYSTACK_PUBLIC_KEY =
+    "pk_test_ac0a1943975693d8bb6b99db021bd4ea87ffb4c8";
+
+  const API_BASE =
+    "https://campusconnect-backend-amhx.onrender.com";
+
+
+  const supabaseClient =
+    window.supabase.createClient(
+      SUPABASE_URL,
+      SUPABASE_PUBLISHABLE_KEY
+    );
+
+
+  let currentUser = null;
+  let currentStudent = null;
+  let currentCourses = [];
+  let currentNotes = [];
+
+
+  /* ========================================================
+     HELPERS
+  ======================================================== */
+
+  function money(kobo) {
+
+    const naira =
+      Number(kobo || 0) / 100;
+
+    return "₦" +
+      naira.toLocaleString(
+        "en-NG",
+        {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2
+        }
+      );
+  }
+
+
+  function showMessage(
+    elementId,
+    text,
+    type = "success"
+  ) {
+
+    const el =
+      document.getElementById(elementId);
+
+    if (!el) return;
+
+    el.textContent = text;
+
+    el.className =
+      "message " + type;
+
+  }
+
+
+  function clearMessage(elementId) {
+
+    const el =
+      document.getElementById(elementId);
+
+    if (!el) return;
+
+    el.textContent = "";
+
+    el.className = "message";
+
+  }
+
+
+  async function getToken() {
+
+    const {
+      data
+    } =
+      await supabaseClient.auth.getSession();
+
+    return data.session?.access_token || null;
+  }
+
+
+  async function api(
+    endpoint,
+    options = {}
+  ) {
+
+    const token =
+      await getToken();
+
+    const headers = {
+      "Content-Type":
+        "application/json",
+      ...(options.headers || {})
+    };
+
+    if (token) {
+      headers.Authorization =
+        "Bearer " + token;
+    }
+
+    const response =
+      await fetch(
+        API_BASE + endpoint,
+        {
+          ...options,
+          headers
+        }
+      );
+
+    let data = null;
+
+    try {
+      data =
+        await response.json();
+    } catch (error) {
+      data = null;
+    }
+
+    if (!response.ok) {
+
+      throw new Error(
+        data?.message ||
+        data?.error ||
+        "Something went wrong."
+      );
+
+    }
+
+    return data;
+  }
+
+
+  /* ========================================================
+     AUTH TABS
+  ======================================================== */
+
+  function showLogin() {
+
+    document
+      .getElementById("loginTab")
+      .classList.add("active");
+
+    document
+      .getElementById("registerTab")
+      .classList.remove("active");
+
+    document
+      .getElementById("loginForm")
+      .classList.remove("hidden");
+
+    document
+      .getElementById("registerForm")
+      .classList.add("hidden");
+
+    clearMessage("authMessage");
+  }
+
+
+  function showRegister() {
+
+    document
+      .getElementById("registerTab")
+      .classList.add("active");
+
+    document
+      .getElementById("loginTab")
+      .classList.remove("active");
+
+    document
+      .getElementById("registerForm")
+      .classList.remove("hidden");
+
+    document
+      .getElementById("loginForm")
+      .classList.add("hidden");
+
+    clearMessage("authMessage");
+  }
+
+
+  /* ========================================================
+     REGISTER
+  ======================================================== */
+
+  document
+    .getElementById("registerForm")
+    .addEventListener(
+      "submit",
+      async function(event) {
+
+        event.preventDefault();
+
+        const name =
+          document
+            .getElementById("registerName")
+            .value
+            .trim();
+
+        const email =
+          document
+            .getElementById("registerEmail")
+            .value
+            .trim();
+
+        const phone =
+          document
+            .getElementById("registerPhone")
+            .value
+            .trim();
+
+        const password =
+          document
+            .getElementById("registerPassword")
+            .value;
+
+        try {
+
+          showMessage(
+            "authMessage",
+            "Creating your account...",
+            "success"
+          );
+
+          const {
+            data,
+            error
+          } =
+            await supabaseClient.auth.signUp({
+
+              email,
+              password,
+
+              options: {
+                data: {
+                  full_name: name,
+                  phone: phone
+                }
+              }
+
+            });
+
+          if (error)
+            throw error;
+
+          if (!data.session) {
+
+            showMessage(
+              "authMessage",
+              "Account created. Please log in.",
+              "success"
+            );
+
+            showLogin();
+
+            document
+              .getElementById("loginEmail")
+              .value = email;
+
+            return;
+          }
+
+          currentUser =
+            data.user;
+
+          await startApp();
+
+        } catch (error) {
+
+          showMessage(
+            "authMessage",
+            error.message,
+            "error"
+          );
+
+        }
+
+      }
+    );
+
+
+  /* ========================================================
+     LOGIN
+  ======================================================== */
+
+  document
+    .getElementById("loginForm")
+    .addEventListener(
+      "submit",
+      async function(event) {
+
+        event.preventDefault();
+
+        const email =
+          document
+            .getElementById("loginEmail")
+            .value
+            .trim();
+
+        const password =
+          document
+            .getElementById("loginPassword")
+            .value;
+
+        try {
+
+          showMessage(
+            "authMessage",
+            "Logging in...",
+            "success"
+          );
+
+          const {
+            data,
+            error
+          } =
+            await supabaseClient.auth
+              .signInWithPassword({
+                email,
+                password
+              });
+
+          if (error)
+            throw error;
+
+          currentUser =
+            data.user;
+
+          await startApp();
+
+        } catch (error) {
+
+          showMessage(
+            "authMessage",
+            error.message,
+            "error"
+          );
+
+        }
+
+      }
+    );
+
+
+  /* ========================================================
+     FORGOT PASSWORD
+  ======================================================== */
+
+  async function forgotPassword() {
+
+    const email =
+      document
+        .getElementById("loginEmail")
+        .value
+        .trim();
+
+    if (!email) {
+
+      showMessage(
+        "authMessage",
+        "Enter your email address first.",
+        "error"
+      );
+
+      return;
+    }
+
+    try {
+
+      const {
+        error
+      } =
+        await supabaseClient.auth
+          .resetPasswordForEmail(
+            email,
+            {
+              redirectTo:
+                window.location.origin
+            }
+          );
+
+      if (error)
+        throw error;
+
+      showMessage(
+        "authMessage",
+        "Password reset instructions have been sent to your email.",
+        "success"
+      );
+
+    } catch (error) {
+
+      showMessage(
+        "authMessage",
+        error.message,
+        "error"
+      );
+
+    }
+
+  }
+
+
+  /* ========================================================
+     START APP
+  ======================================================== */
+
+  async function startApp() {
+
+    document
+      .getElementById("authPage")
+      .classList.add("hidden");
+
+    document
+      .getElementById("appPage")
+      .classList.remove("hidden");
+
+    try {
+
+      await loadStudent();
+
+      await Promise.all([
+        loadCourses(),
+        loadNotes(),
+        loadLibrary(),
+        loadWallet(),
+        loadTransactions()
+      ]);
+
+    } catch (error) {
+
+      console.error(error);
+
+    }
+
+  }
+
+
+  /* ========================================================
+     LOAD STUDENT
+  ======================================================== */
+
+  async function loadStudent() {
+
+    const data =
+      await api(
+        "/api/student/me"
+      );
+
+    currentStudent =
+      data.student || data;
+
+    const name =
+      currentStudent.full_name ||
+      "Student";
+
+    document
+      .getElementById("welcomeName")
+      .textContent = name;
+
+    document
+      .getElementById("profileName")
+      .textContent =
+        currentStudent.full_name || "-";
+
+    document
+      .getElementById("profileEmail")
+      .textContent =
+        currentStudent.email || "-";
+
+    document
+      .getElementById("profilePhone")
+      .textContent =
+        currentStudent.phone || "-";
+
+  }
+
+
+  /* ========================================================
+     LOAD COURSES
+  ======================================================== */
+
+  async function loadCourses() {
+
+    const data =
+      await api(
+        "/api/courses"
+      );
+
+    currentCourses =
+      data.courses ||
+      data ||
+      [];
+
+    renderCourses();
+
+  }
+
+
+  function renderCourses() {
+
+    const home =
+      document.getElementById(
+        "homeCourses"
+      );
+
+    const list =
+      document.getElementById(
+        "coursesList"
+      );
+
+    if (!currentCourses.length) {
+
+      const empty =
+        `<div class="empty">
+          No courses have been added yet.
+        </div>`;
+
+      home.innerHTML = empty;
+      list.innerHTML = empty;
+
+      return;
+    }
+
+
+    const cards =
+      currentCourses.map(
+        course => `
+
+          <div class="course-card">
+
+            <div class="course-code">
+              ${escapeHtml(
+                course.course_code
+              )}
+            </div>
+
+            <div class="course-title">
+              ${escapeHtml(
+                course.course_title
+              )}
+            </div>
+
+            <div class="muted">
+              ${escapeHtml(
+                course.description ||
+                "Course materials available on CampusConnect."
+              )}
+            </div>
+
+          </div>
+
+        `
+      ).join("");
+
+
+    home.innerHTML =
+      currentCourses
+        .slice(0, 4)
+        .map(
+          course => `
+
+            <div class="course-card">
+
+              <div class="course-code">
+                ${escapeHtml(
+                  course.course_code
+                )}
+              </div>
+
+              <div class="course-title">
+                ${escapeHtml(
+                  course.course_title
+                )}
+              </div>
+
+              <div class="muted">
+                ${escapeHtml(
+                  course.description || ""
+                )}
+              </div>
+
+            </div>
+
+          `
+        )
+        .join("");
+
+    list.innerHTML =
+      cards;
+
+  }
+
+
+  /* ========================================================
+     LOAD NOTES
+  ======================================================== */
+
+  async function loadNotes() {
+
+    try {
+
+      const search =
+        document
+          .getElementById("notesSearch")
+          ?.value
+          .trim() || "";
+
+      let endpoint =
+        "/api/notes";
+
+      if (search) {
+
+        endpoint +=
+          "?search=" +
+          encodeURIComponent(search);
+
+      }
+
+      const data =
+        await api(endpoint);
+
+      currentNotes =
+        data.notes ||
+        data ||
+        [];
+
+      renderNotes();
+
+    } catch (error) {
+
+      console.error(error);
+
+      document
+        .getElementById("notesList")
+        .innerHTML =
+          `<div class="empty">
+             Unable to load notes.
+           </div>`;
+
+    }
+
+  }
+
+
+  function renderNotes() {
+
+    const list =
+      document.getElementById(
+        "notesList"
+      );
+
+    const home =
+      document.getElementById(
+        "homeNotes"
+      );
+
+
+    if (!currentNotes.length) {
+
+      const empty =
+        `<div class="empty">
+          No notes available.
+        </div>`;
+
+      list.innerHTML =
+        empty;
+
+      home.innerHTML =
+        empty;
+
+      return;
+    }
+
+
+    list.innerHTML =
+      currentNotes
+        .map(noteCard)
+        .join("");
+
+
+    home.innerHTML =
+      currentNotes
+        .slice(0, 6)
+        .map(noteCard)
+        .join("");
+
+  }
+
+
+  function noteCard(note) {
+
+    const course =
+      note.course ||
+      {};
+
+    const courseCode =
+      note.course_code ||
+      course.course_code ||
+      "Course";
+
+    const title =
+      note.title ||
+      "Untitled Note";
+
+    const description =
+      note.description ||
+      "Study material";
+
+    const price =
+      money(note.price_kobo);
+
+
+    return `
+
+      <div class="note-card">
+
+        <div class="note-course">
+          ${escapeHtml(courseCode)}
+        </div>
+
+        <h3>
+          ${escapeHtml(title)}
+        </h3>
+
+        <div class="muted">
+          ${escapeHtml(description)}
+        </div>
+
+        <div class="note-price">
+          ${price}
+        </div>
+
+        <button
+          class="buy-btn"
+          onclick="buyNote('${note.id}')">
+
+          Buy Note
+
+        </button>
+
+      </div>
+
+    `;
+
+  }
+
+
+  /* ========================================================
+     SEARCH
+  ======================================================== */
+
+  function searchNotes() {
+
+    const value =
+      document
+        .getElementById("homeSearch")
+        .value
+        .trim();
+
+    document
+      .getElementById("notesSearch")
+      .value = value;
+
+    showPage("notes");
+
+    loadNotes();
+
+  }
+
+
+  /* ========================================================
+     BUY NOTE
+  ======================================================== */
+
+  async function buyNote(noteId) {
+
+    const note =
+      currentNotes.find(
+        item => String(item.id) === String(noteId)
+      );
+
+    if (!note) {
+
+      alert(
+        "This note could not be found."
+      );
+
+      return;
+    }
+
+
+    const confirmed =
+      confirm(
+        `Buy "${note.title}" for ${money(note.price_kobo)}?`
+      );
+
+    if (!confirmed)
+      return;
+
+
+    try {
+
+      const result =
+        await api(
+          "/api/purchases/buy",
+          {
+            method: "POST",
+
+            body: JSON.stringify({
+              note_id: note.id
+            })
+          }
+        );
+
+
+      alert(
+        result.message ||
+        "Note purchased successfully."
+      );
+
+
+      await loadWallet();
+      await loadLibrary();
+
+      showPage("library");
+
+    } catch (error) {
+
+      alert(
+        error.message ||
+        "Purchase failed."
+      );
+
+    }
+
+  }
+
+
+  /* ========================================================
+     LOAD WALLET
+  ======================================================== */
+
+  async function loadWallet() {
+
+    const data =
+      await api(
+        "/api/wallet"
+      );
+
+    const wallet =
+      data.wallet ||
+      data;
+
+    const balance =
+      Number(
+        wallet.wallet_balance_kobo ??
+        wallet.balance_kobo ??
+        wallet.balance ??
+        0
+      );
+
+
+    document
+      .getElementById("walletBalance")
+      .textContent =
+        money(balance);
+
+    document
+      .getElementById("headerWallet")
+      .textContent =
+        money(balance);
+
+    document
+      .getElementById("profileWallet")
+      .textContent =
+        money(balance);
+
+  }
+
+
+  /* ========================================================
+     FUND WALLET MODAL
+  ======================================================== */
+
+  function openFundModal() {
+
+    clearMessage(
+      "fundMessage"
+    );
+
+    document
+      .getElementById("fundAmount")
+      .value = "";
+
+    document
+      .getElementById("fundModal")
+      .classList.remove("hidden");
+
+  }
+
+
+  function closeFundModal() {
+
+    document
+      .getElementById("fundModal")
+      .classList.add("hidden");
+
+  }
+
+
+  /* ========================================================
+     PAYSTACK
+  ======================================================== */
+
+  async function fundWallet() {
+
+    const amount =
+      Number(
+        document
+          .getElementById("fundAmount")
+          .value
+      );
+
+
+    if (!amount || amount < 100) {
+
+      showMessage(
+        "fundMessage",
+        "Enter an amount of at least ₦100.",
+        "error"
+      );
+
+      return;
+    }
+
+
+    try {
+
+      showMessage(
+        "fundMessage",
+        "Preparing payment...",
+        "success"
+      );
+
+
+      const result =
+        await api(
+          "/api/paystack/initialize",
+          {
+            method: "POST",
+
+            body: JSON.stringify({
+              amount_naira: amount
+            })
+          }
+        );
+
+
+      const reference =
+        result.reference ||
+        result.data?.reference;
+
+      const email =
+        currentStudent?.email ||
+        currentUser?.email;
+
+
+      if (!reference) {
+
+        throw new Error(
+          "Payment reference was not returned."
+        );
+
+      }
+
+
+      closeFundModal();
+
+
+      const popup =
+        new Paystack();
+
+      popup.checkout({
+        key:
+          PAYSTACK_PUBLIC_KEY,
+
+        email:
+          email,
+
+        amount:
+          Math.round(amount * 100),
+
+        reference:
+          reference,
+
+        onSuccess:
+          async function(transaction) {
+
+            try {
+
+              await api(
+                "/api/paystack/verify",
+                {
+                  method: "POST",
+
+                  body:
+                    JSON.stringify({
+                      reference:
+                        transaction.reference
+                    })
+                }
+              );
+
+
+              alert(
+                "Payment successful! Your wallet is being updated."
+              );
+
+
+              await loadWallet();
+              await loadTransactions();
+
+            } catch (error) {
+
+              alert(
+                error.message ||
+                "Payment verification failed."
+              );
+
+            }
+
+          },
+
+        onCancel:
+          function() {
+
+            alert(
+              "Payment was cancelled."
+            );
+
+          }
+
+      });
+
+
+    } catch (error) {
+
+      showMessage(
+        "fundMessage",
+        error.message ||
+        "Unable to initialize payment.",
+        "error"
+      );
+
+    }
+
+  }
+
+
+  /* ========================================================
+     TRANSACTIONS
+  ======================================================== */
+
+  async function loadTransactions() {
+
+    try {
+
+      const data =
+        await api(
+          "/api/admin/wallet-transactions"
+        );
+
+      /*
+        This endpoint is normally admin-only.
+        If the backend rejects it, we simply
+        show a friendly message.
+      */
+
+      const transactions =
+        data.transactions ||
+        [];
+
+      renderTransactions(
+        transactions
+      );
+
+    } catch (error) {
+
+      document
+        .getElementById(
+          "transactionsList"
+        )
+        .innerHTML =
+          `<div class="empty">
+             Wallet transactions will appear here.
+           </div>`;
+
+    }
+
+  }
+
+
+  function renderTransactions(
+    transactions
+  ) {
+
+    const container =
+      document.getElementById(
+        "transactionsList"
+      );
+
+    if (!transactions.length) {
+
+      container.innerHTML =
+        `<div class="empty">
+          No wallet transactions yet.
+        </div>`;
+
+      return;
+    }
+
+
+    container.innerHTML =
+      transactions.map(
+        transaction => `
+
+          <div class="profile-card"
+               style="margin-bottom:10px;">
+
+            <strong>
+              ${escapeHtml(
+                transaction.type ||
+                "Transaction"
+              )}
+            </strong>
+
+            <div>
+              ${money(
+                transaction.amount_kobo
+              )}
+            </div>
+
+            <div class="muted">
+              ${escapeHtml(
+                transaction.description ||
+                ""
+              )}
+            </div>
+
+          </div>
+
+        `
+      ).join("");
+
+  }
+
+
+  /* ========================================================
+     LIBRARY
+  ======================================================== */
+
+  async function loadLibrary() {
+
+    try {
+
+      const data =
+        await api(
+          "/api/library"
+        );
+
+      const library =
+        data.library ||
+        data.purchases ||
+        data ||
+        [];
+
+      renderLibrary(
+        library
+      );
+
+    } catch (error) {
+
+      console.error(error);
+
+      document
+        .getElementById("libraryList")
+        .innerHTML =
+          `<div class="empty">
+             Unable to load your library.
+           </div>`;
+
+    }
+
+  }
+
+
+  function renderLibrary(
+    library
+  ) {
+
+    const list =
+      document
+        .getElementById(
+          "libraryList"
+        );
+
+
+    if (!library.length) {
+
+      list.innerHTML =
+        `<div class="empty">
+          You have not purchased any notes yet.
+          <br><br>
+          Go to the Notes section to get started.
+        </div>`;
+
+      return;
+    }
+
+
+    list.innerHTML =
+      library.map(
+        item => {
+
+          const note =
+            item.note ||
+            item;
+
+          const purchaseId =
+            item.id ||
+            item.purchase_id;
+
+          return `
+
+            <div class="library-card">
+
+              <div class="note-course">
+                ${escapeHtml(
+                  note.course_code ||
+                  note.course?.course_code ||
+                  "Course"
+                )}
+              </div>
+
+              <h3>
+                ${escapeHtml(
+                  note.title ||
+                  "Purchased Note"
+                )}
+              </h3>
+
+              <p class="muted"
+                 style="margin:8px 0 15px;">
+                Purchased successfully.
+              </p>
+
+              <button
+                class="download-btn"
+                onclick="downloadNote('${purchaseId}')">
+
+                Open / Download PDF
+
+              </button>
+
+            </div>
+
+          `;
+
+        }
+      ).join("");
+
+  }
+
+
+  /* ========================================================
+     SECURE DOWNLOAD
+  ======================================================== */
+
+  async function downloadNote(
+    purchaseId
+  ) {
+
+    try {
+
+      const result =
+        await api(
+          `/api/library/${purchaseId}/download`
+        );
+
+
+      const url =
+        result.download_url ||
+        result.url;
+
+
+      if (!url) {
+
+        throw new Error(
+          "Download link was not returned."
+        );
+
+      }
+
+
+      window.open(
+        url,
+        "_blank"
+      );
+
+    } catch (error) {
+
+      alert(
+        error.message ||
+        "Unable to open this note."
+      );
+
+    }
+
+  }
+
+
+  /* ========================================================
+     PAGE NAVIGATION
+  ======================================================== */
+
+  function showPage(
+    page
+  ) {
+
+    const pages = [
+      "home",
+      "courses",
+      "notes",
+      "wallet",
+      "library",
+      "profile"
+    ];
+
+
+    pages.forEach(
+      name => {
+
+        const element =
+          document.getElementById(
+            name + "Page"
+          );
+
+        if (element) {
+
+          element.classList.toggle(
+            "hidden",
+            name !== page
+          );
+
+        }
+
+      }
+    );
+
+
+    document
+      .querySelectorAll(
+        ".nav button"
+      )
+      .forEach(
+        button => {
+
+          button.classList.remove(
+            "active"
+          );
+
+        }
+      );
+
+
+    const nav =
+      document.getElementById(
+        "nav" +
+        page.charAt(0).toUpperCase() +
+        page.slice(1)
+      );
+
+    if (nav)
+      nav.classList.add("active");
+
+
+    if (page === "notes")
+      loadNotes();
+
+    if (page === "library")
+      loadLibrary();
+
+    if (page === "wallet") {
+
+      loadWallet();
+      loadTransactions();
+
+    }
+
+  }
+
+
+  /* ========================================================
+     LOGOUT
+  ======================================================== */
+
+  async function logout() {
+
+    await supabaseClient.auth.signOut();
+
+    currentUser = null;
+    currentStudent = null;
+
+    document
+      .getElementById("appPage")
+      .classList.add("hidden");
+
+    document
+      .getElementById("authPage")
+      .classList.remove("hidden");
+
+    showLogin();
+
+  }
+
+
+  /* ========================================================
+     ESCAPE HTML
+  ======================================================== */
+
+  function escapeHtml(
+    value
+  ) {
+
+    if (value === null ||
+        value === undefined)
+      return "";
+
+    return String(value)
+      .replace(
+        /&/g,
+        "&amp;"
+      )
+      .replace(
+        /</g,
+        "&lt;"
+      )
+      .replace(
+        />/g,
+        "&gt;"
+      )
+      .replace(
+        /"/g,
+        "&quot;"
+      )
+      .replace(
+        /'/g,
+        "&#039;"
+      );
+
+  }
+
+
+  /* ========================================================
+     AUTH SESSION CHECK
+  ======================================================== */
+
+  async function checkSession() {
+
+    const {
+      data
+    } =
+      await supabaseClient.auth
+        .getSession();
+
+
+    if (data.session) {
+
+      currentUser =
+        data.session.user;
+
+      await startApp();
+
+    } else {
+
+      document
+        .getElementById("authPage")
+        .classList.remove("hidden");
+
+      document
+        .getElementById("appPage")
+        .classList.add("hidden");
+
+    }
+
+  }
+
+
+  /* ========================================================
+     AUTH STATE LISTENER
+  ======================================================== */
+
+  supabaseClient.auth
+    .onAuthStateChange(
+      async (event, session) => {
+
+        if (
+          event === "SIGNED_IN" &&
+          session
+        ) {
+
+          currentUser =
+            session.user;
+
+        }
+
+      }
+    );
+
+
+  /* ========================================================
+     START
+  ======================================================== */
+
+  checkSession();
+
+</script>
+
+</body>
+</html>
