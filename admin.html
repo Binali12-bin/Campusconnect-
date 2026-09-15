@@ -1,0 +1,1928 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CampusConnect Admin</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:Arial,sans-serif;
+  background:#f5f5f7;
+  color:#222;
+}
+button,input,textarea,select{
+  font:inherit;
+}
+button{
+  cursor:pointer;
+}
+.hidden{
+  display:none!important;
+}
+
+.login-page{
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+  background:linear-gradient(135deg,#4a148c,#7b1fa2);
+}
+
+.login-box{
+  width:100%;
+  max-width:420px;
+  background:white;
+  padding:30px;
+  border-radius:18px;
+  box-shadow:0 15px 40px rgba(0,0,0,.2);
+}
+
+.logo{
+  text-align:center;
+  font-size:28px;
+  font-weight:bold;
+  color:#4a148c;
+  margin-bottom:8px;
+}
+
+.subtitle{
+  text-align:center;
+  color:#777;
+  margin-bottom:25px;
+}
+
+.field{
+  margin-bottom:15px;
+}
+
+.field label{
+  display:block;
+  font-weight:bold;
+  margin-bottom:6px;
+}
+
+.field input,
+.field textarea,
+.field select{
+  width:100%;
+  padding:12px;
+  border:1px solid #ddd;
+  border-radius:10px;
+  outline:none;
+}
+
+.field input:focus,
+.field textarea:focus,
+.field select:focus{
+  border-color:#7b1fa2;
+}
+
+.primary{
+  width:100%;
+  border:0;
+  padding:13px;
+  border-radius:10px;
+  background:#4a148c;
+  color:white;
+  font-weight:bold;
+}
+
+.primary:hover{
+  background:#6a1b9a;
+}
+
+.error{
+  color:#c62828;
+  background:#ffebee;
+  padding:10px;
+  border-radius:8px;
+  margin-bottom:15px;
+}
+
+.success{
+  color:#2e7d32;
+  background:#e8f5e9;
+  padding:10px;
+  border-radius:8px;
+  margin-bottom:15px;
+}
+
+/* APP */
+
+.app{
+  display:none;
+  min-height:100vh;
+}
+
+.sidebar{
+  position:fixed;
+  left:0;
+  top:0;
+  bottom:0;
+  width:240px;
+  background:#4a148c;
+  color:white;
+  padding:20px;
+  z-index:10;
+}
+
+.sidebar h2{
+  margin:0 0 25px;
+}
+
+.nav-btn{
+  width:100%;
+  text-align:left;
+  border:0;
+  background:transparent;
+  color:white;
+  padding:13px;
+  margin-bottom:6px;
+  border-radius:8px;
+}
+
+.nav-btn:hover,
+.nav-btn.active{
+  background:rgba(255,255,255,.15);
+}
+
+.logout{
+  position:absolute;
+  bottom:20px;
+  left:20px;
+  right:20px;
+  width:calc(100% - 40px);
+  padding:12px;
+  border:0;
+  border-radius:8px;
+  background:#fff;
+  color:#4a148c;
+  font-weight:bold;
+}
+
+.main{
+  margin-left:240px;
+  padding:25px;
+}
+
+.topbar{
+  background:white;
+  padding:18px 20px;
+  border-radius:12px;
+  margin-bottom:20px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.topbar h1{
+  margin:0;
+  font-size:23px;
+}
+
+.section{
+  display:none;
+}
+
+.section.active{
+  display:block;
+}
+
+.cards{
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  gap:15px;
+  margin-bottom:25px;
+}
+
+.card{
+  background:white;
+  padding:20px;
+  border-radius:14px;
+  box-shadow:0 2px 8px rgba(0,0,0,.05);
+}
+
+.card h3{
+  margin:0 0 8px;
+  font-size:14px;
+  color:#777;
+}
+
+.card strong{
+  font-size:28px;
+  color:#4a148c;
+}
+
+.panel{
+  background:white;
+  padding:20px;
+  border-radius:14px;
+  margin-bottom:20px;
+  box-shadow:0 2px 8px rgba(0,0,0,.05);
+}
+
+.panel h2{
+  margin-top:0;
+}
+
+.form-grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:15px;
+}
+
+.full{
+  grid-column:1/-1;
+}
+
+.small-btn{
+  border:0;
+  padding:8px 12px;
+  border-radius:7px;
+  color:white;
+  background:#4a148c;
+  margin-right:5px;
+}
+
+.danger{
+  background:#c62828;
+}
+
+.gray{
+  background:#757575;
+}
+
+.green{
+  background:#2e7d32;
+}
+
+.table-wrap{
+  overflow-x:auto;
+}
+
+table{
+  width:100%;
+  border-collapse:collapse;
+  min-width:700px;
+}
+
+th,td{
+  padding:12px;
+  border-bottom:1px solid #eee;
+  text-align:left;
+}
+
+th{
+  background:#fafafa;
+}
+
+.badge{
+  padding:5px 8px;
+  border-radius:20px;
+  font-size:12px;
+  background:#eee;
+}
+
+.active-badge{
+  background:#e8f5e9;
+  color:#2e7d32;
+}
+
+.inactive-badge{
+  background:#ffebee;
+  color:#c62828;
+}
+
+.file-box{
+  border:2px dashed #ccc;
+  padding:20px;
+  text-align:center;
+  border-radius:10px;
+}
+
+@media(max-width:900px){
+  .cards{
+    grid-template-columns:repeat(2,1fr);
+  }
+
+  .sidebar{
+    width:200px;
+  }
+
+  .main{
+    margin-left:200px;
+  }
+}
+
+@media(max-width:650px){
+  .sidebar{
+    position:relative;
+    width:100%;
+    height:auto;
+  }
+
+  .logout{
+    position:static;
+    width:100%;
+    margin-top:10px;
+  }
+
+  .main{
+    margin-left:0;
+    padding:15px;
+  }
+
+  .cards{
+    grid-template-columns:1fr 1fr;
+  }
+
+  .form-grid{
+    grid-template-columns:1fr;
+  }
+
+  .full{
+    grid-column:auto;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<!-- LOGIN -->
+
+<div id="loginPage" class="login-page">
+
+  <div class="login-box">
+
+    <div class="logo">CampusConnect</div>
+
+    <div class="subtitle">
+      Administrator Portal
+    </div>
+
+    <div id="loginError" class="error hidden"></div>
+
+    <div class="field">
+      <label>Email</label>
+      <input
+        id="adminEmail"
+        type="email"
+        placeholder="Admin email"
+      >
+    </div>
+
+    <div class="field">
+      <label>Password</label>
+      <input
+        id="adminPassword"
+        type="password"
+        placeholder="Admin password"
+      >
+    </div>
+
+    <button class="primary" onclick="adminLogin()">
+      Login
+    </button>
+
+  </div>
+
+</div>
+
+
+<!-- ADMIN APP -->
+
+<div id="app" class="app">
+
+  <aside class="sidebar">
+
+    <h2>CampusConnect</h2>
+
+    <button class="nav-btn active" onclick="showSection('dashboard',this)">
+      📊 Dashboard
+    </button>
+
+    <button class="nav-btn" onclick="showSection('courses',this)">
+      📚 Courses
+    </button>
+
+    <button class="nav-btn" onclick="showSection('notes',this)">
+      📄 Notes
+    </button>
+
+    <button class="nav-btn" onclick="showSection('students',this)">
+      👥 Students
+    </button>
+
+    <button class="nav-btn" onclick="showSection('payments',this)">
+      💳 Payments
+    </button>
+
+    <button class="nav-btn" onclick="showSection('purchases',this)">
+      🛒 Purchases
+    </button>
+
+    <button class="nav-btn" onclick="showSection('transactions',this)">
+      💰 Wallet Transactions
+    </button>
+
+    <button class="logout" onclick="logout()">
+      Logout
+    </button>
+
+  </aside>
+
+
+  <main class="main">
+
+    <div class="topbar">
+      <h1 id="pageTitle">Dashboard</h1>
+      <span id="adminName"></span>
+    </div>
+
+
+    <!-- DASHBOARD -->
+
+    <section id="dashboard" class="section active">
+
+      <div class="cards">
+
+        <div class="card">
+          <h3>Students</h3>
+          <strong id="statStudents">0</strong>
+        </div>
+
+        <div class="card">
+          <h3>Courses</h3>
+          <strong id="statCourses">0</strong>
+        </div>
+
+        <div class="card">
+          <h3>Notes</h3>
+          <strong id="statNotes">0</strong>
+        </div>
+
+        <div class="card">
+          <h3>Payments</h3>
+          <strong id="statPayments">0</strong>
+        </div>
+
+        <div class="card">
+          <h3>Purchases</h3>
+          <strong id="statPurchases">0</strong>
+        </div>
+
+      </div>
+
+      <div class="panel">
+
+        <h2>Welcome to CampusConnect Admin</h2>
+
+        <p>
+          From this portal you will control your courses,
+          notes, prices, students and transactions.
+        </p>
+
+      </div>
+
+    </section>
+
+
+    <!-- COURSES -->
+
+    <section id="courses" class="section">
+
+      <div class="panel">
+
+        <h2>Add Course</h2>
+
+        <div id="courseMessage"></div>
+
+        <div class="form-grid">
+
+          <div class="field">
+            <label>Course Code</label>
+            <input
+              id="courseCode"
+              placeholder="e.g. CSC 205"
+            >
+          </div>
+
+          <div class="field">
+            <label>Course Title</label>
+            <input
+              id="courseTitle"
+              placeholder="e.g. Computer Architecture"
+            >
+          </div>
+
+          <div class="field full">
+            <label>Description</label>
+            <textarea
+              id="courseDescription"
+              rows="3"
+              placeholder="Course description"
+            ></textarea>
+          </div>
+
+        </div>
+
+        <button class="small-btn" onclick="addCourse()">
+          Add Course
+        </button>
+
+      </div>
+
+
+      <div class="panel">
+
+        <h2>Courses</h2>
+
+        <div class="table-wrap">
+
+          <table>
+
+            <thead>
+              <tr>
+                <th>Code</th>
+                <th>Title</th>
+                <th>Description</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+
+            <tbody id="coursesTable"></tbody>
+
+          </table>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- NOTES -->
+
+    <section id="notes" class="section">
+
+      <div class="panel">
+
+        <h2>Add Note</h2>
+
+        <div id="noteMessage"></div>
+
+        <div class="form-grid">
+
+          <div class="field">
+            <label>Course</label>
+
+            <select id="noteCourse">
+              <option value="">Select course</option>
+            </select>
+
+          </div>
+
+          <div class="field">
+            <label>Note Title</label>
+
+            <input
+              id="noteTitle"
+              placeholder="e.g. Week 1 Lecture Note"
+            >
+
+          </div>
+
+          <div class="field">
+            <label>Price (₦)</label>
+
+            <input
+              id="notePrice"
+              type="number"
+              min="0"
+              placeholder="1000"
+            >
+
+          </div>
+
+          <div class="field">
+            <label>PDF File</label>
+
+            <input
+              id="noteFile"
+              type="file"
+              accept=".pdf,application/pdf"
+            >
+
+          </div>
+
+          <div class="field full">
+
+            <label>Description</label>
+
+            <textarea
+              id="noteDescription"
+              rows="3"
+              placeholder="Description of the note"
+            ></textarea>
+
+          </div>
+
+        </div>
+
+        <button
+          class="small-btn"
+          onclick="addNote()"
+        >
+          Add Note
+        </button>
+
+      </div>
+
+
+      <div class="panel">
+
+        <h2>Notes</h2>
+
+        <div class="table-wrap">
+
+          <table>
+
+            <thead>
+
+              <tr>
+                <th>Course</th>
+                <th>Title</th>
+                <th>Price</th>
+                <th>Status</th>
+                <th>Action</th>
+              </tr>
+
+            </thead>
+
+            <tbody id="notesTable"></tbody>
+
+          </table>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- STUDENTS -->
+
+    <section id="students" class="section">
+
+      <div class="panel">
+
+        <h2>Registered Students</h2>
+
+        <div class="table-wrap">
+
+          <table>
+
+            <thead>
+
+              <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Wallet</th>
+                <th>Status</th>
+                <th>Action</th>
+              </tr>
+
+            </thead>
+
+            <tbody id="studentsTable"></tbody>
+
+          </table>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- PAYMENTS -->
+
+    <section id="payments" class="section">
+
+      <div class="panel">
+
+        <h2>Payments</h2>
+
+        <div class="table-wrap">
+
+          <table>
+
+            <thead>
+
+              <tr>
+                <th>Student</th>
+                <th>Reference</th>
+                <th>Amount</th>
+                <th>Status</th>
+                <th>Date</th>
+              </tr>
+
+            </thead>
+
+            <tbody id="paymentsTable"></tbody>
+
+          </table>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- PURCHASES -->
+
+    <section id="purchases" class="section">
+
+      <div class="panel">
+
+        <h2>Note Purchases</h2>
+
+        <div class="table-wrap">
+
+          <table>
+
+            <thead>
+
+              <tr>
+                <th>Student</th>
+                <th>Note</th>
+                <th>Amount</th>
+                <th>Date</th>
+              </tr>
+
+            </thead>
+
+            <tbody id="purchasesTable"></tbody>
+
+          </table>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- TRANSACTIONS -->
+
+    <section id="transactions" class="section">
+
+      <div class="panel">
+
+        <h2>Wallet Transactions</h2>
+
+        <div class="table-wrap">
+
+          <table>
+
+            <thead>
+
+              <tr>
+                <th>Student</th>
+                <th>Type</th>
+                <th>Amount</th>
+                <th>Reference</th>
+                <th>Description</th>
+                <th>Date</th>
+              </tr>
+
+            </thead>
+
+            <tbody id="transactionsTable"></tbody>
+
+          </table>
+
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+</div>
+
+
+<script>
+
+/* =========================================================
+   CONFIG
+========================================================= */
+
+const SUPABASE_URL =
+  "https://xhuagcmnufndavuhmrqo.supabase.co";
+
+const SUPABASE_PUBLISHABLE_KEY =
+  "sb_publishable_WWyyRz3SRE5BwHzD4TfGtQ_3mThtiDT";
+
+const API_BASE =
+  "https://campusconnect-backend-amhx.onrender.com";
+
+const supabaseClient =
+  supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_PUBLISHABLE_KEY
+  );
+
+
+/* =========================================================
+   HELPERS
+========================================================= */
+
+async function getToken(){
+
+  const {
+    data,
+    error
+  } = await supabaseClient.auth.getSession();
+
+  if(error || !data.session){
+    return null;
+  }
+
+  return data.session.access_token;
+}
+
+
+async function api(url, options = {}){
+
+  const token = await getToken();
+
+  if(!token){
+    throw new Error("Your session has expired. Please login again.");
+  }
+
+  const response = await fetch(
+    API_BASE + url,
+    {
+      ...options,
+
+      headers:{
+        "Content-Type":"application/json",
+        ...(options.headers || {}),
+        "Authorization":"Bearer " + token
+      }
+    }
+  );
+
+  const data = await response.json();
+
+  if(!response.ok){
+    throw new Error(
+      data.message || "Request failed."
+    );
+  }
+
+  return data;
+}
+
+
+/* =========================================================
+   LOGIN
+========================================================= */
+
+async function adminLogin(){
+
+  const email =
+    document.getElementById("adminEmail").value.trim();
+
+  const password =
+    document.getElementById("adminPassword").value;
+
+  const errorBox =
+    document.getElementById("loginError");
+
+  errorBox.classList.add("hidden");
+
+  if(!email || !password){
+
+    errorBox.textContent =
+      "Enter your admin email and password.";
+
+    errorBox.classList.remove("hidden");
+
+    return;
+  }
+
+  try{
+
+    const {
+      data,
+      error
+    } = await supabaseClient.auth.signInWithPassword({
+      email,
+      password
+    });
+
+    if(error){
+      throw error;
+    }
+
+    const result =
+      await api("/api/admin/me");
+
+    document.getElementById("adminName").textContent =
+      result.admin.full_name || "Administrator";
+
+    document.getElementById("loginPage").style.display =
+      "none";
+
+    document.getElementById("app").style.display =
+      "block";
+
+    await loadDashboard();
+    await loadCourses();
+    await loadNotes();
+
+  }catch(error){
+
+    errorBox.textContent =
+      error.message || "Login failed.";
+
+    errorBox.classList.remove("hidden");
+
+    await supabaseClient.auth.signOut();
+  }
+
+}
+
+
+/* =========================================================
+   LOGOUT
+========================================================= */
+
+async function logout(){
+
+  await supabaseClient.auth.signOut();
+
+  location.reload();
+}
+
+
+/* =========================================================
+   NAVIGATION
+========================================================= */
+
+function showSection(id, button){
+
+  document.querySelectorAll(".section")
+    .forEach(section =>
+      section.classList.remove("active")
+    );
+
+  document.querySelectorAll(".nav-btn")
+    .forEach(btn =>
+      btn.classList.remove("active")
+    );
+
+  document.getElementById(id)
+    .classList.add("active");
+
+  button.classList.add("active");
+
+  const titles = {
+    dashboard:"Dashboard",
+    courses:"Courses",
+    notes:"Notes",
+    students:"Students",
+    payments:"Payments",
+    purchases:"Purchases",
+    transactions:"Wallet Transactions"
+  };
+
+  document.getElementById("pageTitle")
+    .textContent =
+    titles[id] || "CampusConnect";
+
+  if(id === "students")
+    loadStudents();
+
+  if(id === "payments")
+    loadPayments();
+
+  if(id === "purchases")
+    loadPurchases();
+
+  if(id === "transactions")
+    loadTransactions();
+}
+
+
+/* =========================================================
+   DASHBOARD
+========================================================= */
+
+async function loadDashboard(){
+
+  try{
+
+    const result =
+      await api("/api/admin/dashboard");
+
+    document.getElementById("statStudents")
+      .textContent = result.stats.students;
+
+    document.getElementById("statCourses")
+      .textContent = result.stats.courses;
+
+    document.getElementById("statNotes")
+      .textContent = result.stats.notes;
+
+    document.getElementById("statPayments")
+      .textContent = result.stats.payments;
+
+    document.getElementById("statPurchases")
+      .textContent = result.stats.purchases;
+
+  }catch(error){
+
+    console.error(error);
+
+  }
+}
+
+
+/* =========================================================
+   COURSES
+========================================================= */
+
+async function loadCourses(){
+
+  try{
+
+    const result =
+      await api("/api/admin/courses");
+
+    const table =
+      document.getElementById("coursesTable");
+
+    const select =
+      document.getElementById("noteCourse");
+
+    table.innerHTML = "";
+    select.innerHTML =
+      '<option value="">Select course</option>';
+
+    result.courses.forEach(course => {
+
+      const row =
+        document.createElement("tr");
+
+      row.innerHTML = `
+        <td>${escapeHtml(course.course_code)}</td>
+
+        <td>${escapeHtml(course.course_title)}</td>
+
+        <td>${escapeHtml(course.description || "")}</td>
+
+        <td>
+          <button
+            class="small-btn"
+            onclick="editCourse('${course.id}')">
+            Edit
+          </button>
+
+          <button
+            class="small-btn danger"
+            onclick="deleteCourse('${course.id}')">
+            Delete
+          </button>
+        </td>
+      `;
+
+      table.appendChild(row);
+
+      const option =
+        document.createElement("option");
+
+      option.value = course.id;
+
+      option.textContent =
+        course.course_code +
+        " — " +
+        course.course_title;
+
+      select.appendChild(option);
+
+    });
+
+  }catch(error){
+
+    console.error(error);
+
+  }
+}
+
+
+async function addCourse(){
+
+  const course_code =
+    document.getElementById("courseCode")
+      .value.trim();
+
+  const course_title =
+    document.getElementById("courseTitle")
+      .value.trim();
+
+  const description =
+    document.getElementById("courseDescription")
+      .value.trim();
+
+  if(!course_code || !course_title){
+
+    alert("Enter course code and course title.");
+
+    return;
+  }
+
+  try{
+
+    await api(
+      "/api/admin/courses",
+      {
+        method:"POST",
+        body:JSON.stringify({
+          course_code,
+          course_title,
+          description
+        })
+      }
+    );
+
+    alert("Course added successfully.");
+
+    document.getElementById("courseCode").value = "";
+    document.getElementById("courseTitle").value = "";
+    document.getElementById("courseDescription").value = "";
+
+    await loadCourses();
+    await loadDashboard();
+
+  }catch(error){
+
+    alert(error.message);
+
+  }
+}
+
+
+async function editCourse(id){
+
+  const title =
+    prompt("Enter the new course title:");
+
+  if(title === null)
+    return;
+
+  const description =
+    prompt("Enter the new description:");
+
+  if(description === null)
+    return;
+
+  try{
+
+    await api(
+      "/api/admin/courses/" + id,
+      {
+        method:"PATCH",
+        body:JSON.stringify({
+          course_title:title,
+          description
+        })
+      }
+    );
+
+    alert("Course updated.");
+
+    await loadCourses();
+
+  }catch(error){
+
+    alert(error.message);
+
+  }
+}
+
+
+async function deleteCourse(id){
+
+  if(!confirm(
+    "Delete this course? This may fail if notes still belong to it."
+  )){
+    return;
+  }
+
+  try{
+
+    await api(
+      "/api/admin/courses/" + id,
+      {
+        method:"DELETE"
+      }
+    );
+
+    alert("Course deleted.");
+
+    await loadCourses();
+    await loadDashboard();
+
+  }catch(error){
+
+    alert(error.message);
+
+  }
+}
+
+
+/* =========================================================
+   NOTES
+========================================================= */
+
+async function loadNotes(){
+
+  try{
+
+    const result =
+      await api("/api/admin/notes");
+
+    const table =
+      document.getElementById("notesTable");
+
+    table.innerHTML = "";
+
+    result.notes.forEach(note => {
+
+      const course =
+        note.courses?.course_code || "—";
+
+      const price =
+        Number(note.price_kobo || 0) / 100;
+
+      const status =
+        note.is_active
+        ? `<span class="badge active-badge">Active</span>`
+        : `<span class="badge inactive-badge">Inactive</span>`;
+
+      const row =
+        document.createElement("tr");
+
+      row.innerHTML = `
+
+        <td>${escapeHtml(course)}</td>
+
+        <td>${escapeHtml(note.title)}</td>
+
+        <td>₦${price.toLocaleString()}</td>
+
+        <td>${status}</td>
+
+        <td>
+
+          <button
+            class="small-btn"
+            onclick="editNote('${note.id}', ${price})">
+            Edit
+          </button>
+
+          <button
+            class="small-btn gray"
+            onclick="toggleNote('${note.id}', ${note.is_active})">
+            ${note.is_active ? "Deactivate" : "Activate"}
+          </button>
+
+          <button
+            class="small-btn danger"
+            onclick="deleteNote('${note.id}')">
+            Delete
+          </button>
+
+        </td>
+      `;
+
+      table.appendChild(row);
+
+    });
+
+  }catch(error){
+
+    console.error(error);
+
+  }
+}
+
+
+/* =========================================================
+   PDF UPLOAD
+========================================================= */
+
+async function uploadPdf(file){
+
+  const uploadInfo =
+    await api(
+      "/api/admin/notes/upload-url",
+      {
+        method:"POST",
+        body:JSON.stringify({
+          file_name:file.name
+        })
+      }
+    );
+
+  const {
+    path,
+    token
+  } = uploadInfo;
+
+  const {
+    error
+  } = await supabaseClient.storage
+    .from("notes-pdfs")
+    .uploadToSignedUrl(
+      path,
+      token,
+      file
+    );
+
+  if(error){
+    throw error;
+  }
+
+  return path;
+}
+
+
+/* =========================================================
+   ADD NOTE
+========================================================= */
+
+async function addNote(){
+
+  const course_id =
+    document.getElementById("noteCourse").value;
+
+  const title =
+    document.getElementById("noteTitle")
+      .value.trim();
+
+  const price_naira =
+    Number(
+      document.getElementById("notePrice").value
+    );
+
+  const description =
+    document.getElementById("noteDescription")
+      .value.trim();
+
+  const file =
+    document.getElementById("noteFile").files[0];
+
+  if(!course_id){
+    alert("Select a course.");
+    return;
+  }
+
+  if(!title){
+    alert("Enter the note title.");
+    return;
+  }
+
+  if(!Number.isFinite(price_naira) || price_naira < 0){
+    alert("Enter a valid price.");
+    return;
+  }
+
+  if(!file){
+    alert("Select a PDF file.");
+    return;
+  }
+
+  if(file.type !== "application/pdf"){
+    alert("Only PDF files are allowed.");
+    return;
+  }
+
+  try{
+
+    const filePath =
+      await uploadPdf(file);
+
+    await api(
+      "/api/admin/notes",
+      {
+        method:"POST",
+        body:JSON.stringify({
+          course_id,
+          title,
+          description,
+          price_naira,
+          file_path:filePath
+        })
+      }
+    );
+
+    alert("Note and PDF uploaded successfully.");
+
+    document.getElementById("noteTitle").value = "";
+    document.getElementById("notePrice").value = "";
+    document.getElementById("noteDescription").value = "";
+    document.getElementById("noteFile").value = "";
+
+    await loadNotes();
+    await loadDashboard();
+
+  }catch(error){
+
+    alert(
+      "Upload failed: " +
+      error.message
+    );
+
+  }
+}
+
+
+/* =========================================================
+   EDIT NOTE
+========================================================= */
+
+async function editNote(id,currentPrice){
+
+  const title =
+    prompt("New note title:");
+
+  if(title === null)
+    return;
+
+  const price =
+    prompt(
+      "New price in Naira:",
+      currentPrice
+    );
+
+  if(price === null)
+    return;
+
+  const numericPrice =
+    Number(price);
+
+  if(!Number.isFinite(numericPrice) || numericPrice < 0){
+
+    alert("Invalid price.");
+
+    return;
+  }
+
+  try{
+
+    await api(
+      "/api/admin/notes/" + id,
+      {
+        method:"PATCH",
+        body:JSON.stringify({
+          title,
+          price_naira:numericPrice
+        })
+      }
+    );
+
+    alert("Note updated.");
+
+    await loadNotes();
+
+  }catch(error){
+
+    alert(error.message);
+
+  }
+}
+
+
+/* =========================================================
+   TOGGLE NOTE
+========================================================= */
+
+async function toggleNote(id,current){
+
+  try{
+
+    await api(
+      "/api/admin/notes/" + id,
+      {
+        method:"PATCH",
+        body:JSON.stringify({
+          is_active:!current
+        })
+      }
+    );
+
+    await loadNotes();
+
+  }catch(error){
+
+    alert(error.message);
+
+  }
+}
+
+
+/* =========================================================
+   DELETE NOTE
+========================================================= */
+
+async function deleteNote(id){
+
+  if(!confirm(
+    "Delete this note?"
+  )){
+    return;
+  }
+
+  try{
+
+    await api(
+      "/api/admin/notes/" + id,
+      {
+        method:"DELETE"
+      }
+    );
+
+    alert("Note deleted.");
+
+    await loadNotes();
+    await loadDashboard();
+
+  }catch(error){
+
+    alert(error.message);
+
+  }
+}
+
+
+/* =========================================================
+   STUDENTS
+========================================================= */
+
+async function loadStudents(){
+
+  try{
+
+    const result =
+      await api("/api/admin/students");
+
+    const table =
+      document.getElementById("studentsTable");
+
+    table.innerHTML = "";
+
+    result.students.forEach(student => {
+
+      const balance =
+        Number(student.wallet_balance_kobo || 0) / 100;
+
+      const status =
+        student.is_active
+        ? `<span class="badge active-badge">Active</span>`
+        : `<span class="badge inactive-badge">Inactive</span>`;
+
+      const row =
+        document.createElement("tr");
+
+      row.innerHTML = `
+
+        <td>${escapeHtml(student.full_name || "")}</td>
+
+        <td>${escapeHtml(student.email || "")}</td>
+
+        <td>${escapeHtml(student.phone || "—")}</td>
+
+        <td>₦${balance.toLocaleString()}</td>
+
+        <td>${status}</td>
+
+        <td>
+
+          <button
+            class="small-btn"
+            onclick="toggleStudent('${student.id}', ${student.is_active})">
+
+            ${student.is_active
+              ? "Deactivate"
+              : "Activate"}
+
+          </button>
+
+        </td>
+
+      `;
+
+      table.appendChild(row);
+
+    });
+
+  }catch(error){
+
+    console.error(error);
+
+  }
+}
+
+
+async function toggleStudent(id,current){
+
+  const action =
+    current
+    ? "deactivate"
+    : "activate";
+
+  if(!confirm(
+    "Are you sure you want to " +
+    action +
+    " this student?"
+  )){
+    return;
+  }
+
+  try{
+
+    await api(
+      "/api/admin/students/" +
+      id +
+      "/status",
+      {
+        method:"PATCH",
+        body:JSON.stringify({
+          is_active:!current
+        })
+      }
+    );
+
+    await loadStudents();
+
+  }catch(error){
+
+    alert(error.message);
+
+  }
+}
+
+
+/* =========================================================
+   PAYMENTS
+========================================================= */
+
+async function loadPayments(){
+
+  try{
+
+    const result =
+      await api("/api/admin/payments");
+
+    const table =
+      document.getElementById("paymentsTable");
+
+    table.innerHTML = "";
+
+    result.payments.forEach(payment => {
+
+      const amount =
+        Number(payment.amount_kobo || 0) / 100;
+
+      const student =
+        payment.students?.full_name || "—";
+
+      const row =
+        document.createElement("tr");
+
+      row.innerHTML = `
+
+        <td>${escapeHtml(student)}</td>
+
+        <td>${escapeHtml(payment.reference)}</td>
+
+        <td>₦${amount.toLocaleString()}</td>
+
+        <td>${escapeHtml(payment.status)}</td>
+
+        <td>${formatDate(payment.created_at)}</td>
+
+      `;
+
+      table.appendChild(row);
+
+    });
+
+  }catch(error){
+
+    console.error(error);
+
+  }
+}
+
+
+/* =========================================================
+   PURCHASES
+========================================================= */
+
+async function loadPurchases(){
+
+  try{
+
+    const result =
+      await api("/api/admin/purchases");
+
+    const table =
+      document.getElementById("purchasesTable");
+
+    table.innerHTML = "";
+
+    result.purchases.forEach(purchase => {
+
+      const student =
+        purchase.students?.full_name || "—";
+
+      const note =
+        purchase.notes?.title || "—";
+
+      const amount =
+        Number(purchase.amount_kobo || 0) / 100;
+
+      const row =
+        document.createElement("tr");
+
+      row.innerHTML = `
+
+        <td>${escapeHtml(student)}</td>
+
+        <td>${escapeHtml(note)}</td>
+
+        <td>₦${amount.toLocaleString()}</td>
+
+        <td>${formatDate(purchase.created_at)}</td>
+
+      `;
+
+      table.appendChild(row);
+
+    });
+
+  }catch(error){
+
+    console.error(error);
+
+  }
+}
+
+
+/* =========================================================
+   TRANSACTIONS
+========================================================= */
+
+async function loadTransactions(){
+
+  try{
+
+    const result =
+      await api(
+        "/api/admin/wallet-transactions"
+      );
+
+    const table =
+      document.getElementById(
+        "transactionsTable"
+      );
+
+    table.innerHTML = "";
+
+    result.transactions.forEach(transaction => {
+
+      const student =
+        transaction.students?.full_name || "—";
+
+      const amount =
+        Number(
+          transaction.amount_kobo || 0
+        ) / 100;
+
+      const row =
+        document.createElement("tr");
+
+      row.innerHTML = `
+
+        <td>${escapeHtml(student)}</td>
+
+        <td>${escapeHtml(transaction.type)}</td>
+
+        <td>₦${amount.toLocaleString()}</td>
+
+        <td>${escapeHtml(transaction.reference || "—")}</td>
+
+        <td>${escapeHtml(transaction.description || "—")}</td>
+
+        <td>${formatDate(transaction.created_at)}</td>
+
+      `;
+
+      table.appendChild(row);
+
+    });
+
+  }catch(error){
+
+    console.error(error);
+
+  }
+}
+
+
+/* =========================================================
+   UTILITIES
+========================================================= */
+
+function escapeHtml(value){
+
+  return String(value ?? "")
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
+}
+
+
+function formatDate(date){
+
+  if(!date)
+    return "—";
+
+  return new Date(date)
+    .toLocaleString();
+}
+
+
+/* =========================================================
+   AUTO SESSION CHECK
+========================================================= */
+
+(async function(){
+
+  const {
+    data
+  } = await supabaseClient.auth.getSession();
+
+  if(data.session){
+
+    try{
+
+      const result =
+        await api("/api/admin/me");
+
+      document.getElementById("adminName")
+        .textContent =
+        result.admin.full_name ||
+        "Administrator";
+
+      document.getElementById("loginPage")
+        .style.display = "none";
+
+      document.getElementById("app")
+        .style.display = "block";
+
+      await loadDashboard();
+      await loadCourses();
+      await loadNotes();
+
+    }catch(error){
+
+      await supabaseClient.auth.signOut();
+
+    }
+
+  }
+
+})();
+
+</script>
+
+</body>
+</html>
