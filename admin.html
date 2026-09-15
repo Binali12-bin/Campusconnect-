@@ -2,1549 +2,1219 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#0b1020">
-<title>CampusConnect Admin</title>
+<title>CampusConnect</title>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://js.paystack.co/v2/inline.js"></script>
 
 <style>
 *{box-sizing:border-box}
 :root{
- --bg:#f5f7fb;--card:#fff;--text:#101828;
- --muted:#667085;--line:#e4e7ec;
- --primary:#5b5cf0;--purple:#7c3aed;
- --danger:#d92d20;--success:#039855
+ --bg:#f5f7fb;--card:#fff;--text:#101828;--muted:#667085;
+ --line:#e4e7ec;--primary:#5b5cf0;--purple:#7c3aed;
+ --success:#12b76a;--danger:#f04438;
 }
-body{
- margin:0;background:var(--bg);color:var(--text);
- font-family:Inter,Arial,sans-serif
-}
-button,input,textarea,select{font:inherit}
+body{margin:0;background:var(--bg);font-family:Inter,Arial,sans-serif;color:var(--text)}
+button,input{font:inherit}
 button{cursor:pointer}
 .hidden{display:none!important}
 
-.login{
+#splash{
+ position:fixed;inset:0;z-index:9999;background:linear-gradient(145deg,#070b18,#171b46,#5421a8);
+ display:flex;align-items:center;justify-content:center;color:#fff;
+ transition:.4s;
+}
+#splash.hide{opacity:0;pointer-events:none}
+.logoBig{
+ width:82px;height:82px;border-radius:25px;
+ background:linear-gradient(135deg,#fff,#dbeafe);
+ color:#312e81;display:grid;place-items:center;
+ font-size:28px;font-weight:900;margin:auto;
+}
+#splash h1{text-align:center;margin:18px 0 5px}
+#splash p{text-align:center;color:#c7d2fe}
+.loading{
+ width:150px;height:4px;background:#ffffff25;border-radius:20px;
+ overflow:hidden;margin:25px auto
+}
+.loading i{
+ display:block;height:100%;width:45%;background:#fff;
+ animation:load 1s infinite
+}
+@keyframes load{to{transform:translateX(230%)}}
+@keyframes show{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+
+.auth{
  min-height:100vh;display:grid;place-items:center;padding:20px;
  background:radial-gradient(circle at 10% 10%,#dbeafe,transparent 30%),#f8fafc
 }
-.loginBox{
- width:min(430px,100%);background:#fff;padding:28px;
- border:1px solid var(--line);border-radius:28px;
- box-shadow:0 20px 60px #10182812
+.authBox{
+ width:min(430px,100%);background:#fff;border:1px solid var(--line);
+ border-radius:28px;padding:28px;box-shadow:0 20px 60px #10182812;
+ animation:show .4s
 }
 .brand{display:flex;align-items:center;gap:10px;font-weight:900;font-size:20px}
-.logo{
+.brandIcon{
  width:42px;height:42px;border-radius:14px;
  background:linear-gradient(135deg,var(--primary),var(--purple));
  color:#fff;display:grid;place-items:center
 }
-.loginBox h1{font-size:29px;margin:25px 0 7px}
-label{display:block;font-size:13px;font-weight:800;margin:16px 0 7px}
-input,textarea,select{
- width:100%;padding:13px;border:1px solid var(--line);
- border-radius:13px;outline:none;background:#fff
-}
-textarea{min-height:100px}
-.primary{
- background:linear-gradient(135deg,var(--primary),var(--purple));
- color:#fff;border:0;padding:13px 16px;
- border-radius:12px;font-weight:900
-}
-.wide{width:100%;margin-top:18px}
+.auth h1{font-size:29px;margin:25px 0 7px}
 .muted{color:var(--muted)}
+label{display:block;font-size:13px;font-weight:800;margin:16px 0 7px}
+input{
+ width:100%;padding:14px;border:1px solid var(--line);
+ border-radius:13px;outline:none
+}
+input:focus{border-color:var(--primary);box-shadow:0 0 0 4px #5b5cf018}
+.primary{
+ width:100%;padding:14px;border:0;border-radius:13px;
+ color:#fff;background:linear-gradient(135deg,var(--primary),var(--purple));
+ font-weight:900;margin-top:18px
+}
+.link{
+ border:0;background:none;color:var(--primary);font-weight:800;
+ margin-top:14px
+}
+.switch{text-align:center;margin-top:20px;color:var(--muted)}
 
-.layout{
- min-height:100vh;
- display:grid;
- grid-template-columns:245px 1fr
+.app{min-height:100vh;padding-bottom:80px}
+.top{
+ position:sticky;top:0;z-index:20;background:#ffffffdd;
+ backdrop-filter:blur(18px);border-bottom:1px solid var(--line)
 }
-.sidebar{
- background:#0b1220;color:#fff;
- position:fixed;left:0;top:0;bottom:0;width:245px;
- padding:20px
+.topInner{
+ max-width:1150px;margin:auto;padding:12px 17px;
+ display:flex;align-items:center;gap:12px
 }
-.sidebar nav{margin-top:30px}
-.sidebar nav button{
- display:block;width:100%;text-align:left;
- border:0;background:none;color:#aab4c3;
- padding:13px;border-radius:11px;
- margin:3px 0;font-weight:800
+.spacer{flex:1}
+.avatar{
+ width:42px;height:42px;border:0;border-radius:50%;
+ color:#fff;background:linear-gradient(135deg,var(--primary),var(--purple));
+ font-weight:900
 }
-.sidebar nav button.active,
-.sidebar nav button:hover{
- background:#ffffff12;color:#fff
+.container{max-width:1150px;margin:auto;padding:20px 16px}
+.page{display:none;animation:show .3s}
+.page.active{display:block}
+
+.hero{
+ color:#fff;border-radius:28px;padding:25px;
+ background:linear-gradient(135deg,#0b1220,#312e81,#6d28d9);
+ box-shadow:0 18px 50px #10182820
 }
-.signout{
- width:100%;margin-top:25px;
- background:#fef3f2;color:#b42318;
- padding:11px;border:0;border-radius:11px;font-weight:800
+.hero h1{font-size:30px;margin:9px 0}
+.hero p{color:#dbeafe}
+.heroButtons{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}
+.pill{
+ padding:11px 15px;border-radius:12px;
+ color:#fff;background:#ffffff17;border:1px solid #ffffff25;font-weight:800
 }
 
-.main{
- grid-column:2;padding:25px;
- max-width:1400px;width:100%;margin:auto
+.wallet{
+ background:#fff;border:1px solid var(--line);border-radius:22px;
+ padding:18px;margin-top:16px;box-shadow:0 10px 30px #10182808
 }
-.header{
- display:flex;align-items:center;
- justify-content:space-between;
- margin-bottom:25px
-}
-.header h1{margin:0 0 4px}
-.mobileMenu{
- display:none;background:#0b1220;color:#fff;
- border:0;padding:10px 13px;border-radius:10px
+.walletRow{display:flex;justify-content:space-between;align-items:center}
+.balance{font-size:28px;font-weight:900;margin-top:4px}
+.fund{
+ background:#101828;color:#fff;border:0;border-radius:11px;
+ padding:10px 14px;font-weight:800
 }
 
-.stats{
- display:grid;grid-template-columns:repeat(4,1fr);gap:14px
-}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:16px}
 .stat{
- background:#fff;border:1px solid var(--line);
- border-radius:19px;padding:18px
+ background:#fff;border:1px solid var(--line);border-radius:18px;padding:16px
 }
 .stat small{color:var(--muted)}
-.stat strong{display:block;font-size:27px;margin-top:5px}
+.stat strong{display:block;font-size:23px;margin-top:4px}
 
-.view{display:block}
-.section{margin-top:22px}
 .sectionHead{
- display:flex;align-items:center;
- justify-content:space-between;
- margin-bottom:12px
+ display:flex;align-items:center;justify-content:space-between;
+ margin:25px 0 13px
 }
-.sectionHead h2{margin:0}
+.sectionHead h2{margin:0;font-size:20px}
 
-.tableWrap{
- background:#fff;border:1px solid var(--line);
- border-radius:19px;overflow:auto
-}
-table{border-collapse:collapse;width:100%;min-width:750px}
-th,td{
- text-align:left;padding:14px;
- border-bottom:1px solid var(--line);
- font-size:13px
-}
-th{font-size:11px;color:var(--muted)}
+.search{position:relative;margin:15px 0}
+.search span{position:absolute;left:15px;top:13px}
+.search input{padding-left:42px}
 
-.actions{display:flex;gap:7px}
-.small{
- padding:8px 10px;border:0;border-radius:9px;
- background:#eef2ff;color:#3730a3;font-weight:800
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.card{
+ background:#fff;border:1px solid var(--line);border-radius:20px;
+ padding:17px;box-shadow:0 8px 25px #10182808;
+ transition:.2s
 }
-.danger{background:#fef3f2;color:#b42318}
+.card:hover{transform:translateY(-3px)}
+.icon{
+ width:44px;height:44px;border-radius:14px;
+ display:grid;place-items:center;background:#eef2ff;color:#4338ca;
+ font-weight:900
+}
+.card h3{margin:11px 0 5px}
+.card p{margin:0;color:var(--muted);font-size:13px}
+.price{font-size:18px;font-weight:900;margin-top:13px}
+.cardAction{
+ width:100%;margin-top:13px;padding:11px;border:0;border-radius:11px;
+ background:linear-gradient(135deg,var(--primary),var(--purple));
+ color:#fff;font-weight:900
+}
+.empty{
+ grid-column:1/-1;text-align:center;padding:35px;
+ color:var(--muted);border:1px dashed var(--line);
+ border-radius:18px;background:#fff
+}
 
-.badge{
- display:inline-block;padding:6px 9px;
- border-radius:99px;background:#ecfdf3;
- color:#027a48;font-size:11px;font-weight:800
+.bottom{
+ position:fixed;bottom:0;left:0;right:0;z-index:30;
+ background:#fffffff5;backdrop-filter:blur(18px);
+ border-top:1px solid var(--line)
 }
-.badge.off{background:#fef3f2;color:#b42318}
+.nav{
+ max-width:600px;margin:auto;
+ display:grid;grid-template-columns:repeat(4,1fr)
+}
+.nav button{
+ border:0;background:none;color:#98a2b3;
+ padding:10px 3px;font-size:11px;font-weight:800
+}
+.nav button.active{color:var(--primary)}
+.nav b{display:block;font-size:20px;margin-bottom:2px}
 
 .modal{
- position:fixed;inset:0;background:#10182899;
- display:none;align-items:center;justify-content:center;
- padding:15px;z-index:100
+ position:fixed;inset:0;z-index:100;
+ background:#10182899;display:none;
+ align-items:flex-end;padding:12px
 }
 .modal.show{display:flex}
-.modalBox{
- background:#fff;width:min(600px,100%);
- max-height:90vh;overflow:auto;
- padding:23px;border-radius:25px
+.sheet{
+ background:#fff;width:min(560px,100%);
+ max-height:88vh;overflow:auto;
+ border-radius:27px;padding:22px;
+ margin:auto
 }
+.sheetHead{display:flex;justify-content:space-between;align-items:center}
 .close{
- float:right;border:0;width:35px;height:35px;
- border-radius:50%;background:#f2f4f7;font-size:20px
+ border:0;width:38px;height:38px;border-radius:50%;
+ background:#f2f4f7;font-size:22px
+}
+.row{
+ display:flex;justify-content:space-between;
+ padding:14px 0;border-bottom:1px solid var(--line)
 }
 .toast{
- position:fixed;right:20px;bottom:20px;
- background:#101828;color:#fff;
- padding:13px 17px;border-radius:12px;
- opacity:0;transform:translateY(15px);
- transition:.25s;z-index:300
+ position:fixed;z-index:300;left:50%;bottom:95px;
+ transform:translate(-50%,20px);
+ background:#101828;color:#fff;padding:13px 17px;
+ border-radius:13px;opacity:0;pointer-events:none;transition:.25s
 }
-.toast.show{opacity:1;transform:none}
+.toast.show{opacity:1;transform:translate(-50%,0)}
 
-@media(max-width:850px){
- .layout{display:block}
- .sidebar{
-  left:-260px;transition:.25s;z-index:80
- }
- .sidebar.open{left:0}
- .main{padding:16px}
- .stats{grid-template-columns:repeat(2,1fr)}
- .mobileMenu{display:block}
+.footer{text-align:center;color:#98a2b3;font-size:11px;padding:30px}
+
+@media(max-width:750px){.grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:520px){
+ .grid{grid-template-columns:1fr}
+ .hero h1{font-size:26px}
+ .stats{grid-template-columns:repeat(3,1fr)}
 }
 </style>
 </head>
 
 <body>
 
-<section id="login" class="login">
+<div id="splash">
+ <div>
+  <div class="logoBig">CC</div>
+  <h1>CampusConnect</h1>
+  <p>Your campus. Your notes. Your library.</p>
+  <div class="loading"><i></i></div>
+ </div>
+</div>
 
- <div class="loginBox">
+<section id="auth" class="auth hidden">
+ <div class="authBox">
 
   <div class="brand">
-   <div class="logo">CC</div>
-   CampusConnect Admin
+   <div class="brandIcon">CC</div>
+   CampusConnect
   </div>
 
-  <h1>Control your platform.</h1>
+  <h1 id="authTitle">Welcome back 👋</h1>
+  <p class="muted" id="authSub">Sign in to your student account.</p>
 
-  <p class="muted">
-   Manage courses, notes, students, payments and purchases.
-  </p>
+  <form id="authForm">
 
-  <form id="loginForm">
+   <div id="nameBox" class="hidden">
+    <label>Full name</label>
+    <input id="fullName">
+   </div>
 
    <label>Email</label>
    <input id="email" type="email" required>
 
+   <div id="phoneBox" class="hidden">
+    <label>Phone</label>
+    <input id="phone">
+   </div>
+
    <label>Password</label>
    <input id="password" type="password" required>
 
-   <button class="primary wide">
-    Sign in as administrator
-   </button>
-
+   <button class="primary" id="authButton">Sign in</button>
   </form>
 
+  <button class="link" id="forgot">Forgot password?</button>
+
+  <div class="switch">
+   <span id="switchText">Don't have an account?</span>
+   <button class="link" id="switchButton">Create one</button>
+  </div>
+
+ </div>
+</section>
+
+<main id="app" class="app hidden">
+
+<header class="top">
+ <div class="topInner">
+
+  <div class="brand">
+   <div class="brandIcon">CC</div>
+   CampusConnect
+  </div>
+
+  <div class="spacer"></div>
+
+  <button class="avatar" id="avatar">M</button>
+
+ </div>
+</header>
+
+<div class="container">
+
+<section id="homePage" class="page active">
+
+ <div class="hero">
+  <small>STUDENT PORTAL</small>
+  <h1 id="welcome">Welcome 👋</h1>
+  <p>Discover course materials, fund your wallet and build your digital library.</p>
+
+  <div class="heroButtons">
+   <button class="pill" onclick="openFund()">＋ Fund wallet</button>
+   <button class="pill" onclick="go('coursesPage','coursesNav')">Explore courses</button>
+  </div>
+ </div>
+
+ <div class="wallet">
+  <div class="walletRow">
+   <div>
+    <div class="muted">Available balance</div>
+    <div class="balance" id="balance">₦0.00</div>
+   </div>
+   <button class="fund" onclick="openFund()">Fund</button>
+  </div>
+ </div>
+
+ <div class="stats">
+  <div class="stat"><small>Courses</small><strong id="courseCount">0</strong></div>
+  <div class="stat"><small>Library</small><strong id="libraryCount">0</strong></div>
+  <div class="stat"><small>Transactions</small><strong id="transactionCount">0</strong></div>
+ </div>
+
+ <div class="sectionHead">
+  <h2>Featured notes</h2>
+  <button class="link" onclick="go('coursesPage','coursesNav')">See all</button>
+ </div>
+
+ <div id="featured" class="grid"></div>
+
+</section>
+
+<section id="coursesPage" class="page">
+
+ <div class="sectionHead">
+  <div>
+   <h2>Courses & Notes</h2>
+   <div class="muted">Browse materials made available by the administrator.</div>
+  </div>
+ </div>
+
+ <div class="search">
+  <span>⌕</span>
+  <input id="search" placeholder="Search course or note..." oninput="renderMarketplace()">
+ </div>
+
+ <div class="sectionHead"><h2>Courses</h2></div>
+ <div id="courses" class="grid"></div>
+
+ <div class="sectionHead"><h2>Notes</h2></div>
+ <div id="notes" class="grid"></div>
+
+</section>
+
+<section id="libraryPage" class="page">
+
+ <div class="sectionHead">
+  <div>
+   <h2>My Library</h2>
+   <div class="muted">Your purchased notes.</div>
+  </div>
+ </div>
+
+ <div id="library" class="grid"></div>
+
+</section>
+
+<section id="profilePage" class="page">
+
+ <div class="hero">
+  <small>MY ACCOUNT</small>
+  <h1 id="profileName">Student</h1>
+  <p id="profileEmail"></p>
+ </div>
+
+ <div class="sectionHead"><h2>Account</h2></div>
+
+ <div class="card">
+
+  <div class="row">
+   <b>Wallet balance</b>
+   <span id="profileBalance">₦0.00</span>
+  </div>
+
+  <div class="row">
+   <b>Account status</b>
+   <span>Active</span>
+  </div>
+
+  <div class="row">
+   <b>Account type</b>
+   <span>Student</span>
+  </div>
+
+  <button class="primary" onclick="openTransactions()">Transaction history</button>
+
+  <button
+   class="primary"
+   style="background:#fff;color:#d92d20;border:1px solid #fecdca"
+   onclick="logout()">
+   Sign out
+  </button>
+
+ </div>
+
+ <div class="footer">
+  CampusConnect<br>
+  <b>Created by Muhammad Bin Ali, popularly known as GCR</b>
  </div>
 
 </section>
 
-<div id="panel" class="layout hidden">
+</div>
 
-<aside id="sidebar" class="sidebar">
+<footer class="bottom">
+ <div class="nav">
 
- <div class="brand">
-  <div class="logo">CC</div>
-  CampusConnect
- </div>
-
- <div style="color:#98a2b3;font-size:11px;margin-top:28px">
-  ADMIN CONSOLE
- </div>
-
- <nav>
-
-  <button class="active"
-   onclick="openPage('dashboard',this)">
-   ▦ Dashboard
+  <button id="homeNav" class="active"
+   onclick="go('homePage','homeNav')">
+   <b>⌂</b>Home
   </button>
 
-  <button onclick="openPage('courses',this)">
-   ⌘ Courses
+  <button id="coursesNav"
+   onclick="go('coursesPage','coursesNav')">
+   <b>▦</b>Courses
   </button>
 
-  <button onclick="openPage('notes',this)">
-   ▤ Notes
+  <button id="libraryNav"
+   onclick="go('libraryPage','libraryNav')">
+   <b>▤</b>Library
   </button>
 
-  <button onclick="openPage('students',this)">
-   ◉ Students
+  <button id="profileNav"
+   onclick="go('profilePage','profileNav')">
+   <b>◉</b>Profile
   </button>
-
-  <button onclick="openPage('payments',this)">
-   ₦ Payments
-  </button>
-
-  <button onclick="openPage('purchases',this)">
-   🛒 Purchases
-  </button>
-
-  <button onclick="openPage('transactions',this)">
-   ⇄ Wallet transactions
-  </button>
-
- </nav>
-
- <button class="signout" onclick="logout()">
-  Sign out
- </button>
-
-</aside>
-
-<main class="main">
-
- <div class="header">
-
-  <div>
-   <button class="mobileMenu"
-    onclick="$('sidebar').classList.toggle('open')">
-    ☰ Menu
-   </button>
-
-   <h1 id="pageTitle">Dashboard</h1>
-
-   <div class="muted">
-    CampusConnect management center
-   </div>
-  </div>
-
-  <span id="adminName" class="badge">
-   Administrator
-  </span>
 
  </div>
-
- <!-- DASHBOARD -->
-
- <section id="dashboard" class="view">
-
-  <div id="stats" class="stats"></div>
-
-  <div class="section">
-   <div class="stat">
-    <h2>CampusConnect Admin</h2>
-    <p class="muted">
-     Changes made here are reflected on the student marketplace.
-    </p>
-   </div>
-  </div>
-
- </section>
-
- <!-- COURSES -->
-
- <section id="courses" class="view hidden">
-
-  <div class="sectionHead">
-   <h2>Courses</h2>
-
-   <button class="primary"
-    onclick="openCourse()">
-    ＋ Add course
-   </button>
-  </div>
-
-  <div class="tableWrap">
-
-   <table>
-    <thead>
-     <tr>
-      <th>Code</th>
-      <th>Title</th>
-      <th>Description</th>
-      <th>Actions</th>
-     </tr>
-    </thead>
-
-    <tbody id="courseRows"></tbody>
-
-   </table>
-
-  </div>
-
- </section>
-
- <!-- NOTES -->
-
- <section id="notes" class="view hidden">
-
-  <div class="sectionHead">
-   <h2>Notes marketplace</h2>
-
-   <button class="primary"
-    onclick="openNote()">
-    ＋ Add note
-   </button>
-  </div>
-
-  <div class="tableWrap">
-
-   <table>
-
-    <thead>
-     <tr>
-      <th>Note</th>
-      <th>Course</th>
-      <th>Price</th>
-      <th>Status</th>
-      <th>Actions</th>
-     </tr>
-    </thead>
-
-    <tbody id="noteRows"></tbody>
-
-   </table>
-
-  </div>
-
- </section>
-
- <!-- STUDENTS -->
-
- <section id="students" class="view hidden">
-
-  <div class="sectionHead">
-   <h2>Students</h2>
-  </div>
-
-  <div class="tableWrap">
-
-   <table>
-
-    <thead>
-     <tr>
-      <th>Name</th>
-      <th>Email</th>
-      <th>Phone</th>
-      <th>Wallet</th>
-      <th>Status</th>
-      <th>Action</th>
-     </tr>
-    </thead>
-
-    <tbody id="studentRows"></tbody>
-
-   </table>
-
-  </div>
-
- </section>
-
- <!-- PAYMENTS -->
-
- <section id="payments" class="view hidden">
-
-  <h2>Payments</h2>
-
-  <div class="tableWrap">
-
-   <table>
-
-    <thead>
-     <tr>
-      <th>Reference</th>
-      <th>Student</th>
-      <th>Amount</th>
-      <th>Status</th>
-      <th>Date</th>
-     </tr>
-    </thead>
-
-    <tbody id="paymentRows"></tbody>
-
-   </table>
-
-  </div>
-
- </section>
-
- <!-- PURCHASES -->
-
- <section id="purchases" class="view hidden">
-
-  <h2>Purchases</h2>
-
-  <div class="tableWrap">
-
-   <table>
-
-    <thead>
-     <tr>
-      <th>Student</th>
-      <th>Note</th>
-      <th>Amount</th>
-      <th>Date</th>
-     </tr>
-    </thead>
-
-    <tbody id="purchaseRows"></tbody>
-
-   </table>
-
-  </div>
-
- </section>
-
- <!-- TRANSACTIONS -->
-
- <section id="transactions" class="view hidden">
-
-  <h2>Wallet transactions</h2>
-
-  <div class="tableWrap">
-
-   <table>
-
-    <thead>
-     <tr>
-      <th>Student</th>
-      <th>Type</th>
-      <th>Amount</th>
-      <th>Reference</th>
-      <th>Date</th>
-     </tr>
-    </thead>
-
-    <tbody id="transactionRows"></tbody>
-
-   </table>
-
-  </div>
-
- </section>
+</footer>
 
 </main>
-</div>
 
-<!-- COURSE MODAL -->
+<!-- FUND WALLET -->
+<div id="fundModal" class="modal">
+ <div class="sheet">
 
-<div id="courseModal" class="modal">
+  <div class="sheetHead">
+   <h2>Fund wallet</h2>
+   <button class="close" onclick="closeModal('fundModal')">×</button>
+  </div>
 
- <div class="modalBox">
-
-  <button class="close"
-   onclick="closeModal('courseModal')">
-   ×
-  </button>
-
-  <h2 id="courseModalTitle">
-   Add course
-  </h2>
-
-  <input id="courseId" type="hidden">
-
-  <label>Course code</label>
-  <input id="courseCode" placeholder="CSC 201">
-
-  <label>Course title</label>
-  <input id="courseTitle" placeholder="Data Structures">
-
-  <label>Description</label>
-  <textarea id="courseDescription"></textarea>
-
-  <button class="primary wide"
-   onclick="saveCourse()">
-   Save course
-  </button>
-
- </div>
-
-</div>
-
-<!-- NOTE MODAL -->
-
-<div id="noteModal" class="modal">
-
- <div class="modalBox">
-
-  <button class="close"
-   onclick="closeModal('noteModal')">
-   ×
-  </button>
-
-  <h2 id="noteModalTitle">
-   Add note
-  </h2>
-
-  <input id="noteId" type="hidden">
-
-  <label>Course</label>
-  <select id="noteCourse"></select>
-
-  <label>Note title</label>
-  <input id="noteName">
-
-  <label>Description</label>
-  <textarea id="noteDescription"></textarea>
-
-  <label>Price (₦)</label>
-  <input id="notePrice" type="number" min="0">
-
-  <label>PDF file</label>
-  <input id="noteFile" type="file" accept="application/pdf">
-
-  <p class="muted" style="font-size:12px">
-   Upload a PDF. The file remains private and students can only
-   download it after a successful purchase.
+  <p class="muted">
+   Enter the amount you want to add. Payment is processed securely by Paystack.
   </p>
 
-  <button class="primary wide"
-   onclick="saveNote()">
-   Save note
+  <label>Amount (₦)</label>
+  <input id="fundAmount" type="number" min="100" placeholder="5000">
+
+  <button class="primary" onclick="fundWallet()">
+   Continue to payment
   </button>
 
  </div>
+</div>
 
+<!-- NOTE -->
+<div id="noteModal" class="modal">
+ <div class="sheet">
+
+  <div class="sheetHead">
+   <h2 id="noteTitle">Note</h2>
+   <button class="close" onclick="closeModal('noteModal')">×</button>
+  </div>
+
+  <p id="noteDescription" class="muted"></p>
+
+  <div class="row">
+   <b>Course</b>
+   <span id="noteCourse"></span>
+  </div>
+
+  <div class="row">
+   <b>Price</b>
+   <span id="notePrice"></span>
+  </div>
+
+  <button id="noteButton" class="primary"></button>
+
+ </div>
+</div>
+
+<!-- TRANSACTIONS -->
+<div id="transactionModal" class="modal">
+ <div class="sheet">
+
+  <div class="sheetHead">
+   <h2>Transaction history</h2>
+   <button class="close" onclick="closeModal('transactionModal')">×</button>
+  </div>
+
+  <div id="transactions"></div>
+
+ </div>
 </div>
 
 <div id="toast" class="toast"></div>
 
 <script>
-
-const SUPABASE_URL=
+const SUPABASE_URL =
 "https://xhuagcmnufndavuhmrqo.supabase.co";
 
-const SUPABASE_KEY=
+const SUPABASE_KEY =
 "sb_publishable_WWyyRz3SRE5BwHzD4TfGtQ_3mThtiDT";
 
-const API=
+const API =
 "https://campusconnect-backend-amhx.onrender.com";
 
-const client=
-supabase.createClient(
- SUPABASE_URL,
- SUPABASE_KEY
-);
+const supabaseClient =
+supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 
+let student=null;
 let courses=[];
 let notes=[];
+let library=[];
+let transactions=[];
+let selectedNote=null;
+let authMode="login";
 
 const $=id=>document.getElementById(id);
 
 function money(kobo){
- return "₦"+
- (Number(kobo||0)/100)
- .toLocaleString(
+ return "₦"+(Number(kobo||0)/100).toLocaleString(
   "en-NG",
   {minimumFractionDigits:2}
  );
 }
 
 function toast(message){
-
  $("toast").textContent=message;
-
  $("toast").classList.add("show");
-
- setTimeout(
-  ()=>$("toast").classList.remove("show"),
-  2800
- );
-
+ setTimeout(()=>$("toast").classList.remove("show"),2800);
 }
 
 function closeModal(id){
  $(id).classList.remove("show");
 }
 
-function esc(value){
+function openFund(){
+ $("fundModal").classList.add("show");
+}
 
- return String(value??"")
- .replace(/[&<>"']/g,char=>({
+function go(page,nav){
+ document.querySelectorAll(".page")
+ .forEach(x=>x.classList.remove("active"));
+
+ $(page).classList.add("active");
+
+ document.querySelectorAll(".nav button")
+ .forEach(x=>x.classList.remove("active"));
+
+ $(nav).classList.add("active");
+
+ window.scrollTo(0,0);
+}
+
+function escapeHTML(value){
+ return String(value??"").replace(/[&<>"']/g,
+ char=>({
   "&":"&amp;",
   "<":"&lt;",
   ">":"&gt;",
   '"':"&quot;",
   "'":"&#039;"
- }[char]));
-
+ }[char])
+ );
 }
 
 async function api(path,options={}){
+ const {data}=await supabaseClient.auth.getSession();
 
- const {data}=await client.auth.getSession();
+ const token=data.session?.access_token;
 
- const token=
-  data.session?.access_token;
+ if(!token){
+  throw new Error("Your session has expired. Please sign in again.");
+ }
 
- if(!token)
-  throw new Error(
-   "Administrator session expired."
-  );
+ const response=await fetch(API+path,{
+  ...options,
+  headers:{
+   "Content-Type":"application/json",
+   ...(options.headers||{}),
+   Authorization:"Bearer "+token
+  }
+ });
 
- const response=
-  await fetch(
-   API+path,
-   {
-    ...options,
-    headers:{
-     "Content-Type":"application/json",
-     ...(options.headers||{}),
-     Authorization:
-      "Bearer "+token
-    }
-   }
-  );
-
- const json=
-  await response.json()
-  .catch(()=>({}));
+ const json=await response.json().catch(()=>({}));
 
  if(!response.ok){
-
-  throw new Error(
-   json.message||
-   "Request failed."
-  );
-
+  throw new Error(json.message||"Server request failed.");
  }
 
  return json;
-
 }
 
-async function verifyAdmin(){
+/*
+ IMPORTANT:
+ The interface is shown first.
+ Backend/Supabase connection happens afterwards.
+ Therefore a slow server cannot leave the user stuck on the logo.
+*/
 
- try{
+async function start(){
+ setTimeout(async()=>{
+  $("splash").classList.add("hide");
 
-  const result=
-   await api("/api/admin/me");
+  const {data}=await supabaseClient.auth.getSession();
 
-  if(!result.admin)
-   throw new Error(
-    "This account is not an administrator."
-   );
-
-  $("login").classList.add("hidden");
-  $("panel").classList.remove("hidden");
-
-  $("adminName").textContent=
-   result.admin.full_name||
-   "Administrator";
-
-  await loadAll();
-
- }catch(error){
-
-  toast(error.message);
-
-  await client.auth.signOut();
-
- }
-
-}
-
-$("loginForm").onsubmit=
- async event=>{
-
-  event.preventDefault();
-
-  try{
-
-   const result=
-    await client.auth
-    .signInWithPassword({
-     email:$("email").value.trim(),
-     password:$("password").value
-    });
-
-   if(result.error)
-    throw result.error;
-
-   await verifyAdmin();
-
-  }catch(error){
-
-   toast(
-    error.message||
-    "Administrator login failed."
-   );
-
+  if(!data.session){
+   $("auth").classList.remove("hidden");
+   return;
   }
 
- };
-
-function openPage(id,button){
-
- document.querySelectorAll(".view")
- .forEach(
-  section=>section.classList.add("hidden")
- );
-
- $(id).classList.remove("hidden");
-
- document.querySelectorAll(
-  ".sidebar nav button"
- ).forEach(
-  button=>button.classList.remove("active")
- );
-
- if(button)
-  button.classList.add("active");
-
- $("pageTitle").textContent=
-  id.charAt(0).toUpperCase()+
-  id.slice(1);
-
- $("sidebar").classList.remove("open");
-
+  await checkRole();
+ },700);
 }
 
-async function loadAll(){
+async function checkRole(){
 
  try{
 
-  const [
-   dashboard,
-   courseResult,
-   noteResult,
-   studentResult,
-   paymentResult,
-   purchaseResult,
-   transactionResult
-  ]=await Promise.all([
+  const admin=await api("/api/admin/me");
 
-   api("/api/admin/dashboard"),
-   api("/api/admin/courses"),
-   api("/api/admin/notes"),
-   api("/api/admin/students"),
-   api("/api/admin/payments"),
-   api("/api/admin/purchases"),
-   api("/api/admin/wallet-transactions")
+  if(admin.success && admin.admin){
+   location.href="/admin.html";
+   return;
+  }
 
+ }catch(e){
+  // Not an admin — continue checking student.
+ }
+
+ try{
+
+  const result=await api("/api/student/me");
+
+  if(result.success && result.student){
+
+   student=result.student;
+
+   $("auth").classList.add("hidden");
+   $("app").classList.remove("hidden");
+
+   renderIdentity();
+   loadData();
+
+   return;
+  }
+
+ }catch(e){
+  console.log(e);
+ }
+
+ await supabaseClient.auth.signOut();
+
+ $("auth").classList.remove("hidden");
+
+ toast("This account is not an active student account.");
+}
+
+function renderIdentity(){
+
+ const name=student?.full_name||"Student";
+
+ $("welcome").textContent=
+ "Welcome, "+name.split(" ")[0]+" 👋";
+
+ $("profileName").textContent=name;
+
+ $("profileEmail").textContent=
+ student?.email||"";
+
+ $("avatar").textContent=
+ name.trim()[0]?.toUpperCase()||"S";
+
+ updateBalance();
+
+}
+
+function updateBalance(){
+
+ const value=money(student?.wallet_balance_kobo);
+
+ $("balance").textContent=value;
+ $("profileBalance").textContent=value;
+
+}
+
+async function loadData(){
+
+ try{
+
+  const results=await Promise.all([
+   api("/api/courses"),
+   api("/api/notes"),
+   api("/api/wallet"),
+   api("/api/library")
   ]);
 
-  courses=
-   courseResult.courses||[];
+  courses=results[0].courses||[];
+  notes=results[1].notes||[];
+  student={
+   ...student,
+   ...(results[2].student||{})
+  };
 
-  notes=
-   noteResult.notes||[];
+  library=
+   results[3].purchases||
+   results[3].library||
+   [];
 
-  const d=
-   dashboard.dashboard||
-   dashboard||
-   {};
+  updateBalance();
+  renderAll();
 
-  $("stats").innerHTML=`
+  try{
+   const tx=await api("/api/wallet/transactions");
+   transactions=tx.transactions||[];
+  }catch{
+   transactions=[];
+  }
 
-   <div class="stat">
-    <small>Students</small>
-    <strong>
-     ${d.students??0}
-    </strong>
-   </div>
-
-   <div class="stat">
-    <small>Courses</small>
-    <strong>
-     ${d.courses??courses.length}
-    </strong>
-   </div>
-
-   <div class="stat">
-    <small>Notes</small>
-    <strong>
-     ${d.notes??notes.length}
-    </strong>
-   </div>
-
-   <div class="stat">
-    <small>Payments</small>
-    <strong>
-     ${d.payments??0}
-    </strong>
-   </div>
-
-  `;
-
-  renderCourses();
-  renderNotes();
-
-  renderStudents(
-   studentResult.students||[]
-  );
-
-  renderPayments(
-   paymentResult.payments||[]
-  );
-
-  renderPurchases(
-   purchaseResult.purchases||[]
-  );
-
-  renderTransactions(
-   transactionResult.transactions||[]
-  );
+  $("transactionCount").textContent=
+   transactions.length;
 
  }catch(error){
 
   toast(
    error.message||
-   "Could not load admin data."
+   "Could not load CampusConnect data."
   );
 
  }
 
 }
 
-function renderCourses(){
+function renderAll(){
 
- $("courseRows").innerHTML=
-  courses.map(course=>`
+ $("courseCount").textContent=
+  courses.length;
 
-  <tr>
+ $("libraryCount").textContent=
+  library.length;
 
-   <td>
-    <b>${esc(course.course_code)}</b>
-   </td>
+ renderMarketplace();
 
-   <td>
-    ${esc(course.course_title)}
-   </td>
+ $("featured").innerHTML=
+  notes.slice(0,3)
+  .map(noteCard)
+  .join("")
+  ||
+  empty("No notes have been added yet.");
 
-   <td>
-    ${esc(course.description||"—")}
-   </td>
-
-   <td class="actions">
-
-    <button
-     class="small"
-     onclick="openCourse('${course.id}')">
-     Edit
-    </button>
-
-    <button
-     class="small danger"
-     onclick="deleteCourse('${course.id}')">
-     Remove
-    </button>
-
-   </td>
-
-  </tr>
-
- `).join("")
- ||
- `<tr>
-  <td colspan="4">No courses yet.</td>
- </tr>`;
+ renderLibrary();
 
 }
 
-function renderNotes(){
+function renderMarketplace(){
 
- $("noteRows").innerHTML=
-  notes.map(note=>{
+ const search=
+  ($("search")?.value||"").toLowerCase();
+
+ const filteredCourses=
+  courses.filter(course=>
+   (
+    course.course_code+
+    " "+
+    course.course_title+
+    " "+
+    (course.description||"")
+   ).toLowerCase().includes(search)
+  );
+
+ const filteredNotes=
+  notes.filter(note=>{
 
    const course=
-    courses.find(
-     c=>c.id===note.course_id
-    );
+    courses.find(c=>c.id===note.course_id);
+
+   return (
+    note.title+
+    " "+
+    (note.description||"")+
+    " "+
+    (course?.course_code||"")+
+    " "+
+    (course?.course_title||"")
+   ).toLowerCase().includes(search);
+
+  });
+
+ $("courses").innerHTML=
+  filteredCourses.map(course=>`
+
+   <article class="card"
+    onclick="courseInfo('${course.id}')">
+
+    <div class="icon">⌘</div>
+
+    <h3>${escapeHTML(course.course_code)}</h3>
+
+    <p>${escapeHTML(course.course_title)}</p>
+
+    <div class="muted" style="margin-top:10px;font-size:11px">
+     Tap to view course information
+    </div>
+
+   </article>
+
+  `).join("")
+  ||
+  empty("No matching courses.");
+
+ $("notes").innerHTML=
+  filteredNotes.map(noteCard).join("")
+  ||
+  empty("No matching notes.");
+
+}
+
+function noteCard(note){
+
+ const course=
+  courses.find(c=>c.id===note.course_id);
+
+ return `
+
+ <article class="card">
+
+  <div class="icon">PDF</div>
+
+  <h3>${escapeHTML(note.title)}</h3>
+
+  <p>
+   ${escapeHTML(course?.course_code||"Course")}
+   ·
+   ${escapeHTML(course?.course_title||"")}
+  </p>
+
+  <div class="price">
+   ${money(note.price_kobo)}
+  </div>
+
+  <button
+   class="cardAction"
+   onclick="openNote('${note.id}')">
+   View note
+  </button>
+
+ </article>
+
+ `;
+}
+
+function renderLibrary(){
+
+ if(!library.length){
+
+  $("library").innerHTML=
+   empty(
+    "Your library is empty. Purchase a note to see it here."
+   );
+
+  return;
+ }
+
+ $("library").innerHTML=
+  library.map(purchase=>{
+
+   const note=
+    purchase.note||
+    notes.find(n=>n.id===purchase.note_id);
 
    return `
 
-   <tr>
+   <article class="card">
 
-    <td>
-     <b>${esc(note.title)}</b>
-    </td>
+    <div class="icon">✓</div>
 
-    <td>
-     ${esc(course?.course_code||"—")}
-    </td>
+    <h3>${escapeHTML(note?.title||"Purchased note")}</h3>
 
-    <td>
-     ${money(note.price_kobo)}
-    </td>
+    <p>
+     Purchased
+     ${
+      purchase.created_at
+      ?new Date(purchase.created_at)
+       .toLocaleDateString()
+      :""
+     }
+    </p>
 
-    <td>
-     <span class="badge ${
-      note.is_active===false
-      ?"off":""
-     }">
-      ${
-       note.is_active===false
-       ?"Inactive"
-       :"Active"
-      }
-     </span>
-    </td>
+    <button
+     class="cardAction"
+     onclick="downloadNote('${purchase.id}')">
+     Open / Download PDF
+    </button>
 
-    <td class="actions">
-
-     <button
-      class="small"
-      onclick="openNote('${note.id}')">
-      Edit
-     </button>
-
-     <button
-      class="small danger"
-      onclick="deleteNote('${note.id}')">
-      Remove
-     </button>
-
-    </td>
-
-   </tr>
+   </article>
 
    `;
 
-  }).join("")
- ||
- `<tr>
-  <td colspan="5">No notes yet.</td>
- </tr>`;
+  }).join("");
 
 }
 
-function renderStudents(students){
+function empty(message){
 
- $("studentRows").innerHTML=
-  students.map(student=>`
-
-  <tr>
-
-   <td>
-    ${esc(student.full_name)}
-   </td>
-
-   <td>
-    ${esc(student.email)}
-   </td>
-
-   <td>
-    ${esc(student.phone||"—")}
-   </td>
-
-   <td>
-    ${money(student.wallet_balance_kobo)}
-   </td>
-
-   <td>
-    <span class="badge ${
-     student.is_active===false
-     ?"off":""
-    }">
-     ${
-      student.is_active===false
-      ?"Inactive"
-      :"Active"
-     }
-    </span>
-   </td>
-
-   <td>
-
-    <button
-     class="small"
-     onclick="toggleStudent(
-      '${student.id}',
-      ${student.is_active!==false}
-     )">
-
-     ${
-      student.is_active===false
-      ?"Activate"
-      :"Deactivate"
-     }
-
-    </button>
-
-   </td>
-
-  </tr>
-
- `).join("")
- ||
- `<tr>
-  <td colspan="6">No students.</td>
- </tr>`;
+ return `
+ <div class="empty">
+  ${escapeHTML(message)}
+ </div>
+ `;
 
 }
 
-function renderPayments(payments){
-
- $("paymentRows").innerHTML=
-  payments.map(payment=>`
-
-  <tr>
-
-   <td>
-    ${esc(payment.reference)}
-   </td>
-
-   <td>
-    ${esc(
-     payment.student?.email||
-     payment.student_id||
-     "—"
-    )}
-   </td>
-
-   <td>
-    ${money(payment.amount_kobo)}
-   </td>
-
-   <td>
-    ${esc(payment.status)}
-   </td>
-
-   <td>
-    ${new Date(
-     payment.created_at
-    ).toLocaleString()}
-   </td>
-
-  </tr>
-
- `).join("")
- ||
- `<tr>
-  <td colspan="5">No payments.</td>
- </tr>`;
-
-}
-
-function renderPurchases(purchases){
-
- $("purchaseRows").innerHTML=
-  purchases.map(purchase=>`
-
-  <tr>
-
-   <td>
-    ${esc(
-     purchase.student?.email||
-     purchase.student_id||
-     "—"
-    )}
-   </td>
-
-   <td>
-    ${esc(
-     purchase.note?.title||
-     purchase.note_id||
-     "—"
-    )}
-   </td>
-
-   <td>
-    ${money(purchase.amount_kobo)}
-   </td>
-
-   <td>
-    ${new Date(
-     purchase.created_at
-    ).toLocaleString()}
-   </td>
-
-  </tr>
-
- `).join("")
- ||
- `<tr>
-  <td colspan="4">No purchases.</td>
- </tr>`;
-
-}
-
-function renderTransactions(transactions){
-
- $("transactionRows").innerHTML=
-  transactions.map(transaction=>`
-
-  <tr>
-
-   <td>
-    ${esc(
-     transaction.student?.email||
-     transaction.student_id||
-     "—"
-    )}
-   </td>
-
-   <td>
-    ${esc(transaction.type)}
-   </td>
-
-   <td>
-    ${money(transaction.amount_kobo)}
-   </td>
-
-   <td>
-    ${esc(
-     transaction.reference||
-     "—"
-    )}
-   </td>
-
-   <td>
-    ${new Date(
-     transaction.created_at
-    ).toLocaleString()}
-   </td>
-
-  </tr>
-
- `).join("")
- ||
- `<tr>
-  <td colspan="5">No wallet transactions.</td>
- </tr>`;
-
-}
-
-function openCourse(id){
+function courseInfo(id){
 
  const course=
-  courses.find(
-   c=>c.id===id
-  )||{};
+  courses.find(c=>c.id===id);
 
- $("courseModalTitle").textContent=
-  id
-  ?"Edit course"
-  :"Add course";
+ if(!course)return;
 
- $("courseId").value=
-  id||"";
+ $("noteTitle").textContent=
+  course.course_code+
+  " — "+
+  course.course_title;
 
- $("courseCode").value=
-  course.course_code||"";
+ $("noteDescription").textContent=
+  course.description||
+  "Course information";
 
- $("courseTitle").value=
-  course.course_title||"";
+ $("noteCourse").textContent=
+  course.course_code;
 
- $("courseDescription").value=
-  course.description||"";
+ const count=
+  notes.filter(n=>n.course_id===id).length;
 
- $("courseModal").classList.add("show");
+ $("notePrice").textContent=
+  count+" note(s) available";
 
-}
+ $("noteButton").textContent=
+  "View course notes";
 
-async function saveCourse(){
+ $("noteButton").onclick=()=>{
 
- try{
+  closeModal("noteModal");
 
-  const id=
-   $("courseId").value;
+  $("search").value=
+   course.course_code;
 
-  const body={
-   course_code:
-    $("courseCode").value.trim(),
+  renderMarketplace();
 
-   course_title:
-    $("courseTitle").value.trim(),
+ };
 
-   description:
-    $("courseDescription").value.trim()
-  };
-
-  if(!body.course_code||
-     !body.course_title){
-
-   throw new Error(
-    "Course code and title are required."
-   );
-
-  }
-
-  await api(
-   id
-   ?"/api/admin/courses/"+id
-   :"/api/admin/courses",
-   {
-    method:id?"PATCH":"POST",
-    body:JSON.stringify(body)
-   }
-  );
-
-  closeModal("courseModal");
-
-  toast("Course saved successfully.");
-
-  await loadAll();
-
- }catch(error){
-
-  toast(error.message);
-
- }
-
-}
-
-async function deleteCourse(id){
-
- if(!confirm(
-  "Remove this course?"
- ))return;
-
- try{
-
-  await api(
-   "/api/admin/courses/"+id,
-   {method:"DELETE"}
-  );
-
-  toast("Course removed.");
-
-  await loadAll();
-
- }catch(error){
-
-  toast(error.message);
-
- }
+ $("noteModal").classList.add("show");
 
 }
 
 function openNote(id){
 
  const note=
-  notes.find(
-   n=>n.id===id
-  )||{};
+  notes.find(n=>n.id===id);
 
- $("noteModalTitle").textContent=
-  id
-  ?"Edit note"
-  :"Add note";
+ if(!note)return;
 
- $("noteId").value=
-  id||"";
+ selectedNote=note;
 
- $("noteCourse").innerHTML=
-  courses.map(course=>`
+ const course=
+  courses.find(c=>c.id===note.course_id);
 
-   <option
-    value="${course.id}"
-    ${
-     course.id===note.course_id
-     ?"selected"
-     :""
-    }>
+ const purchased=
+  library.find(
+   p=>p.note_id===note.id
+  );
 
-    ${esc(course.course_code)}
-    —
-    ${esc(course.course_title)}
+ $("noteTitle").textContent=
+  note.title;
 
-   </option>
+ $("noteDescription").textContent=
+  note.description||
+  "Digital course note.";
 
-  `).join("");
+ $("noteCourse").textContent=
+  course?.course_code||"Course";
 
- $("noteName").value=
-  note.title||"";
+ $("notePrice").textContent=
+  money(note.price_kobo);
 
- $("noteDescription").value=
-  note.description||"";
+ $("noteButton").textContent=
+  purchased
+  ?"Open / Download"
+  :"Buy note";
 
- $("notePrice").value=
-  note.price_kobo
-  ?Number(note.price_kobo)/100
-  :"";
+ $("noteButton").onclick=()=>{
 
- $("noteFile").value="";
+  if(purchased){
+   downloadNote(purchased.id);
+  }else{
+   buyNote(note);
+  }
+
+ };
 
  $("noteModal").classList.add("show");
 
 }
 
-async function saveNote(){
+async function buyNote(note){
+
+ if(
+  !confirm(
+   "Buy “"+
+   note.title+
+   "” for "+
+   money(note.price_kobo)+
+   "?"
+  )
+ )return;
 
  try{
-
-  const id=
-   $("noteId").value;
-
-  const file=
-   $("noteFile").files[0];
-
-  const body={
-   course_id:
-    $("noteCourse").value,
-
-   title:
-    $("noteName").value.trim(),
-
-   description:
-    $("noteDescription").value.trim(),
-
-   price_kobo:
-    Math.round(
-     Number(
-      $("notePrice").value||0
-     )*100
-    )
-  };
-
-  if(!body.course_id||
-     !body.title){
-
-   throw new Error(
-    "Course and title are required."
-   );
-
-  }
-
-  let noteId=id;
-
-  if(id){
-
-   await api(
-    "/api/admin/notes/"+id,
-    {
-     method:"PATCH",
-     body:JSON.stringify(body)
-    }
-   );
-
-  }else{
-
-   if(!file){
-
-    throw new Error(
-     "Select a PDF file."
-    );
-
-   }
-
-   const result=
-    await api(
-     "/api/admin/notes",
-     {
-      method:"POST",
-      body:JSON.stringify(body)
-     }
-    );
-
-   noteId=
-    result.note?.id||
-    result.id;
-
-   if(!noteId){
-
-    throw new Error(
-     "Note was created but its ID was not returned."
-    );
-
-   }
-
-  }
-
-  if(file){
-
-   await uploadPDF(
-    noteId,
-    file
-   );
-
-  }
 
   closeModal("noteModal");
 
-  toast("Note saved successfully.");
-
-  await loadAll();
-
- }catch(error){
-
-  toast(error.message);
-
- }
-
-}
-
-async function uploadPDF(noteId,file){
-
- if(file.type!=="application/pdf"){
-
-  throw new Error(
-   "Only PDF files are allowed."
-  );
-
- }
-
- const result=
   await api(
-   "/api/admin/notes/upload-url",
+   "/api/purchases/buy",
    {
     method:"POST",
     body:JSON.stringify({
-     note_id:noteId,
-     file_name:file.name,
-     content_type:"application/pdf"
-    })
-   }
-  );
-
- const uploadUrl=
-  result.signed_url||
-  result.url;
-
- if(!uploadUrl){
-
-  throw new Error(
-   "No upload URL was returned."
-  );
-
- }
-
- const upload=
-  await fetch(
-   uploadUrl,
-   {
-    method:"PUT",
-    headers:{
-     "Content-Type":"application/pdf"
-    },
-    body:file
-   }
-  );
-
- if(!upload.ok){
-
-  throw new Error(
-   "PDF upload failed."
-  );
-
- }
-
- if(result.path){
-
-  await api(
-   "/api/admin/notes/"+noteId,
-   {
-    method:"PATCH",
-    body:JSON.stringify({
-     file_url:result.path
-    })
-   }
-  );
-
- }
-
-}
-
-async function deleteNote(id){
-
- if(!confirm(
-  "Remove this note from the marketplace?"
- ))return;
-
- try{
-
-  await api(
-   "/api/admin/notes/"+id,
-   {method:"DELETE"}
-  );
-
-  toast("Note removed.");
-
-  await loadAll();
-
- }catch(error){
-
-  toast(error.message);
-
- }
-
-}
-
-async function toggleStudent(id,current){
-
- try{
-
-  await api(
-   "/api/admin/students/"+id+"/status",
-   {
-    method:"PATCH",
-    body:JSON.stringify({
-     is_active:!current
+     note_id:note.id
     })
    }
   );
 
   toast(
-   "Student status updated."
+   "Purchase successful. Added to your library."
   );
 
-  await loadAll();
+  await loadData();
+
+ }catch(error){
+
+  toast(
+   error.message||
+   "Purchase failed."
+  );
+
+ }
+
+}
+
+async function downloadNote(purchaseId){
+
+ try{
+
+  const result=
+   await api(
+    "/api/library/"+
+    encodeURIComponent(purchaseId)+
+    "/download"
+   );
+
+  if(result.url){
+   window.location.href=result.url;
+  }else{
+   throw new Error(
+    "Download link was not returned."
+   );
+  }
+
+ }catch(error){
+
+  toast(
+   error.message||
+   "Could not open PDF."
+  );
+
+ }
+
+}
+
+async function fundWallet(){
+
+ const amount=
+  Number($("fundAmount").value);
+
+ if(!amount || amount<100){
+
+  toast("Enter at least ₦100.");
+
+  return;
+ }
+
+ try{
+
+  const result=
+   await api(
+    "/api/paystack/initialize",
+    {
+     method:"POST",
+     body:JSON.stringify({
+      amount_kobo:
+       Math.round(amount*100)
+     })
+    }
+   );
+
+  if(!result.access_code){
+
+   throw new Error(
+    "Payment could not be initialized."
+   );
+
+  }
+
+  closeModal("fundModal");
+
+  if(typeof PaystackPop==="undefined"){
+
+   throw new Error(
+    "Paystack could not load. Check your internet connection."
+   );
+
+  }
+
+  const popup=
+   new PaystackPop();
+
+  popup.resumeTransaction(
+   result.access_code
+  );
+
+  toast(
+   "Complete your Paystack payment."
+  );
+
+  setTimeout(
+   ()=>loadData(),
+   6000
+  );
+
+ }catch(error){
+
+  toast(
+   error.message||
+   "Could not start payment."
+  );
+
+ }
+
+}
+
+async function openTransactions(){
+
+ try{
+
+  const result=
+   await api(
+    "/api/wallet/transactions"
+   );
+
+  transactions=
+   result.transactions||[];
+
+  if(!transactions.length){
+
+   $("transactions").innerHTML=
+    empty("No transactions yet.");
+
+  }else{
+
+   $("transactions").innerHTML=
+    transactions.map(t=>`
+
+     <div class="row">
+
+      <div>
+       <b>
+        ${escapeHTML(
+         t.description||
+         t.type||
+         "Wallet transaction"
+        )}
+       </b>
+
+       <div class="muted">
+        ${new Date(
+         t.created_at
+        ).toLocaleString()}
+       </div>
+      </div>
+
+      <strong>
+       ${
+        t.type==="credit"
+        ?"+"
+        :"−"
+       }${money(t.amount_kobo)}
+      </strong>
+
+     </div>
+
+    `).join("");
+
+  }
+
+  $("transactionModal")
+   .classList.add("show");
 
  }catch(error){
 
@@ -1556,28 +1226,173 @@ async function toggleStudent(id,current){
 
 async function logout(){
 
- await client.auth.signOut();
+ await supabaseClient.auth.signOut();
 
  location.reload();
 
 }
 
-window.addEventListener(
- "load",
- async()=>{
-  setTimeout(
-   async()=>{
-    const {data}=
-     await client.auth.getSession();
+$("switchButton").onclick=()=>{
 
-    if(data.session)
-     await verifyAdmin();
-   },
-   300
+ authMode=
+  authMode==="login"
+  ?"register"
+  :"login";
+
+ const register=
+  authMode==="register";
+
+ $("authTitle").textContent=
+  register
+  ?"Create your student account"
+  :"Welcome back 👋";
+
+ $("authSub").textContent=
+  register
+  ?"Join CampusConnect and build your digital library."
+  :"Sign in to your student account.";
+
+ $("nameBox").classList.toggle(
+  "hidden",
+  !register
+ );
+
+ $("phoneBox").classList.toggle(
+  "hidden",
+  !register
+ );
+
+ $("authButton").textContent=
+  register
+  ?"Create account"
+  :"Sign in";
+
+ $("forgot").classList.toggle(
+  "hidden",
+  register
+ );
+
+ $("switchText").textContent=
+  register
+  ?"Already have an account?"
+  :"Don't have an account?";
+
+ $("switchButton").textContent=
+  register
+  ?"Sign in"
+  :"Create one";
+
+};
+
+$("authForm").onsubmit=async event=>{
+
+ event.preventDefault();
+
+ $("authButton").disabled=true;
+
+ try{
+
+  const email=
+   $("email").value.trim();
+
+  const password=
+   $("password").value;
+
+  if(authMode==="login"){
+
+   const result=
+    await supabaseClient.auth
+    .signInWithPassword({
+     email,
+     password
+    });
+
+   if(result.error)
+    throw result.error;
+
+   await checkRole();
+
+  }else{
+
+   const result=
+    await supabaseClient.auth.signUp({
+     email,
+     password,
+     options:{
+      data:{
+       full_name:
+        $("fullName").value.trim(),
+
+       phone:
+        $("phone").value.trim()
+      }
+     }
+    });
+
+   if(result.error)
+    throw result.error;
+
+   if(result.data.session){
+
+    await checkRole();
+
+   }else{
+
+    toast(
+     "Account created. Sign in to continue."
+    );
+
+   }
+
+  }
+
+ }catch(error){
+
+  toast(
+   error.message||
+   "Authentication failed."
   );
- }
-);
 
+ }finally{
+
+  $("authButton").disabled=false;
+
+ }
+
+};
+
+$("forgot").onclick=async()=>{
+
+ const email=
+  $("email").value.trim();
+
+ if(!email){
+
+  toast("Enter your email first.");
+
+  return;
+ }
+
+ const result=
+  await supabaseClient.auth
+  .resetPasswordForEmail(
+   email,
+   {redirectTo:location.href}
+  );
+
+ toast(
+  result.error
+  ?result.error.message
+  :"Password reset email sent."
+ );
+
+};
+
+$("avatar").onclick=()=>{
+ go("profilePage","profileNav");
+};
+
+start();
 </script>
 
 </body>
