@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>CampusConnect</title>
+
+    <meta name="description"
+          content="CampusConnect - Your university notes marketplace">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f5f7fb;
+            color: #172033;
+            min-height: 100vh;
+        }
+
+        button,
+        input {
+            font: inherit;
+        }
+
+        button {
+            cursor: pointer;
+        }
+
+        /* =========================
+           APP
+        ========================== */
+
+        .app {
+            min-height: 100vh;
+        }
+
+        /* =========================
+           HEADER
+        ========================== */
+
+        .topbar {
+            background: white;
+            padding: 16px 18px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid #e8ebf2;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .brand-logo {
+            width: 38px;
+            height: 38px;
+            border-radius: 11px;
+            background: #2563eb;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 16px;
+        }
+
+        .brand-text h1 {
+            font-size: 18px;
+            line-height: 1;
+        }
+
+        .brand-text span {
+            font-size: 10px;
+            color: #7b8496;
+        }
+
+        .profile-button {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: none;
+            background: #eaf1ff;
+            color: #2563eb;
+            font-weight: 800;
+        }
+
+        /* =========================
+           MAIN
+        ========================== */
+
+        main {
+            max-width: 1100px;
+            margin: auto;
+            padding: 20px 16px 100px;
+        }
+
+        .welcome {
+            margin-bottom: 20px;
+        }
+
+        .welcome small {
+            color: #7b8496;
+            font-size: 13px;
+        }
+
+        .welcome h2 {
+            margin-top: 5px;
+            font-size: 25px;
+        }
+
+        /* =========================
+           WALLET
+        ========================== */
+
+        .wallet-card {
+            background: linear-gradient(135deg, #2563eb, #1744b5);
+            color: white;
+            border-radius: 20px;
+            padding: 22px;
+            margin-bottom: 22px;
+            box-shadow: 0 12px 30px rgba(37, 99, 235, .20);
+        }
+
+        .wallet-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .wallet-label {
+            font-size: 13px;
+            opacity: .85;
+        }
+
+        .wallet-balance {
+            font-size: 30px;
+            font-weight: 800;
+            margin-top: 7px;
+        }
+
+        .wallet-button {
+            background: white;
+            color: #2563eb;
+            border: none;
+            border-radius: 10px;
+            padding: 10px 14px;
+            font-weight: 700;
+        }
+
+        /* =========================
+           QUICK ACTIONS
+        ========================== */
+
+        .section-title {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 24px 0 12px;
+        }
+
+        .section-title h3 {
+            font-size: 17px;
+        }
+
+        .section-title span {
+            color: #2563eb;
+            font-size: 12px;
+        }
+
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+
+        .quick-card {
+            background: white;
+            border: 1px solid #e8ebf2;
+            border-radius: 15px;
+            padding: 14px 8px;
+            text-align: center;
+        }
+
+        .quick-icon {
+            font-size: 22px;
+            margin-bottom: 7px;
+        }
+
+        .quick-card p {
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        /* =========================
+           SEARCH
+        ========================== */
+
+        .search-box {
+            background: white;
+            border: 1px solid #e1e5ed;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            padding: 0 14px;
+            margin-top: 20px;
+        }
+
+        .search-box span {
+            font-size: 18px;
+        }
+
+        .search-box input {
+            border: none;
+            outline: none;
+            padding: 14px 10px;
+            width: 100%;
+            background: transparent;
+        }
+
+        /* =========================
+           COURSE CARDS
+        ========================== */
+
+        .courses {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        .course-card {
+            background: white;
+            border: 1px solid #e8ebf2;
+            border-radius: 16px;
+            padding: 16px;
+        }
+
+        .course-code {
+            color: #2563eb;
+            font-size: 12px;
+            font-weight: 800;
+        }
+
+        .course-card h4 {
+            margin-top: 7px;
+            font-size: 14px;
+        }
+
+        .course-card p {
+            margin-top: 6px;
+            color: #7b8496;
+            font-size: 11px;
+        }
+
+        .view-course {
+            margin-top: 12px;
+            width: 100%;
+            padding: 9px;
+            border: none;
+            border-radius: 9px;
+            background: #edf3ff;
+            color: #2563eb;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        /* =========================
+           NOTES
+        ========================== */
+
+        .notes {
+            display: grid;
+            gap: 12px;
+        }
+
+        .note-card {
+            background: white;
+            border: 1px solid #e8ebf2;
+            border-radius: 16px;
+            padding: 15px;
+            display: flex;
+            gap: 13px;
+            align-items: center;
+        }
+
+        .pdf-icon {
+            width: 45px;
+            height: 45px;
+            border-radius: 11px;
+            background: #fff0f0;
+            color: #dc2626;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 12px;
+            flex-shrink: 0;
+        }
+
+        .note-info {
+            flex: 1;
+        }
+
+        .note-info h4 {
+            font-size: 14px;
+        }
+
+        .note-info p {
+            color: #7b8496;
+            font-size: 11px;
+            margin-top: 4px;
+        }
+
+        .note-price {
+            font-weight: 800;
+            font-size: 13px;
+            margin-top: 7px;
+        }
+
+        .buy-button {
+            border: none;
+            background: #2563eb;
+            color: white;
+            border-radius: 9px;
+            padding: 9px 12px;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        /* =========================
+           BOTTOM NAV
+        ========================== */
+
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            border-top: 1px solid #e8ebf2;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            padding: 8px 5px calc(8px + env(safe-area-inset-bottom));
+            z-index: 100;
+        }
+
+        .nav-item {
+            border: none;
+            background: transparent;
+            color: #8992a5;
+            font-size: 10px;
+            padding: 5px;
+        }
+
+        .nav-item .nav-icon {
+            display: block;
+            font-size: 19px;
+            margin-bottom: 3px;
+        }
+
+        .nav-item.active {
+            color: #2563eb;
+            font-weight: 700;
+        }
+
+        /* =========================
+           FOOTER
+        ========================== */
+
+        footer {
+            text-align: center;
+            color: #929aaa;
+            font-size: 10px;
+            padding: 25px 10px 10px;
+        }
+
+        /* =========================
+           RESPONSIVE
+        ========================== */
+
+        @media (min-width: 700px) {
+
+            main {
+                padding-left: 25px;
+                padding-right: 25px;
+            }
+
+            .courses {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            .notes {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .bottom-nav {
+                left: 50%;
+                transform: translateX(-50%);
+                width: min(600px, 100%);
+                border: 1px solid #e8ebf2;
+                border-radius: 18px 18px 0 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="app">
+
+    <!-- HEADER -->
+    <header class="topbar">
+
+        <div class="brand">
+            <div class="brand-logo">CC</div>
+
+            <div class="brand-text">
+                <h1>CampusConnect</h1>
+                <span>University Notes Marketplace</span>
+            </div>
+        </div>
+
+        <button class="profile-button">MB</button>
+
+    </header>
+
+
+    <!-- MAIN CONTENT -->
+    <main>
+
+        <!-- WELCOME -->
+        <section class="welcome">
+            <small>Welcome back 👋</small>
+            <h2>Student Dashboard</h2>
+        </section>
+
+
+        <!-- WALLET -->
+        <section class="wallet-card">
+
+            <div class="wallet-top">
+
+                <div>
+                    <div class="wallet-label">Wallet Balance</div>
+                    <div class="wallet-balance">₦0.00</div>
+                </div>
+
+                <button class="wallet-button">
+                    + Fund Wallet
+                </button>
+
+            </div>
+
+        </section>
+
+
+        <!-- QUICK ACTIONS -->
+        <div class="section-title">
+            <h3>Quick Actions</h3>
+        </div>
+
+        <section class="quick-actions">
+
+            <button class="quick-card">
+                <div class="quick-icon">📚</div>
+                <p>Courses</p>
+            </button>
+
+            <button class="quick-card">
+                <div class="quick-icon">📄</div>
+                <p>Notes</p>
+            </button>
+
+            <button class="quick-card">
+                <div class="quick-icon">📥</div>
+                <p>My Library</p>
+            </button>
+
+            <button class="quick-card">
+                <div class="quick-icon">💳</div>
+                <p>Transactions</p>
+            </button>
+
+        </section>
+
+
+        <!-- SEARCH -->
+        <div class="search-box">
+            <span>🔎</span>
+            <input
+                type="search"
+                placeholder="Search courses, notes or materials..."
+            >
+        </div>
+
+
+        <!-- COURSES -->
+        <div class="section-title">
+            <h3>Popular Courses</h3>
+            <span>View all</span>
+        </div>
+
+        <section class="courses">
+
+            <article class="course-card">
+                <div class="course-code">CSC 101</div>
+                <h4>Introduction to Computer Science</h4>
+                <p>Study materials and lecture notes</p>
+                <button class="view-course">View Course</button>
+            </article>
+
+            <article class="course-card">
+                <div class="course-code">CSC 202</div>
+                <h4>Data Structures</h4>
+                <p>Study materials and lecture notes</p>
+                <button class="view-course">View Course</button>
+            </article>
+
+            <article class="course-card">
+                <div class="course-code">CSC 204</div>
+                <h4>Database Systems</h4>
+                <p>Study materials and lecture notes</p>
+                <button class="view-course">View Course</button>
+            </article>
+
+            <article class="course-card">
+                <div class="course-code">MTH 202</div>
+                <h4>Mathematics</h4>
+                <p>Study materials and lecture notes</p>
+                <button class="view-course">View Course</button>
+            </article>
+
+        </section>
+
+
+        <!-- NOTES -->
+        <div class="section-title">
+            <h3>Latest Notes</h3>
+            <span>View all</span>
+        </div>
+
+        <section class="notes">
+
+            <article class="note-card">
+
+                <div class="pdf-icon">PDF</div>
+
+                <div class="note-info">
+                    <h4>CSC 101 Complete Lecture Notes</h4>
+                    <p>Introduction to Computer Science</p>
+                    <div class="note-price">₦1,000</div>
+                </div>
+
+                <button class="buy-button">
+                    Buy
+                </button>
+
+            </article>
+
+
+            <article class="note-card">
+
+                <div class="pdf-icon">PDF</div>
+
+                <div class="note-info">
+                    <h4>CSC 202 Data Structures</h4>
+                    <p>Complete lecture materials</p>
+                    <div class="note-price">₦1,500</div>
+                </div>
+
+                <button class="buy-button">
+                    Buy
+                </button>
+
+            </article>
+
+        </section>
+
+
+        <footer>
+            Created by Muhammad Bin Ali, popularly known as GCR.
+            <br>
+            © 2026 CampusConnect
+        </footer>
+
+    </main>
+
+
+    <!-- BOTTOM NAVIGATION -->
+    <nav class="bottom-nav">
+
+        <button class="nav-item active">
+            <span class="nav-icon">🏠</span>
+            Home
+        </button>
+
+        <button class="nav-item">
+            <span class="nav-icon">📚</span>
+            Courses
+        </button>
+
+        <button class="nav-item">
+            <span class="nav-icon">📥</span>
+            Library
+        </button>
+
+        <button class="nav-item">
+            <span class="nav-icon">👤</span>
+            Profile
+        </button>
+
+    </nav>
+
+</div>
+
+</body>
+</html>
