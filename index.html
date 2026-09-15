@@ -1,40 +1,745 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#5b21b6">
+<meta name="description" content="CampusConnect — University Academic Notes Marketplace">
+<title>CampusConnect | Learn • Share • Connect</title>
 
-  <title>CampusConnect</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://js.paystack.co/v2/inline.js"></script>
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="https://js.paystack.co/v2/inline.js"></script>
+<style>
+:root{
+  --primary:#6d28d9;
+  --primary2:#8b5cf6;
+  --primary3:#a78bfa;
+  --dark:#17112b;
+  --text:#211a32;
+  --muted:#77728a;
+  --bg:#f7f7fb;
+  --card:#ffffff;
+  --line:#ebe8f3;
+  --success:#16a34a;
+  --danger:#dc2626;
+  --warning:#f59e0b;
+  --shadow:0 15px 45px rgba(35,20,70,.10);
+  --radius:22px;
+}
 
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  min-height:100vh;
+}
+button,input,select{font:inherit}
+button{border:0;cursor:pointer}
+.hidden{display:none!important}
 
-    body {
-      font-family: Arial, Helvetica, sans-serif;
-      background: #f5f5fa;
-      color: #222;
-    }
+.app{
+  min-height:100vh;
+  padding-bottom:88px;
+}
 
-    button,
-    input {
-      font: inherit;
-    }
+.topbar{
+  position:sticky;
+  top:0;
+  z-index:50;
+  background:rgba(247,247,251,.88);
+  backdrop-filter:blur(18px);
+  border-bottom:1px solid rgba(235,232,243,.8);
+}
 
-    button {
-      cursor: pointer;
-    }
+.topbar-inner{
+  max-width:1180px;
+  margin:auto;
+  padding:15px 18px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
 
-    .hidden {
-      display: none !important;
-    }
+.brand{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  cursor:pointer;
+}
+.logo{
+  width:43px;height:43px;
+  border-radius:14px;
+  background:linear-gradient(135deg,var(--primary),#3b0764);
+  color:white;
+  display:grid;
+  place-items:center;
+  font-weight:900;
+  box-shadow:0 10px 25px rgba(109,40,217,.28);
+}
+.brand-text strong{display:block;font-size:17px}
+.brand-text span{font-size:10px;color:var(--muted)}
 
+.top-actions{display:flex;gap:8px}
+.icon-btn{
+  width:42px;height:42px;
+  border-radius:14px;
+  background:white;
+  color:var(--text);
+  border:1px solid var(--line);
+  display:grid;
+  place-items:center;
+  transition:.2s;
+}
+.icon-btn:active{transform:scale(.92)}
+
+.container{
+  width:min(1180px,calc(100% - 30px));
+  margin:auto;
+}
+
+.view{padding:22px 0}
+.hero{
+  position:relative;
+  overflow:hidden;
+  border-radius:30px;
+  padding:28px;
+  color:white;
+  background:
+    radial-gradient(circle at 90% 10%,rgba(255,255,255,.23),transparent 30%),
+    radial-gradient(circle at 10% 100%,rgba(255,255,255,.14),transparent 35%),
+    linear-gradient(135deg,#4c1d95,#7c3aed 55%,#a855f7);
+  box-shadow:0 25px 60px rgba(76,29,149,.25);
+}
+.hero:after{
+  content:"";
+  position:absolute;
+  width:170px;height:170px;
+  border:1px solid rgba(255,255,255,.15);
+  border-radius:50%;
+  right:-50px;bottom:-65px;
+}
+.hero small{opacity:.8}
+.hero h1{
+  font-size:clamp(28px,6vw,46px);
+  line-height:1.05;
+  margin:9px 0;
+}
+.hero p{opacity:.82;max-width:600px}
+.hero-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px}
+
+.btn{
+  min-height:46px;
+  padding:0 18px;
+  border-radius:14px;
+  font-weight:800;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  transition:.2s;
+}
+.btn:active{transform:scale(.96)}
+.btn-primary{background:var(--primary);color:white}
+.btn-white{background:white;color:var(--primary)}
+.btn-soft{background:#f0ebff;color:var(--primary)}
+.btn-danger{background:#fee2e2;color:#b91c1c}
+.btn-dark{background:#211a32;color:white}
+
+.section-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  margin:26px 0 14px;
+}
+.section-head h2{font-size:20px}
+.section-head button{
+  color:var(--primary);
+  background:transparent;
+  font-weight:800;
+}
+
+.quick-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:12px;
+}
+.quick{
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:20px;
+  padding:17px;
+  box-shadow:0 7px 25px rgba(30,20,60,.04);
+  transition:.25s;
+  cursor:pointer;
+}
+.quick:hover{transform:translateY(-3px);box-shadow:var(--shadow)}
+.quick-icon{
+  width:42px;height:42px;border-radius:13px;
+  background:#f1ecff;
+  color:var(--primary);
+  display:grid;place-items:center;
+  font-size:20px;margin-bottom:12px;
+}
+.quick strong{display:block;font-size:18px}
+.quick span{font-size:12px;color:var(--muted)}
+
+.wallet{
+  margin-top:18px;
+  border-radius:24px;
+  padding:22px;
+  color:white;
+  background:linear-gradient(135deg,#111827,#312e81);
+  box-shadow:0 18px 45px rgba(17,24,39,.18);
+}
+.wallet-top{display:flex;justify-content:space-between;align-items:center}
+.wallet-label{opacity:.7;font-size:12px}
+.balance{
+  font-size:32px;
+  font-weight:900;
+  margin:8px 0 18px;
+  letter-spacing:-1px;
+}
+.wallet-actions{display:flex;gap:9px}
+.wallet-actions .btn{flex:1}
+
+.search-box{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  background:white;
+  border:1px solid var(--line);
+  border-radius:16px;
+  padding:0 15px;
+  height:52px;
+  box-shadow:0 5px 20px rgba(30,20,60,.04);
+}
+.search-box input{
+  flex:1;border:0;outline:0;background:transparent;color:var(--text);
+}
+
+.chips{
+  display:flex;
+  gap:8px;
+  overflow-x:auto;
+  padding:4px 0 5px;
+  scrollbar-width:none;
+}
+.chips::-webkit-scrollbar{display:none}
+.chip{
+  flex:none;
+  border:1px solid var(--line);
+  background:white;
+  padding:9px 14px;
+  border-radius:999px;
+  font-weight:700;
+  color:var(--muted);
+}
+.chip.active{background:var(--primary);color:white;border-color:var(--primary)}
+
+.course-grid,.note-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:14px;
+}
+.course-card,.note-card{
+  background:white;
+  border:1px solid var(--line);
+  border-radius:22px;
+  padding:17px;
+  transition:.25s;
+  cursor:pointer;
+  box-shadow:0 6px 24px rgba(30,20,60,.04);
+}
+.course-card:hover,.note-card:hover{transform:translateY(-4px);box-shadow:var(--shadow)}
+.course-code{
+  display:inline-flex;
+  padding:7px 10px;
+  background:#eee8ff;
+  color:var(--primary);
+  border-radius:10px;
+  font-size:12px;
+  font-weight:900;
+}
+.course-card h3{margin:13px 0 7px;font-size:17px}
+.course-card p,.note-card p{color:var(--muted);font-size:13px;line-height:1.5}
+.course-bottom,.note-bottom{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-top:15px;
+}
+.note-cover{
+  height:125px;
+  border-radius:17px;
+  background:
+    radial-gradient(circle at 80% 20%,rgba(255,255,255,.3),transparent 25%),
+    linear-gradient(135deg,#4c1d95,#9333ea);
+  color:white;
+  display:flex;
+  flex-direction:column;
+  justify-content:flex-end;
+  padding:15px;
+  margin-bottom:13px;
+}
+.note-cover strong{font-size:20px}
+.price{font-weight:900;color:var(--primary)}
+.favorite{
+  width:38px;height:38px;
+  border-radius:12px;
+  background:#f6f4fa;
+  display:grid;place-items:center;
+}
+
+.library-list,.transaction-list{
+  display:grid;
+  gap:10px;
+}
+.list-item{
+  background:white;
+  border:1px solid var(--line);
+  border-radius:18px;
+  padding:15px;
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+.list-icon{
+  width:44px;height:44px;border-radius:14px;
+  background:#f1ecff;
+  color:var(--primary);
+  display:grid;place-items:center;
+  flex:none;
+}
+.list-main{flex:1;min-width:0}
+.list-main strong{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.list-main span{font-size:12px;color:var(--muted)}
+.amount-positive{color:var(--success);font-weight:900}
+.amount-negative{color:var(--danger);font-weight:900}
+
+.profile-card{
+  background:white;
+  border:1px solid var(--line);
+  border-radius:25px;
+  padding:22px;
+}
+.avatar{
+  width:75px;height:75px;
+  border-radius:24px;
+  background:linear-gradient(135deg,var(--primary),#c084fc);
+  color:white;
+  display:grid;place-items:center;
+  font-size:26px;font-weight:900;
+}
+.profile-head{display:flex;gap:16px;align-items:center}
+.profile-head h2{margin-bottom:4px}
+.profile-head p{color:var(--muted);font-size:13px}
+.profile-menu{margin-top:22px;display:grid;gap:8px}
+.profile-option{
+  display:flex;align-items:center;gap:12px;
+  padding:15px;
+  border-radius:15px;
+  background:#faf9fd;
+  cursor:pointer;
+}
+.profile-option span{flex:1;font-weight:700}
+
+.bottom-nav{
+  position:fixed;
+  z-index:100;
+  left:50%;
+  bottom:12px;
+  transform:translateX(-50%);
+  width:min(580px,calc(100% - 20px));
+  background:rgba(255,255,255,.94);
+  backdrop-filter:blur(20px);
+  border:1px solid var(--line);
+  border-radius:24px;
+  padding:8px;
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  box-shadow:0 20px 60px rgba(20,10,50,.16);
+}
+.nav-item{
+  background:transparent;
+  padding:8px 3px;
+  border-radius:17px;
+  color:#898396;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:4px;
+  font-size:10px;
+  font-weight:800;
+}
+.nav-item b{font-size:19px}
+.nav-item.active{background:#f0eaff;color:var(--primary)}
+
+.auth-screen{
+  min-height:100vh;
+  display:grid;
+  place-items:center;
+  padding:20px;
+  background:
+    radial-gradient(circle at 20% 10%,#ddd6fe,transparent 30%),
+    radial-gradient(circle at 90% 90%,#e9d5ff,transparent 30%),
+    #f7f7fb;
+}
+.auth-card{
+  width:min(450px,100%);
+  background:white;
+  border:1px solid var(--line);
+  border-radius:30px;
+  padding:28px;
+  box-shadow:0 30px 80px rgba(40,20,80,.12);
+}
+.auth-logo{
+  width:68px;height:68px;
+  margin:0 auto 14px;
+  border-radius:22px;
+  background:linear-gradient(135deg,var(--primary),#3b0764);
+  color:white;
+  display:grid;place-items:center;
+  font-size:24px;font-weight:900;
+}
+.auth-card h1{text-align:center}
+.auth-card .subtitle{text-align:center;color:var(--muted);font-size:13px;margin:7px 0 24px}
+.auth-tabs{
+  display:grid;grid-template-columns:1fr 1fr;
+  background:#f6f4fa;padding:4px;border-radius:14px;margin-bottom:18px;
+}
+.auth-tab{padding:11px;border-radius:11px;background:transparent;font-weight:800;color:var(--muted)}
+.auth-tab.active{background:white;color:var(--primary);box-shadow:0 3px 10px rgba(0,0,0,.05)}
+.field{margin-bottom:14px}
+.field label{display:block;font-size:12px;font-weight:800;margin-bottom:7px}
+.field input{
+  width:100%;height:49px;
+  border:1px solid var(--line);
+  border-radius:14px;
+  padding:0 14px;
+  outline:none;
+  background:#fcfbfe;
+}
+.field input:focus{border-color:var(--primary3);box-shadow:0 0 0 4px #ede9fe}
+.auth-submit{width:100%;margin-top:5px}
+.auth-foot{text-align:center;margin-top:16px;font-size:12px;color:var(--muted)}
+.link{color:var(--primary);font-weight:800;cursor:pointer}
+
+.splash{
+  position:fixed;
+  inset:0;
+  z-index:1000;
+  display:grid;
+  place-items:center;
+  background:linear-gradient(135deg,#3b0764,#6d28d9,#9333ea);
+  color:white;
+  transition:opacity .5s,visibility .5s;
+}
+.splash.hide{opacity:0;visibility:hidden}
+.splash-logo{
+  width:95px;height:95px;
+  border-radius:30px;
+  background:rgba(255,255,255,.16);
+  border:1px solid rgba(255,255,255,.25);
+  display:grid;place-items:center;
+  font-size:34px;font-weight:900;
+  margin:auto;
+  animation:float 1.7s infinite ease-in-out;
+}
+.splash h1{text-align:center;font-size:34px;margin-top:18px}
+.splash p{text-align:center;opacity:.75}
+@keyframes float{50%{transform:translateY(-9px) scale(1.03)}}
+
+.modal-backdrop{
+  position:fixed;
+  inset:0;
+  z-index:500;
+  background:rgba(14,8,30,.58);
+  backdrop-filter:blur(5px);
+  display:none;
+  align-items:flex-end;
+  justify-content:center;
+  padding:12px;
+}
+.modal-backdrop.show{display:flex}
+.modal{
+  width:min(600px,100%);
+  max-height:90vh;
+  overflow:auto;
+  background:white;
+  border-radius:28px;
+  padding:22px;
+  animation:sheet .25s ease;
+}
+@keyframes sheet{from{transform:translateY(30px);opacity:.3}to{transform:none;opacity:1}}
+.modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:17px}
+.close{width:38px;height:38px;border-radius:12px;background:#f5f3f8}
+.modal-actions{display:flex;gap:9px;margin-top:20px}
+.modal-actions .btn{flex:1}
+.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:15px}
+.info-box{background:#f8f7fb;border-radius:16px;padding:14px}
+.info-box small{display:block;color:var(--muted);font-size:10px}
+.info-box strong{display:block;margin-top:4px}
+
+.toast-wrap{
+  position:fixed;
+  z-index:2000;
+  top:18px;
+  left:50%;
+  transform:translateX(-50%);
+  width:min(440px,calc(100% - 30px));
+  display:grid;
+  gap:8px;
+}
+.toast{
+  background:#211a32;
+  color:white;
+  border-radius:16px;
+  padding:14px 16px;
+  box-shadow:0 15px 40px rgba(0,0,0,.2);
+  animation:toast .25s ease;
+  font-size:13px;
+}
+.toast.success{background:#166534}
+.toast.error{background:#991b1b}
+@keyframes toast{from{transform:translateY(-12px);opacity:0}to{transform:none;opacity:1}}
+
+.empty{
+  text-align:center;
+  padding:45px 20px;
+  color:var(--muted);
+  background:white;
+  border:1px dashed var(--line);
+  border-radius:22px;
+}
+.empty-icon{font-size:35px;margin-bottom:10px}
+
+.spinner{
+  width:20px;height:20px;
+  border:3px solid rgba(255,255,255,.35);
+  border-top-color:white;
+  border-radius:50%;
+  animation:spin .7s linear infinite;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+.loading{
+  min-height:180px;
+  display:grid;place-items:center;
+  color:var(--muted);
+}
+
+.footer{
+  text-align:center;
+  padding:28px 10px 10px;
+  color:#9691a3;
+  font-size:11px;
+}
+.footer strong{color:var(--primary)}
+
+@media(max-width:850px){
+  .quick-grid{grid-template-columns:repeat(2,1fr)}
+  .course-grid,.note-grid{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:600px){
+  .container{width:min(100% - 22px,1180px)}
+  .topbar-inner{padding:12px 11px}
+  .brand-text strong{font-size:15px}
+  .hero{padding:23px;border-radius:24px}
+  .quick-grid{gap:9px}
+  .quick{padding:13px}
+  .course-grid,.note-grid{grid-template-columns:1fr 1fr;gap:10px}
+  .course-card,.note-card{padding:13px;border-radius:18px}
+  .note-cover{height:105px}
+  .wallet{padding:18px}
+  .balance{font-size:28px}
+}
+@media(max-width:390px){
+  .course-grid,.note-grid{grid-template-columns:1fr}
+  .quick-grid{grid-template-columns:1fr 1fr}
+}
+</style>
+</head>
+
+<body>
+
+<div id="splash" class="splash">
+  <div>
+    <div class="splash-logo">CC</div>
+    <h1>CampusConnect</h1>
+    <p>Learn • Share • Connect</p>
+  </div>
+</div>
+
+<div id="authScreen" class="auth-screen hidden">
+  <div class="auth-card">
+    <div class="auth-logo">CC</div>
+    <h1>CampusConnect</h1>
+    <div class="subtitle">Your academic marketplace</div>
+
+    <div class="auth-tabs">
+      <button id="loginTab" class="auth-tab active" onclick="showAuth('login')">Login</button>
+      <button id="registerTab" class="auth-tab" onclick="showAuth('register')">Create account</button>
+    </div>
+
+    <form id="loginForm">
+      <div class="field">
+        <label>Email address</label>
+        <input id="loginEmail" type="email" required placeholder="you@example.com">
+      </div>
+      <div class="field">
+        <label>Password</label>
+        <input id="loginPassword" type="password" required placeholder="••••••••">
+      </div>
+      <button class="btn btn-primary auth-submit" type="submit">Login to CampusConnect</button>
+      <div class="auth-foot">
+        <span class="link" onclick="forgotPassword()">Forgot password?</span>
+      </div>
+    </form>
+
+    <form id="registerForm" class="hidden">
+      <div class="field">
+        <label>Full name</label>
+        <input id="regName" required placeholder="Muhammad Bin Ali">
+      </div>
+      <div class="field">
+        <label>Email address</label>
+        <input id="regEmail" type="email" required placeholder="you@example.com">
+      </div>
+      <div class="field">
+        <label>Phone number</label>
+        <input id="regPhone" placeholder="080...">
+      </div>
+      <div class="field">
+        <label>Password</label>
+        <input id="regPassword" type="password" minlength="6" required placeholder="At least 6 characters">
+      </div>
+      <button class="btn btn-primary auth-submit" type="submit">Create Student Account</button>
+    </form>
+
+    <div class="auth-foot">
+      CampusConnect is built for students.
+    </div>
+  </div>
+</div>
+
+<div id="app" class="app hidden">
+
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="brand" onclick="go('home')">
+        <div class="logo">CC</div>
+        <div class="brand-text">
+          <strong>CampusConnect</strong>
+          <span>Learn • Share • Connect</span>
+        </div>
+      </div>
+      <div class="top-actions">
+        <button class="icon-btn" onclick="openNotifications()">🔔</button>
+        <button class="icon-btn" onclick="go('profile')">👤</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+
+    <section id="homeView" class="view">
+      <div class="hero">
+        <small id="welcomeSmall">WELCOME BACK</small>
+        <h1 id="welcomeName">Student 👋</h1>
+        <p>Your academic resources, wallet and notes — all in one place.</p>
+        <div class="hero-actions">
+          <button class="btn btn-white" onclick="go('courses')">Explore Courses</button>
+          <button class="btn" style="background:rgba(255,255,255,.14);color:white" onclick="openFundModal()">＋ Fund Wallet</button>
+        </div>
+      </div>
+
+      <div class="wallet">
+        <div class="wallet-top">
+          <div>
+            <div class="wallet-label">AVAILABLE WALLET BALANCE</div>
+            <div class="balance" id="walletBalance">₦0.00</div>
+          </div>
+          <div style="font-size:28px">💳</div>
+        </div>
+        <div class="wallet-actions">
+          <button class="btn btn-white" onclick="openFundModal()">＋ Add Money</button>
+          <button class="btn" style="background:rgba(255,255,255,.12);color:white" onclick="go('transactions')">Transactions</button>
+        </div>
+      </div>
+
+      <div class="section-head"><h2>Quick access</h2></div>
+      <div class="quick-grid">
+        <div class="quick" onclick="go('courses')">
+          <div class="quick-icon">📚</div>
+          <strong id="courseCount">0</strong>
+          <span>Courses available</span>
+        </div>
+        <div class="quick" onclick="go('marketplace')">
+          <div class="quick-icon">🛍️</div>
+          <strong id="noteCount">0</strong>
+          <span>Notes marketplace</span>
+        </div>
+        <div class="quick" onclick="go('library')">
+          <div class="quick-icon">📖</div>
+          <strong id="libraryCount">0</strong>
+          <span>My library</span>
+        </div>
+        <div class="quick" onclick="go('transactions')">
+          <div class="quick-icon">💸</div>
+          <strong id="transactionCount">0</strong>
+          <span>Transactions</span>
+        </div>
+      </div>
+
+      <div class="section-head">
+        <h2>Popular courses</h2>
+        <button onclick="go('courses')">See all</button>
+      </div>
+      <div id="homeCourses" class="course-grid"></div>
+
+      <div class="section-head">
+        <h2>Latest notes</h2>
+        <button onclick="go('marketplace')">View marketplace</button>
+      </div>
+      <div id="homeNotes" class="note-grid"></div>
+    </section>
+
+    <section id="coursesView" class="view hidden">
+      <div class="section-head">
+        <div>
+          <h2>Explore courses</h2>
+          <p style="color:var(--muted);font-size:12px;margin-top:4px">Choose a course to discover its notes.</p>
+        </div>
+      </div>
+
+      <div class="search-box">
+        🔎
+        <input id="courseSearch" oninput="renderCourses()" placeholder="Search course code or title...">
+      </div>
+
+      <div style="height:15px"></div>
+      <div id="coursesGrid" class="course-grid"></div>
+    </section>
+
+    <section id="marketplaceView" class="view hidden">
+      <div class="section-head">
+        <div>
+          <h2>Notes marketplace</h2>
+          <p style="color:var(--muted);font-size:12px;margin-top:4px">Find notes shared by students.</p>
+        </div>
+      </div>
+
+      <div class="search-box">
+        🔎
+        <input id="noteSearch" oninput="renderNotes()" placeholder="Search notes, course codes...">
+      </div>
+
+      <div style="height:14px"></div>
+      <div id="courseChips
     .container {
       width: 100%;
       max-width: 1100px;
