@@ -10,6 +10,7 @@
 content="CampusConnect - University Notes Marketplace">
 
 <style>
+
 *{
     margin:0;
     padding:0;
@@ -47,6 +48,7 @@ button{
 .hidden{
     display:none!important;
 }
+
 
 /* =========================
    AUTH
@@ -184,6 +186,7 @@ button{
     color:#15803d;
 }
 
+
 /* =========================
    APP
 ========================= */
@@ -247,7 +250,7 @@ button{
 main{
     max-width:1100px;
     margin:auto;
-    padding:20px 16px 105px;
+    padding:20px 16px 125px;
 }
 
 .welcome{
@@ -263,6 +266,7 @@ main{
     margin-top:5px;
     font-size:24px;
 }
+
 
 /* =========================
    WALLET
@@ -304,6 +308,7 @@ main{
     font-weight:800;
 }
 
+
 /* =========================
    SECTION
 ========================= */
@@ -323,7 +328,9 @@ main{
     color:var(--primary);
     font-size:11px;
     font-weight:700;
+    cursor:pointer;
 }
+
 
 /* =========================
    QUICK ACTIONS
@@ -353,6 +360,7 @@ main{
     font-weight:800;
 }
 
+
 /* =========================
    SEARCH
 ========================= */
@@ -378,6 +386,7 @@ main{
     width:100%;
     background:transparent;
 }
+
 
 /* =========================
    COURSES
@@ -425,6 +434,7 @@ main{
     font-size:11px;
     font-weight:800;
 }
+
 
 /* =========================
    NOTES
@@ -490,6 +500,7 @@ main{
     font-weight:800;
 }
 
+
 /* =========================
    EMPTY
 ========================= */
@@ -503,6 +514,7 @@ main{
     color:var(--muted);
     font-size:12px;
 }
+
 
 /* =========================
    PROFILE
@@ -550,6 +562,7 @@ main{
     font-weight:800;
 }
 
+
 /* =========================
    LIBRARY
 ========================= */
@@ -582,6 +595,117 @@ main{
     font-size:10px;
     margin-top:4px;
 }
+
+.library-open{
+    border:none;
+    background:#edf3ff;
+    color:var(--primary);
+    padding:9px 11px;
+    border-radius:9px;
+    font-size:10px;
+    font-weight:800;
+}
+
+
+/* =========================
+   FOOTER
+========================= */
+
+footer{
+    margin-top:45px;
+    padding:25px 15px 18px;
+    text-align:center;
+    position:relative;
+    overflow:hidden;
+}
+
+.footer-line{
+    width:70px;
+    height:3px;
+    background:var(--primary);
+    border-radius:20px;
+    margin:0 auto 15px;
+    animation:footerPulse 2.5s ease-in-out infinite;
+}
+
+.footer-brand{
+    font-size:14px;
+    font-weight:900;
+    color:var(--primary);
+    letter-spacing:.5px;
+    animation:footerFloat 3s ease-in-out infinite;
+}
+
+.footer-published{
+    margin-top:7px;
+    font-size:11px;
+    color:var(--muted);
+}
+
+.footer-published strong{
+    color:var(--text);
+}
+
+.footer-copy{
+    margin-top:6px;
+    font-size:10px;
+    color:#9aa2b2;
+}
+
+.footer-glow{
+    position:absolute;
+    width:120px;
+    height:120px;
+    border-radius:50%;
+    background:rgba(37,99,235,.08);
+    filter:blur(25px);
+    left:50%;
+    top:50%;
+    transform:translate(-50%,-50%);
+    animation:footerGlow 4s ease-in-out infinite;
+    pointer-events:none;
+}
+
+@keyframes footerPulse{
+
+    0%,100%{
+        transform:scaleX(.8);
+        opacity:.6;
+    }
+
+    50%{
+        transform:scaleX(1.3);
+        opacity:1;
+    }
+
+}
+
+@keyframes footerFloat{
+
+    0%,100%{
+        transform:translateY(0);
+    }
+
+    50%{
+        transform:translateY(-3px);
+    }
+
+}
+
+@keyframes footerGlow{
+
+    0%,100%{
+        transform:translate(-50%,-50%) scale(.8);
+        opacity:.4;
+    }
+
+    50%{
+        transform:translate(-50%,-50%) scale(1.3);
+        opacity:.8;
+    }
+
+}
+
 
 /* =========================
    BOTTOM NAV
@@ -619,6 +743,7 @@ main{
     font-weight:800;
 }
 
+
 /* =========================
    TOAST
 ========================= */
@@ -646,6 +771,7 @@ main{
     transform:translateX(-50%) translateY(0);
 }
 
+
 /* =========================
    LOADER
 ========================= */
@@ -656,6 +782,11 @@ main{
     color:var(--muted);
     font-size:12px;
 }
+
+
+/* =========================
+   DESKTOP
+========================= */
 
 @media(min-width:700px){
 
@@ -679,11 +810,14 @@ main{
         border:1px solid var(--border);
         border-radius:18px 18px 0 0;
     }
+
 }
+
 </style>
 </head>
 
 <body>
+
 
 <!-- =========================
      AUTH SCREEN
@@ -694,38 +828,65 @@ main{
     <div class="auth-card">
 
         <div class="auth-brand">
-            <div class="auth-logo">CC</div>
-            <h1>CampusConnect</h1>
-            <p>University Notes Marketplace</p>
+
+            <div class="auth-logo">
+                CC
+            </div>
+
+            <h1>
+                CampusConnect
+            </h1>
+
+            <p>
+                University Notes Marketplace
+            </p>
+
         </div>
+
 
         <!-- LOGIN -->
 
         <div id="loginForm">
 
-            <h2 class="auth-title">Welcome back 👋</h2>
+            <h2 class="auth-title">
+                Welcome back 👋
+            </h2>
 
-            <div id="loginMessage" class="auth-message"></div>
+            <div id="loginMessage"
+                 class="auth-message">
+            </div>
 
             <div class="form-group">
-                <label>Email Address</label>
+
+                <label>
+                    Email Address
+                </label>
+
                 <input
                     id="loginEmail"
                     type="email"
                     placeholder="Enter your email"
                     autocomplete="email"
                 >
+
             </div>
 
+
             <div class="form-group">
-                <label>Password</label>
+
+                <label>
+                    Password
+                </label>
+
                 <input
                     id="loginPassword"
                     type="password"
                     placeholder="Enter your password"
                     autocomplete="current-password"
                 >
+
             </div>
+
 
             <button
                 id="loginButton"
@@ -735,11 +896,15 @@ main{
                 Login
             </button>
 
+
             <div class="auth-switch">
+
                 Don't have an account?
+
                 <button onclick="showRegister()">
                     Create account
                 </button>
+
             </div>
 
         </div>
@@ -747,51 +912,81 @@ main{
 
         <!-- REGISTER -->
 
-        <div id="registerForm" class="hidden">
+        <div id="registerForm"
+             class="hidden">
 
-            <h2 class="auth-title">Create Student Account</h2>
+            <h2 class="auth-title">
+                Create Student Account
+            </h2>
 
-            <div id="registerMessage" class="auth-message"></div>
+            <div id="registerMessage"
+                 class="auth-message">
+            </div>
+
 
             <div class="form-group">
-                <label>Full Name</label>
+
+                <label>
+                    Full Name
+                </label>
+
                 <input
                     id="registerName"
                     type="text"
                     placeholder="Enter your full name"
                     autocomplete="name"
                 >
+
             </div>
 
+
             <div class="form-group">
-                <label>Email Address</label>
+
+                <label>
+                    Email Address
+                </label>
+
                 <input
                     id="registerEmail"
                     type="email"
                     placeholder="Enter your email"
                     autocomplete="email"
                 >
+
             </div>
 
+
             <div class="form-group">
-                <label>Phone Number</label>
+
+                <label>
+                    Phone Number
+                </label>
+
                 <input
                     id="registerPhone"
                     type="tel"
                     placeholder="Enter your phone number"
                     autocomplete="tel"
                 >
+
             </div>
 
+
             <div class="form-group">
-                <label>Password</label>
+
+                <label>
+                    Password
+                </label>
+
                 <input
                     id="registerPassword"
                     type="password"
                     placeholder="Create a password"
                     autocomplete="new-password"
                 >
+
             </div>
+
 
             <button
                 id="registerButton"
@@ -801,11 +996,15 @@ main{
                 Create Account
             </button>
 
+
             <div class="auth-switch">
+
                 Already have an account?
+
                 <button onclick="showLogin()">
                     Login
                 </button>
+
             </div>
 
         </div>
@@ -815,11 +1014,14 @@ main{
 </section>
 
 
+
 <!-- =========================
      MAIN APP
 ========================= -->
 
-<div id="app" class="app hidden">
+<div id="app"
+     class="app hidden">
+
 
 <header class="topbar">
 
@@ -830,11 +1032,19 @@ main{
         </div>
 
         <div class="brand-text">
-            <h1>CampusConnect</h1>
-            <span>University Notes Marketplace</span>
+
+            <h1>
+                CampusConnect
+            </h1>
+
+            <span>
+                University Notes Marketplace
+            </span>
+
         </div>
 
     </div>
+
 
     <button
         class="profile-button"
@@ -847,7 +1057,9 @@ main{
 </header>
 
 
+
 <main>
+
 
     <!-- HOME -->
 
@@ -887,6 +1099,7 @@ main{
 
                 </div>
 
+
                 <button
                     class="wallet-button"
                     onclick="fundWallet()"
@@ -902,51 +1115,92 @@ main{
         <!-- QUICK ACTIONS -->
 
         <div class="section-title">
-            <h3>Quick Actions</h3>
+
+            <h3>
+                Quick Actions
+            </h3>
+
         </div>
 
+
         <section class="quick-actions">
+
 
             <button
                 class="quick-card"
                 onclick="showPage('courses')"
             >
-                <div class="quick-icon">📚</div>
-                <p>Courses</p>
+
+                <div class="quick-icon">
+                    📚
+                </div>
+
+                <p>
+                    Courses
+                </p>
+
             </button>
+
 
             <button
                 class="quick-card"
                 onclick="showPage('notes')"
             >
-                <div class="quick-icon">📄</div>
-                <p>Notes</p>
+
+                <div class="quick-icon">
+                    📄
+                </div>
+
+                <p>
+                    Notes
+                </p>
+
             </button>
+
 
             <button
                 class="quick-card"
                 onclick="showPage('library')"
             >
-                <div class="quick-icon">📥</div>
-                <p>My Library</p>
+
+                <div class="quick-icon">
+                    📥
+                </div>
+
+                <p>
+                    My Library
+                </p>
+
             </button>
+
 
             <button
                 class="quick-card"
                 onclick="showPage('profile')"
             >
-                <div class="quick-icon">👤</div>
-                <p>Profile</p>
+
+                <div class="quick-icon">
+                    👤
+                </div>
+
+                <p>
+                    Profile
+                </p>
+
             </button>
 
+
         </section>
+
 
 
         <!-- SEARCH -->
 
         <div class="search-box">
 
-            <span>🔎</span>
+            <span>
+                🔎
+            </span>
 
             <input
                 id="searchInput"
@@ -958,11 +1212,14 @@ main{
         </div>
 
 
+
         <!-- COURSES -->
 
         <div class="section-title">
 
-            <h3>Courses</h3>
+            <h3>
+                Courses
+            </h3>
 
             <span onclick="showPage('courses')">
                 View all
@@ -970,21 +1227,27 @@ main{
 
         </div>
 
+
         <section
             id="homeCourses"
             class="courses"
         >
+
             <div class="loader">
                 Loading courses...
             </div>
+
         </section>
+
 
 
         <!-- NOTES -->
 
         <div class="section-title">
 
-            <h3>Latest Notes</h3>
+            <h3>
+                Latest Notes
+            </h3>
 
             <span onclick="showPage('notes')">
                 View all
@@ -992,16 +1255,20 @@ main{
 
         </div>
 
+
         <section
             id="homeNotes"
             class="notes"
         >
+
             <div class="loader">
                 Loading notes...
             </div>
+
         </section>
 
     </section>
+
 
 
     <!-- COURSES PAGE -->
@@ -1012,8 +1279,13 @@ main{
     >
 
         <div class="section-title">
-            <h3>All Courses</h3>
+
+            <h3>
+                All Courses
+            </h3>
+
         </div>
+
 
         <section
             id="allCourses"
@@ -1021,6 +1293,7 @@ main{
         ></section>
 
     </section>
+
 
 
     <!-- NOTES PAGE -->
@@ -1031,8 +1304,13 @@ main{
     >
 
         <div class="section-title">
-            <h3>Available Notes</h3>
+
+            <h3>
+                Available Notes
+            </h3>
+
         </div>
+
 
         <section
             id="allNotes"
@@ -1040,6 +1318,7 @@ main{
         ></section>
 
     </section>
+
 
 
     <!-- LIBRARY PAGE -->
@@ -1050,8 +1329,13 @@ main{
     >
 
         <div class="section-title">
-            <h3>My Library</h3>
+
+            <h3>
+                My Library
+            </h3>
+
         </div>
+
 
         <section
             id="libraryList"
@@ -1059,6 +1343,7 @@ main{
         ></section>
 
     </section>
+
 
 
     <!-- PROFILE PAGE -->
@@ -1069,8 +1354,13 @@ main{
     >
 
         <div class="section-title">
-            <h3>My Profile</h3>
+
+            <h3>
+                My Profile
+            </h3>
+
         </div>
+
 
         <div class="profile-card">
 
@@ -1081,17 +1371,21 @@ main{
                 CC
             </div>
 
+
             <h3 id="profileName">
                 Student
             </h3>
+
 
             <p id="profileEmail">
                 —
             </p>
 
+
             <p id="profilePhone">
                 —
             </p>
+
 
             <button
                 class="logout-btn"
@@ -1104,64 +1398,117 @@ main{
 
     </section>
 
+
+
+    <!-- =========================
+         ATTRACTIVE FOOTER
+    ========================= -->
+
     <footer>
-        Created by Muhammad Bin Ali, popularly known as GCR.
-        <br>
-        © 2026 CampusConnect
+
+        <div class="footer-glow"></div>
+
+        <div class="footer-line"></div>
+
+        <div class="footer-brand">
+            GCR • CampusConnect
+        </div>
+
+        <div class="footer-published">
+            Published by
+            <strong>Muhammad Bin Ali</strong>
+        </div>
+
+        <div class="footer-copy">
+            © 2026 CampusConnect • University Notes Marketplace
+        </div>
+
     </footer>
 
+
 </main>
+
 
 
 <!-- BOTTOM NAV -->
 
 <nav class="bottom-nav">
 
+
     <button
         id="navHome"
         class="nav-item active"
         onclick="showPage('home')"
     >
-        <span class="nav-icon">🏠</span>
+
+        <span class="nav-icon">
+            🏠
+        </span>
+
         Home
+
     </button>
+
 
     <button
         id="navCourses"
         class="nav-item"
         onclick="showPage('courses')"
     >
-        <span class="nav-icon">📚</span>
+
+        <span class="nav-icon">
+            📚
+        </span>
+
         Courses
+
     </button>
+
 
     <button
         id="navLibrary"
         class="nav-item"
         onclick="showPage('library')"
     >
-        <span class="nav-icon">📥</span>
+
+        <span class="nav-icon">
+            📥
+        </span>
+
         Library
+
     </button>
+
 
     <button
         id="navProfile"
         class="nav-item"
         onclick="showPage('profile')"
     >
-        <span class="nav-icon">👤</span>
+
+        <span class="nav-icon">
+            👤
+        </span>
+
         Profile
+
     </button>
+
 
 </nav>
 
 </div>
 
 
-<div id="toast" class="toast"></div>
+
+<div id="toast"
+     class="toast">
+</div>
+
 
 
 <script>
+
 
 /* =====================================================
    CAMPUSCONNECT API
@@ -1202,17 +1549,25 @@ const CampusConnect = {
 function showToast(message){
 
     const toast =
-        document.getElementById("toast");
+        document.getElementById(
+            "toast"
+        );
 
-    toast.textContent = message;
+    toast.textContent =
+        message;
 
-    toast.classList.add("show");
+    toast.classList.add(
+        "show"
+    );
 
     setTimeout(() => {
 
-        toast.classList.remove("show");
+        toast.classList.remove(
+            "show"
+        );
 
     },3000);
+
 }
 
 
@@ -1234,12 +1589,14 @@ async function apiRequest(
 
     };
 
+
     if(CampusConnect.token){
 
         headers.Authorization =
             `Bearer ${CampusConnect.token}`;
 
     }
+
 
     const response =
         await fetch(
@@ -1250,7 +1607,9 @@ async function apiRequest(
             }
         );
 
+
     let data;
+
 
     try{
 
@@ -1263,6 +1622,7 @@ async function apiRequest(
 
     }
 
+
     if(!response.ok){
 
         throw new Error(
@@ -1272,6 +1632,7 @@ async function apiRequest(
         );
 
     }
+
 
     return data;
 
@@ -1285,12 +1646,22 @@ async function apiRequest(
 function showRegister(){
 
     document
-        .getElementById("loginForm")
-        .classList.add("hidden");
+        .getElementById(
+            "loginForm"
+        )
+        .classList.add(
+            "hidden"
+        );
+
 
     document
-        .getElementById("registerForm")
-        .classList.remove("hidden");
+        .getElementById(
+            "registerForm"
+        )
+        .classList.remove(
+            "hidden"
+        );
+
 
     clearMessages();
 
@@ -1300,12 +1671,22 @@ function showRegister(){
 function showLogin(){
 
     document
-        .getElementById("registerForm")
-        .classList.add("hidden");
+        .getElementById(
+            "registerForm"
+        )
+        .classList.add(
+            "hidden"
+        );
+
 
     document
-        .getElementById("loginForm")
-        .classList.remove("hidden");
+        .getElementById(
+            "loginForm"
+        )
+        .classList.remove(
+            "hidden"
+        );
+
 
     clearMessages();
 
@@ -1320,12 +1701,15 @@ function clearMessages(){
     ].forEach(id=>{
 
         const el =
-            document.getElementById(id);
+            document.getElementById(
+                id
+            );
 
         el.className =
             "auth-message";
 
-        el.textContent = "";
+        el.textContent =
+            "";
 
     });
 
@@ -1339,9 +1723,12 @@ function showMessage(
 ){
 
     const el =
-        document.getElementById(id);
+        document.getElementById(
+            id
+        );
 
-    el.textContent = message;
+    el.textContent =
+        message;
 
     el.className =
         `auth-message ${type}`;
@@ -1357,22 +1744,36 @@ async function registerStudent(){
 
     const name =
         document
-        .getElementById("registerName")
-        .value.trim();
+        .getElementById(
+            "registerName"
+        )
+        .value
+        .trim();
+
 
     const email =
         document
-        .getElementById("registerEmail")
-        .value.trim();
+        .getElementById(
+            "registerEmail"
+        )
+        .value
+        .trim();
+
 
     const phone =
         document
-        .getElementById("registerPhone")
-        .value.trim();
+        .getElementById(
+            "registerPhone"
+        )
+        .value
+        .trim();
+
 
     const password =
         document
-        .getElementById("registerPassword")
+        .getElementById(
+            "registerPassword"
+        )
         .value;
 
 
@@ -1405,7 +1806,10 @@ async function registerStudent(){
             "registerButton"
         );
 
-    button.disabled = true;
+
+    button.disabled =
+        true;
+
     button.textContent =
         "Creating account...";
 
@@ -1434,11 +1838,6 @@ async function registerStudent(){
             );
 
 
-        /*
-         The backend may return a token
-         immediately or require login.
-        */
-
         if(result.token){
 
             CampusConnect.token =
@@ -1459,9 +1858,14 @@ async function registerStudent(){
                 "success"
             );
 
+
             document
-                .getElementById("loginEmail")
-                .value = email;
+                .getElementById(
+                    "loginEmail"
+                )
+                .value =
+                email;
+
 
             setTimeout(
                 showLogin,
@@ -1479,7 +1883,8 @@ async function registerStudent(){
 
     }finally{
 
-        button.disabled = false;
+        button.disabled =
+            false;
 
         button.textContent =
             "Create Account";
@@ -1497,12 +1902,18 @@ async function loginStudent(){
 
     const email =
         document
-        .getElementById("loginEmail")
-        .value.trim();
+        .getElementById(
+            "loginEmail"
+        )
+        .value
+        .trim();
+
 
     const password =
         document
-        .getElementById("loginPassword")
+        .getElementById(
+            "loginPassword"
+        )
         .value;
 
 
@@ -1523,7 +1934,9 @@ async function loginStudent(){
             "loginButton"
         );
 
-    button.disabled = true;
+
+    button.disabled =
+        true;
 
     button.textContent =
         "Logging in...";
@@ -1548,11 +1961,6 @@ async function loginStudent(){
                 }
             );
 
-
-        /*
-         Admin accounts must not enter
-         the student application.
-        */
 
         if(
             result.role === "admin" ||
@@ -1583,6 +1991,7 @@ async function loginStudent(){
         CampusConnect.token =
             token;
 
+
         localStorage.setItem(
             "campusconnect_token",
             token
@@ -1601,7 +2010,8 @@ async function loginStudent(){
 
     }finally{
 
-        button.disabled = false;
+        button.disabled =
+            false;
 
         button.textContent =
             "Login";
@@ -1618,30 +2028,51 @@ async function loginStudent(){
 async function startApplication(){
 
     document
-        .getElementById("authScreen")
-        .classList.add("hidden");
+        .getElementById(
+            "authScreen"
+        )
+        .classList.add(
+            "hidden"
+        );
+
 
     document
-        .getElementById("app")
-        .classList.remove("hidden");
+        .getElementById(
+            "app"
+        )
+        .classList.remove(
+            "hidden"
+        );
 
 
     try{
 
         await loadCurrentUser();
 
+
         await Promise.all([
+
             loadCourses(),
+
             loadNotes(),
+
             loadWallet(),
+
             loadLibrary()
+
         ]);
+
 
         renderEverything();
 
+
     }catch(error){
 
-        console.error(error);
+        console.error(
+            "APPLICATION LOAD ERROR:",
+            error
+        );
+
 
         showToast(
             "Unable to load some CampusConnect data."
@@ -1663,16 +2094,12 @@ async function loadCurrentUser(){
             "/api/auth/me"
         );
 
+
     CampusConnect.user =
         result.user ||
         result.student ||
         result;
 
-
-    /*
-     Extra protection against an admin
-     accidentally using the student app.
-    */
 
     if(
         CampusConnect.user.role === "admin"
@@ -1700,6 +2127,7 @@ async function loadCourses(){
             "/api/courses"
         );
 
+
     CampusConnect.courses =
         result.courses ||
         result.data ||
@@ -1726,18 +2154,20 @@ function renderCourses(){
 
     if(!CampusConnect.courses.length){
 
-        containers.forEach(container=>{
+        containers.forEach(
+            container=>{
 
-            if(container){
+                if(container){
 
-                container.innerHTML =
-                    `<div class="empty">
-                        No courses available yet.
-                    </div>`;
+                    container.innerHTML =
+                        `<div class="empty">
+                            No courses available yet.
+                        </div>`;
+
+                }
 
             }
-
-        });
+        );
 
         return;
 
@@ -1751,25 +2181,34 @@ function renderCourses(){
             <article class="course-card">
 
                 <div class="course-code">
+
                     ${escapeHTML(
                         course.course_code || ""
                     )}
+
                 </div>
 
+
                 <h4>
+
                     ${escapeHTML(
                         course.course_title || ""
                     )}
+
                 </h4>
 
+
                 <p>
+
                     ${
                         escapeHTML(
                             course.description ||
                             "Study materials and lecture notes"
                         )
                     }
+
                 </p>
+
 
                 <button
                     class="view-course"
@@ -1784,15 +2223,18 @@ function renderCourses(){
         .join("");
 
 
-    containers.forEach(container=>{
+    containers.forEach(
+        container=>{
 
-        if(container){
+            if(container){
 
-            container.innerHTML = html;
+                container.innerHTML =
+                    html;
+
+            }
 
         }
-
-    });
+    );
 
 }
 
@@ -1814,6 +2256,7 @@ async function loadNotes(){
         await apiRequest(
             "/api/notes"
         );
+
 
     CampusConnect.notes =
         result.notes ||
@@ -1841,18 +2284,20 @@ function renderNotes(){
 
     if(!CampusConnect.notes.length){
 
-        containers.forEach(container=>{
+        containers.forEach(
+            container=>{
 
-            if(container){
+                if(container){
 
-                container.innerHTML =
-                    `<div class="empty">
-                        No notes are available yet.
-                    </div>`;
+                    container.innerHTML =
+                        `<div class="empty">
+                            No notes are available yet.
+                        </div>`;
+
+                }
 
             }
-
-        });
+        );
 
         return;
 
@@ -1877,15 +2322,21 @@ function renderNotes(){
                     PDF
                 </div>
 
+
                 <div class="note-info">
 
                     <h4>
+
                         ${escapeHTML(
-                            note.title || "Untitled Note"
+                            note.title ||
+                            "Untitled Note"
                         )}
+
                     </h4>
 
+
                     <p>
+
                         ${
                             escapeHTML(
                                 note.description ||
@@ -1894,18 +2345,23 @@ function renderNotes(){
                                 )
                             )
                         }
+
                     </p>
 
+
                     <div class="note-price">
+
                         ₦${price.toLocaleString(
                             "en-NG",
                             {
                                 minimumFractionDigits:2
                             }
                         )}
+
                     </div>
 
                 </div>
+
 
                 <button
                     class="buy-button"
@@ -1922,15 +2378,18 @@ function renderNotes(){
         .join("");
 
 
-    containers.forEach(container=>{
+    containers.forEach(
+        container=>{
 
-        if(container){
+            if(container){
 
-            container.innerHTML = html;
+                container.innerHTML =
+                    html;
+
+            }
 
         }
-
-    });
+    );
 
 }
 
@@ -1989,6 +2448,7 @@ function renderWallet(){
 
 /* =====================================================
    LIBRARY
+   FIXED ROUTE
 ===================================================== */
 
 async function loadLibrary(){
@@ -2002,7 +2462,7 @@ async function loadLibrary(){
 
     const result =
         await apiRequest(
-            "/api/student/library"
+            "/api/library"
         );
 
 
@@ -2053,23 +2513,43 @@ function renderLibrary(){
                     PDF
                 </div>
 
+
                 <div class="library-item-info">
 
                     <h4>
+
                         ${escapeHTML(
                             note.title ||
                             "Purchased Note"
                         )}
+
                     </h4>
 
+
                     <p>
+
                         ${escapeHTML(
                             note.description ||
                             "Available in your library"
                         )}
+
                     </p>
 
                 </div>
+
+
+                ${
+                    note.file_url
+                    ?
+                    `<button
+                        class="library-open"
+                        onclick="openNote('${escapeAttribute(note.file_url)}')"
+                    >
+                        Open
+                    </button>`
+                    :
+                    ""
+                }
 
             </div>
 
@@ -2077,6 +2557,31 @@ function renderLibrary(){
 
         })
         .join("");
+
+}
+
+
+/* =====================================================
+   OPEN NOTE
+===================================================== */
+
+function openNote(url){
+
+    if(!url){
+
+        showToast(
+            "Note file is not available yet."
+        );
+
+        return;
+
+    }
+
+
+    window.open(
+        url,
+        "_blank"
+    );
 
 }
 
@@ -2141,21 +2646,24 @@ function renderUser(){
         .getElementById(
             "profileName"
         )
-        .textContent = name;
+        .textContent =
+            name;
 
 
     document
         .getElementById(
             "profileEmail"
         )
-        .textContent = email;
+        .textContent =
+            email;
 
 
     document
         .getElementById(
             "profilePhone"
         )
-        .textContent = phone;
+        .textContent =
+            phone;
 
 
     const initials =
@@ -2166,14 +2674,16 @@ function renderUser(){
         .getElementById(
             "profileInitials"
         )
-        .textContent = initials;
+        .textContent =
+            initials;
 
 
     document
         .getElementById(
             "profileAvatar"
         )
-        .textContent = initials;
+        .textContent =
+            initials;
 
 }
 
@@ -2187,21 +2697,31 @@ function showPage(page){
     const pages = [
 
         "homePage",
+
         "coursesPage",
+
         "notesPage",
+
         "libraryPage",
+
         "profilePage"
 
     ];
 
 
-    pages.forEach(id=>{
+    pages.forEach(
+        id=>{
 
-        document
-            .getElementById(id)
-            .classList.add("hidden");
+            document
+                .getElementById(
+                    id
+                )
+                .classList.add(
+                    "hidden"
+                );
 
-    });
+        }
+    );
 
 
     const target =
@@ -2220,52 +2740,78 @@ function showPage(page){
 
 
     document
-        .querySelectorAll(".nav-item")
-        .forEach(item=>{
+        .querySelectorAll(
+            ".nav-item"
+        )
+        .forEach(
+            item=>{
 
-            item.classList.remove(
-                "active"
-            );
+                item.classList.remove(
+                    "active"
+                );
 
-        });
+            }
+        );
 
 
     if(page === "home"){
 
         document
-            .getElementById("navHome")
-            .classList.add("active");
+            .getElementById(
+                "navHome"
+            )
+            .classList.add(
+                "active"
+            );
 
     }
+
 
     if(page === "courses"){
 
         document
-            .getElementById("navCourses")
-            .classList.add("active");
+            .getElementById(
+                "navCourses"
+            )
+            .classList.add(
+                "active"
+            );
 
     }
+
 
     if(page === "library"){
 
         document
-            .getElementById("navLibrary")
-            .classList.add("active");
+            .getElementById(
+                "navLibrary"
+            )
+            .classList.add(
+                "active"
+            );
 
     }
+
 
     if(page === "profile"){
 
         document
-            .getElementById("navProfile")
-            .classList.add("active");
+            .getElementById(
+                "navProfile"
+            )
+            .classList.add(
+                "active"
+            );
 
     }
 
 
     window.scrollTo({
+
         top:0,
+
         behavior:"smooth"
+
     });
 
 }
@@ -2300,52 +2846,56 @@ function searchEverything(){
 
     const courses =
         CampusConnect.courses
-        .filter(course=>{
+        .filter(
+            course=>{
 
-            return (
+                return (
 
-                String(
-                    course.course_code || ""
-                )
-                .toLowerCase()
-                .includes(query)
+                    String(
+                        course.course_code || ""
+                    )
+                    .toLowerCase()
+                    .includes(query)
 
-                ||
+                    ||
 
-                String(
-                    course.course_title || ""
-                )
-                .toLowerCase()
-                .includes(query)
+                    String(
+                        course.course_title || ""
+                    )
+                    .toLowerCase()
+                    .includes(query)
 
-            );
+                );
 
-        });
+            }
+        );
 
 
     const notes =
         CampusConnect.notes
-        .filter(note=>{
+        .filter(
+            note=>{
 
-            return (
+                return (
 
-                String(
-                    note.title || ""
-                )
-                .toLowerCase()
-                .includes(query)
+                    String(
+                        note.title || ""
+                    )
+                    .toLowerCase()
+                    .includes(query)
 
-                ||
+                    ||
 
-                String(
-                    note.description || ""
-                )
-                .toLowerCase()
-                .includes(query)
+                    String(
+                        note.description || ""
+                    )
+                    .toLowerCase()
+                    .includes(query)
 
-            );
+                );
 
-        });
+            }
+        );
 
 
     renderCourseResults(
@@ -2384,32 +2934,42 @@ function renderCourseResults(
 
 
     container.innerHTML =
-        courses.map(course=>`
+        courses
+        .map(course=>`
 
         <article class="course-card">
 
             <div class="course-code">
+
                 ${escapeHTML(
                     course.course_code || ""
                 )}
+
             </div>
 
+
             <h4>
+
                 ${escapeHTML(
                     course.course_title || ""
                 )}
+
             </h4>
 
+
             <p>
+
                 ${escapeHTML(
                     course.description ||
                     "Study materials available"
                 )}
+
             </p>
 
         </article>
 
-        `).join("");
+        `)
+        .join("");
 
 }
 
@@ -2432,7 +2992,8 @@ function renderNoteResults(
 
 
     container.innerHTML =
-        notes.map(note=>{
+        notes
+        .map(note=>{
 
             const price =
                 Number(
@@ -2448,30 +3009,40 @@ function renderNoteResults(
                     PDF
                 </div>
 
+
                 <div class="note-info">
 
                     <h4>
+
                         ${escapeHTML(
                             note.title || ""
                         )}
+
                     </h4>
 
+
                     <p>
+
                         ${escapeHTML(
                             note.description || ""
                         )}
+
                     </p>
 
+
                     <div class="note-price">
+
                         ₦${price.toLocaleString(
                             "en-NG",
                             {
                                 minimumFractionDigits:2
                             }
                         )}
+
                     </div>
 
                 </div>
+
 
                 <button
                     class="buy-button"
@@ -2484,7 +3055,8 @@ function renderNoteResults(
 
             `;
 
-        }).join("");
+        })
+        .join("");
 
 }
 
@@ -2495,14 +3067,19 @@ function renderNoteResults(
 
 function filterCourse(courseId){
 
-    showPage("notes");
+    showPage(
+        "notes"
+    );
+
 
     const filtered =
         CampusConnect.notes.filter(
             note =>
                 String(
                     note.course_id
-                ) === String(courseId)
+                ) === String(
+                    courseId
+                )
         );
 
 
@@ -2522,6 +3099,7 @@ function filterCourse(courseId){
 
 /* =====================================================
    BUY NOTE
+   FIXED ROUTE
 ===================================================== */
 
 async function buyNote(noteId){
@@ -2572,7 +3150,7 @@ async function buyNote(noteId){
 
 
         await apiRequest(
-            "/api/student/purchases",
+            "/api/purchases",
             {
                 method:"POST",
 
@@ -2589,6 +3167,7 @@ async function buyNote(noteId){
         await loadWallet();
 
         await loadLibrary();
+
 
         renderWallet();
 
@@ -2617,13 +3196,8 @@ async function buyNote(noteId){
 
 function fundWallet(){
 
-    /*
-     Real Paystack funding will be connected
-     in the next stage.
-    */
-
     showToast(
-        "Wallet funding is being connected to Paystack next."
+        "Wallet funding with Paystack will be activated next."
     );
 
 }
@@ -2639,26 +3213,47 @@ function logoutStudent(){
         "campusconnect_token"
     );
 
-    CampusConnect.token = null;
 
-    CampusConnect.user = null;
+    CampusConnect.token =
+        null;
 
-    CampusConnect.courses = [];
 
-    CampusConnect.notes = [];
+    CampusConnect.user =
+        null;
 
-    CampusConnect.library = [];
 
-    CampusConnect.walletBalance = 0;
+    CampusConnect.courses =
+        [];
+
+
+    CampusConnect.notes =
+        [];
+
+
+    CampusConnect.library =
+        [];
+
+
+    CampusConnect.walletBalance =
+        0;
 
 
     document
-        .getElementById("app")
-        .classList.add("hidden");
+        .getElementById(
+            "app"
+        )
+        .classList.add(
+            "hidden"
+        );
+
 
     document
-        .getElementById("authScreen")
-        .classList.remove("hidden");
+        .getElementById(
+            "authScreen"
+        )
+        .classList.remove(
+            "hidden"
+        );
 
 
     showLogin();
