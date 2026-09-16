@@ -1,461 +1,896 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>CampusConnect</title>
-
-    <meta name="description"
-          content="CampusConnect - Your university notes marketplace">
-
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: Arial, Helvetica, sans-serif;
-            background: #f5f7fb;
-            color: #172033;
-            min-height: 100vh;
-        }
-
-        button,
-        input {
-            font: inherit;
-        }
-
-        button {
-            cursor: pointer;
-        }
-
-        /* =========================
-           APP
-        ========================== */
-
-        .app {
-            min-height: 100vh;
-        }
-
-        /* =========================
-           HEADER
-        ========================== */
-
-        .topbar {
-            background: white;
-            padding: 16px 18px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            border-bottom: 1px solid #e8ebf2;
-            position: sticky;
-            top: 0;
-            z-index: 50;
-        }
-
-        .brand {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .brand-logo {
-            width: 38px;
-            height: 38px;
-            border-radius: 11px;
-            background: #2563eb;
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 800;
-            font-size: 16px;
-        }
-
-        .brand-text h1 {
-            font-size: 18px;
-            line-height: 1;
-        }
-
-        .brand-text span {
-            font-size: 10px;
-            color: #7b8496;
-        }
-
-        .profile-button {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            border: none;
-            background: #eaf1ff;
-            color: #2563eb;
-            font-weight: 800;
-        }
-
-        /* =========================
-           MAIN
-        ========================== */
-
-        main {
-            max-width: 1100px;
-            margin: auto;
-            padding: 20px 16px 100px;
-        }
-
-        .welcome {
-            margin-bottom: 20px;
-        }
-
-        .welcome small {
-            color: #7b8496;
-            font-size: 13px;
-        }
-
-        .welcome h2 {
-            margin-top: 5px;
-            font-size: 25px;
-        }
-
-        /* =========================
-           WALLET
-        ========================== */
-
-        .wallet-card {
-            background: linear-gradient(135deg, #2563eb, #1744b5);
-            color: white;
-            border-radius: 20px;
-            padding: 22px;
-            margin-bottom: 22px;
-            box-shadow: 0 12px 30px rgba(37, 99, 235, .20);
-        }
-
-        .wallet-top {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .wallet-label {
-            font-size: 13px;
-            opacity: .85;
-        }
-
-        .wallet-balance {
-            font-size: 30px;
-            font-weight: 800;
-            margin-top: 7px;
-        }
-
-        .wallet-button {
-            background: white;
-            color: #2563eb;
-            border: none;
-            border-radius: 10px;
-            padding: 10px 14px;
-            font-weight: 700;
-        }
-
-        /* =========================
-           QUICK ACTIONS
-        ========================== */
-
-        .section-title {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin: 24px 0 12px;
-        }
-
-        .section-title h3 {
-            font-size: 17px;
-        }
-
-        .section-title span {
-            color: #2563eb;
-            font-size: 12px;
-        }
-
-        .quick-actions {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 10px;
-        }
-
-        .quick-card {
-            background: white;
-            border: 1px solid #e8ebf2;
-            border-radius: 15px;
-            padding: 14px 8px;
-            text-align: center;
-        }
-
-        .quick-icon {
-            font-size: 22px;
-            margin-bottom: 7px;
-        }
-
-        .quick-card p {
-            font-size: 11px;
-            font-weight: 700;
-        }
-
-        /* =========================
-           SEARCH
-        ========================== */
-
-        .search-box {
-            background: white;
-            border: 1px solid #e1e5ed;
-            border-radius: 14px;
-            display: flex;
-            align-items: center;
-            padding: 0 14px;
-            margin-top: 20px;
-        }
-
-        .search-box span {
-            font-size: 18px;
-        }
-
-        .search-box input {
-            border: none;
-            outline: none;
-            padding: 14px 10px;
-            width: 100%;
-            background: transparent;
-        }
-
-        /* =========================
-           COURSE CARDS
-        ========================== */
-
-        .courses {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
-        }
-
-        .course-card {
-            background: white;
-            border: 1px solid #e8ebf2;
-            border-radius: 16px;
-            padding: 16px;
-        }
-
-        .course-code {
-            color: #2563eb;
-            font-size: 12px;
-            font-weight: 800;
-        }
-
-        .course-card h4 {
-            margin-top: 7px;
-            font-size: 14px;
-        }
-
-        .course-card p {
-            margin-top: 6px;
-            color: #7b8496;
-            font-size: 11px;
-        }
-
-        .view-course {
-            margin-top: 12px;
-            width: 100%;
-            padding: 9px;
-            border: none;
-            border-radius: 9px;
-            background: #edf3ff;
-            color: #2563eb;
-            font-size: 12px;
-            font-weight: 700;
-        }
-
-        /* =========================
-           NOTES
-        ========================== */
-
-        .notes {
-            display: grid;
-            gap: 12px;
-        }
-
-        .note-card {
-            background: white;
-            border: 1px solid #e8ebf2;
-            border-radius: 16px;
-            padding: 15px;
-            display: flex;
-            gap: 13px;
-            align-items: center;
-        }
-
-        .pdf-icon {
-            width: 45px;
-            height: 45px;
-            border-radius: 11px;
-            background: #fff0f0;
-            color: #dc2626;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 800;
-            font-size: 12px;
-            flex-shrink: 0;
-        }
-
-        .note-info {
-            flex: 1;
-        }
-
-        .note-info h4 {
-            font-size: 14px;
-        }
-
-        .note-info p {
-            color: #7b8496;
-            font-size: 11px;
-            margin-top: 4px;
-        }
-
-        .note-price {
-            font-weight: 800;
-            font-size: 13px;
-            margin-top: 7px;
-        }
-
-        .buy-button {
-            border: none;
-            background: #2563eb;
-            color: white;
-            border-radius: 9px;
-            padding: 9px 12px;
-            font-size: 11px;
-            font-weight: 700;
-        }
-
-        /* =========================
-           BOTTOM NAV
-        ========================== */
-
-        .bottom-nav {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: white;
-            border-top: 1px solid #e8ebf2;
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            padding: 8px 5px calc(8px + env(safe-area-inset-bottom));
-            z-index: 100;
-        }
-
-        .nav-item {
-            border: none;
-            background: transparent;
-            color: #8992a5;
-            font-size: 10px;
-            padding: 5px;
-        }
-
-        .nav-item .nav-icon {
-            display: block;
-            font-size: 19px;
-            margin-bottom: 3px;
-        }
-
-        .nav-item.active {
-            color: #2563eb;
-            font-weight: 700;
-        }
-
-        /* =========================
-           FOOTER
-        ========================== */
-
-        footer {
-            text-align: center;
-            color: #929aaa;
-            font-size: 10px;
-            padding: 25px 10px 10px;
-        }
-
-        /* =========================
-           RESPONSIVE
-        ========================== */
-
-        @media (min-width: 700px) {
-
-            main {
-                padding-left: 25px;
-                padding-right: 25px;
-            }
-
-            .courses {
-                grid-template-columns: repeat(3, 1fr);
-            }
-
-            .notes {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            .bottom-nav {
-                left: 50%;
-                transform: translateX(-50%);
-                width: min(600px, 100%);
-                border: 1px solid #e8ebf2;
-                border-radius: 18px 18px 0 0;
-            }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>CampusConnect</title>
+
+<meta name="description"
+content="CampusConnect - University Notes Marketplace">
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+:root{
+    --primary:#2563eb;
+    --primary-dark:#1744b5;
+    --bg:#f5f7fb;
+    --card:#ffffff;
+    --text:#172033;
+    --muted:#7b8496;
+    --border:#e7ebf2;
+    --danger:#dc2626;
+    --success:#16a34a;
+}
+
+body{
+    font-family:Arial,Helvetica,sans-serif;
+    background:var(--bg);
+    color:var(--text);
+    min-height:100vh;
+}
+
+button,
+input{
+    font:inherit;
+}
+
+button{
+    cursor:pointer;
+}
+
+.hidden{
+    display:none!important;
+}
+
+/* =========================
+   AUTH
+========================= */
+
+.auth-screen{
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    padding:20px;
+    background:
+        radial-gradient(circle at top right,#dbeafe,transparent 35%),
+        var(--bg);
+}
+
+.auth-card{
+    width:100%;
+    max-width:430px;
+    background:white;
+    border:1px solid var(--border);
+    border-radius:24px;
+    padding:28px 22px;
+    box-shadow:0 15px 45px rgba(0,0,0,.08);
+}
+
+.auth-brand{
+    text-align:center;
+    margin-bottom:25px;
+}
+
+.auth-logo{
+    width:62px;
+    height:62px;
+    border-radius:18px;
+    background:var(--primary);
+    color:white;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    margin:auto;
+    font-size:21px;
+    font-weight:900;
+    box-shadow:0 10px 25px rgba(37,99,235,.25);
+}
+
+.auth-brand h1{
+    margin-top:12px;
+    font-size:25px;
+}
+
+.auth-brand p{
+    color:var(--muted);
+    font-size:12px;
+    margin-top:5px;
+}
+
+.auth-title{
+    font-size:20px;
+    margin-bottom:18px;
+}
+
+.form-group{
+    margin-bottom:14px;
+}
+
+.form-group label{
+    display:block;
+    font-size:12px;
+    font-weight:700;
+    margin-bottom:7px;
+}
+
+.form-group input{
+    width:100%;
+    padding:13px;
+    border:1px solid var(--border);
+    border-radius:11px;
+    outline:none;
+    background:#fafbfe;
+}
+
+.form-group input:focus{
+    border-color:var(--primary);
+    background:white;
+}
+
+.primary-btn{
+    width:100%;
+    border:none;
+    border-radius:11px;
+    padding:13px;
+    background:var(--primary);
+    color:white;
+    font-weight:800;
+    margin-top:5px;
+}
+
+.primary-btn:disabled{
+    opacity:.6;
+    cursor:not-allowed;
+}
+
+.auth-switch{
+    text-align:center;
+    margin-top:17px;
+    font-size:12px;
+    color:var(--muted);
+}
+
+.auth-switch button{
+    border:none;
+    background:none;
+    color:var(--primary);
+    font-weight:800;
+}
+
+.auth-message{
+    padding:11px;
+    border-radius:10px;
+    font-size:12px;
+    margin-bottom:15px;
+    display:none;
+}
+
+.auth-message.error{
+    display:block;
+    background:#fff1f2;
+    color:#be123c;
+}
+
+.auth-message.success{
+    display:block;
+    background:#f0fdf4;
+    color:#15803d;
+}
+
+/* =========================
+   APP
+========================= */
+
+.app{
+    min-height:100vh;
+}
+
+.topbar{
+    background:white;
+    padding:14px 17px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    border-bottom:1px solid var(--border);
+    position:sticky;
+    top:0;
+    z-index:50;
+}
+
+.brand{
+    display:flex;
+    align-items:center;
+    gap:9px;
+}
+
+.brand-logo{
+    width:38px;
+    height:38px;
+    border-radius:11px;
+    background:var(--primary);
+    color:white;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-weight:900;
+    font-size:14px;
+}
+
+.brand-text h1{
+    font-size:17px;
+}
+
+.brand-text span{
+    display:block;
+    color:var(--muted);
+    font-size:9px;
+    margin-top:3px;
+}
+
+.profile-button{
+    width:40px;
+    height:40px;
+    border-radius:50%;
+    border:none;
+    background:#eaf1ff;
+    color:var(--primary);
+    font-weight:900;
+}
+
+main{
+    max-width:1100px;
+    margin:auto;
+    padding:20px 16px 105px;
+}
+
+.welcome{
+    margin-bottom:19px;
+}
+
+.welcome small{
+    color:var(--muted);
+    font-size:12px;
+}
+
+.welcome h2{
+    margin-top:5px;
+    font-size:24px;
+}
+
+/* =========================
+   WALLET
+========================= */
+
+.wallet-card{
+    background:linear-gradient(135deg,var(--primary),var(--primary-dark));
+    color:white;
+    border-radius:20px;
+    padding:21px;
+    margin-bottom:22px;
+    box-shadow:0 12px 30px rgba(37,99,235,.20);
+}
+
+.wallet-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:10px;
+}
+
+.wallet-label{
+    font-size:12px;
+    opacity:.85;
+}
+
+.wallet-balance{
+    font-size:29px;
+    font-weight:900;
+    margin-top:6px;
+}
+
+.wallet-button{
+    background:white;
+    color:var(--primary);
+    border:none;
+    border-radius:10px;
+    padding:10px 13px;
+    font-weight:800;
+}
+
+/* =========================
+   SECTION
+========================= */
+
+.section-title{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin:24px 0 12px;
+}
+
+.section-title h3{
+    font-size:17px;
+}
+
+.section-title span{
+    color:var(--primary);
+    font-size:11px;
+    font-weight:700;
+}
+
+/* =========================
+   QUICK ACTIONS
+========================= */
+
+.quick-actions{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:9px;
+}
+
+.quick-card{
+    background:white;
+    border:1px solid var(--border);
+    border-radius:14px;
+    padding:13px 5px;
+    text-align:center;
+}
+
+.quick-icon{
+    font-size:21px;
+    margin-bottom:6px;
+}
+
+.quick-card p{
+    font-size:10px;
+    font-weight:800;
+}
+
+/* =========================
+   SEARCH
+========================= */
+
+.search-box{
+    background:white;
+    border:1px solid var(--border);
+    border-radius:13px;
+    display:flex;
+    align-items:center;
+    padding:0 13px;
+    margin-top:20px;
+}
+
+.search-box span{
+    font-size:17px;
+}
+
+.search-box input{
+    border:none;
+    outline:none;
+    padding:13px 9px;
+    width:100%;
+    background:transparent;
+}
+
+/* =========================
+   COURSES
+========================= */
+
+.courses{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:11px;
+}
+
+.course-card{
+    background:white;
+    border:1px solid var(--border);
+    border-radius:15px;
+    padding:15px;
+}
+
+.course-code{
+    color:var(--primary);
+    font-size:11px;
+    font-weight:900;
+}
+
+.course-card h4{
+    margin-top:6px;
+    font-size:13px;
+    line-height:1.35;
+}
+
+.course-card p{
+    margin-top:5px;
+    color:var(--muted);
+    font-size:10px;
+}
+
+.view-course{
+    margin-top:11px;
+    width:100%;
+    padding:9px;
+    border:none;
+    border-radius:9px;
+    background:#edf3ff;
+    color:var(--primary);
+    font-size:11px;
+    font-weight:800;
+}
+
+/* =========================
+   NOTES
+========================= */
+
+.notes{
+    display:grid;
+    gap:11px;
+}
+
+.note-card{
+    background:white;
+    border:1px solid var(--border);
+    border-radius:15px;
+    padding:14px;
+    display:flex;
+    gap:11px;
+    align-items:center;
+}
+
+.pdf-icon{
+    width:44px;
+    height:44px;
+    border-radius:11px;
+    background:#fff0f0;
+    color:var(--danger);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:11px;
+    font-weight:900;
+    flex-shrink:0;
+}
+
+.note-info{
+    flex:1;
+    min-width:0;
+}
+
+.note-info h4{
+    font-size:13px;
+}
+
+.note-info p{
+    color:var(--muted);
+    font-size:10px;
+    margin-top:4px;
+}
+
+.note-price{
+    font-weight:900;
+    font-size:12px;
+    margin-top:6px;
+}
+
+.buy-button{
+    border:none;
+    background:var(--primary);
+    color:white;
+    border-radius:9px;
+    padding:9px 11px;
+    font-size:10px;
+    font-weight:800;
+}
+
+/* =========================
+   EMPTY
+========================= */
+
+.empty{
+    background:white;
+    border:1px dashed #d9dee8;
+    border-radius:15px;
+    padding:25px 15px;
+    text-align:center;
+    color:var(--muted);
+    font-size:12px;
+}
+
+/* =========================
+   PROFILE
+========================= */
+
+.profile-card{
+    background:white;
+    border:1px solid var(--border);
+    border-radius:18px;
+    padding:20px;
+}
+
+.profile-avatar{
+    width:65px;
+    height:65px;
+    border-radius:50%;
+    background:#eaf1ff;
+    color:var(--primary);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:22px;
+    font-weight:900;
+    margin-bottom:15px;
+}
+
+.profile-card h3{
+    font-size:18px;
+}
+
+.profile-card p{
+    color:var(--muted);
+    font-size:12px;
+    margin-top:6px;
+}
+
+.logout-btn{
+    width:100%;
+    margin-top:20px;
+    padding:12px;
+    border:1px solid #fecaca;
+    background:#fff1f2;
+    color:#be123c;
+    border-radius:10px;
+    font-weight:800;
+}
+
+/* =========================
+   LIBRARY
+========================= */
+
+.library-list{
+    display:grid;
+    gap:11px;
+}
+
+.library-item{
+    background:white;
+    border:1px solid var(--border);
+    border-radius:15px;
+    padding:14px;
+    display:flex;
+    align-items:center;
+    gap:11px;
+}
+
+.library-item-info{
+    flex:1;
+}
+
+.library-item-info h4{
+    font-size:13px;
+}
+
+.library-item-info p{
+    color:var(--muted);
+    font-size:10px;
+    margin-top:4px;
+}
+
+/* =========================
+   BOTTOM NAV
+========================= */
+
+.bottom-nav{
+    position:fixed;
+    bottom:0;
+    left:0;
+    right:0;
+    background:white;
+    border-top:1px solid var(--border);
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    padding:7px 5px calc(7px + env(safe-area-inset-bottom));
+    z-index:100;
+}
+
+.nav-item{
+    border:none;
+    background:transparent;
+    color:#8992a5;
+    font-size:10px;
+    padding:5px;
+}
+
+.nav-icon{
+    display:block;
+    font-size:18px;
+    margin-bottom:3px;
+}
+
+.nav-item.active{
+    color:var(--primary);
+    font-weight:800;
+}
+
+/* =========================
+   TOAST
+========================= */
+
+.toast{
+    position:fixed;
+    left:50%;
+    bottom:80px;
+    transform:translateX(-50%) translateY(20px);
+    background:#172033;
+    color:white;
+    padding:11px 15px;
+    border-radius:10px;
+    font-size:11px;
+    opacity:0;
+    pointer-events:none;
+    transition:.25s;
+    z-index:300;
+    max-width:90%;
+    text-align:center;
+}
+
+.toast.show{
+    opacity:1;
+    transform:translateX(-50%) translateY(0);
+}
+
+/* =========================
+   LOADER
+========================= */
+
+.loader{
+    text-align:center;
+    padding:25px;
+    color:var(--muted);
+    font-size:12px;
+}
+
+@media(min-width:700px){
+
+    main{
+        padding-left:25px;
+        padding-right:25px;
+    }
+
+    .courses{
+        grid-template-columns:repeat(3,1fr);
+    }
+
+    .notes{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .bottom-nav{
+        left:50%;
+        transform:translateX(-50%);
+        width:min(600px,100%);
+        border:1px solid var(--border);
+        border-radius:18px 18px 0 0;
+    }
+}
+</style>
 </head>
 
 <body>
 
-<div class="app">
+<!-- =========================
+     AUTH SCREEN
+========================= -->
 
-    <!-- HEADER -->
-    <header class="topbar">
+<section id="authScreen" class="auth-screen">
 
-        <div class="brand">
-            <div class="brand-logo">CC</div>
+    <div class="auth-card">
 
-            <div class="brand-text">
-                <h1>CampusConnect</h1>
-                <span>University Notes Marketplace</span>
-            </div>
+        <div class="auth-brand">
+            <div class="auth-logo">CC</div>
+            <h1>CampusConnect</h1>
+            <p>University Notes Marketplace</p>
         </div>
 
-        <button class="profile-button">MB</button>
+        <!-- LOGIN -->
 
-    </header>
+        <div id="loginForm">
+
+            <h2 class="auth-title">Welcome back 👋</h2>
+
+            <div id="loginMessage" class="auth-message"></div>
+
+            <div class="form-group">
+                <label>Email Address</label>
+                <input
+                    id="loginEmail"
+                    type="email"
+                    placeholder="Enter your email"
+                    autocomplete="email"
+                >
+            </div>
+
+            <div class="form-group">
+                <label>Password</label>
+                <input
+                    id="loginPassword"
+                    type="password"
+                    placeholder="Enter your password"
+                    autocomplete="current-password"
+                >
+            </div>
+
+            <button
+                id="loginButton"
+                class="primary-btn"
+                onclick="loginStudent()"
+            >
+                Login
+            </button>
+
+            <div class="auth-switch">
+                Don't have an account?
+                <button onclick="showRegister()">
+                    Create account
+                </button>
+            </div>
+
+        </div>
 
 
-    <!-- MAIN CONTENT -->
-    <main>
+        <!-- REGISTER -->
 
-        <!-- WELCOME -->
-        <section class="welcome">
-            <small>Welcome back 👋</small>
-            <h2>Student Dashboard</h2>
-        </section>
+        <div id="registerForm" class="hidden">
+
+            <h2 class="auth-title">Create Student Account</h2>
+
+            <div id="registerMessage" class="auth-message"></div>
+
+            <div class="form-group">
+                <label>Full Name</label>
+                <input
+                    id="registerName"
+                    type="text"
+                    placeholder="Enter your full name"
+                    autocomplete="name"
+                >
+            </div>
+
+            <div class="form-group">
+                <label>Email Address</label>
+                <input
+                    id="registerEmail"
+                    type="email"
+                    placeholder="Enter your email"
+                    autocomplete="email"
+                >
+            </div>
+
+            <div class="form-group">
+                <label>Phone Number</label>
+                <input
+                    id="registerPhone"
+                    type="tel"
+                    placeholder="Enter your phone number"
+                    autocomplete="tel"
+                >
+            </div>
+
+            <div class="form-group">
+                <label>Password</label>
+                <input
+                    id="registerPassword"
+                    type="password"
+                    placeholder="Create a password"
+                    autocomplete="new-password"
+                >
+            </div>
+
+            <button
+                id="registerButton"
+                class="primary-btn"
+                onclick="registerStudent()"
+            >
+                Create Account
+            </button>
+
+            <div class="auth-switch">
+                Already have an account?
+                <button onclick="showLogin()">
+                    Login
+                </button>
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =========================
+     MAIN APP
+========================= -->
+
+<div id="app" class="app hidden">
+
+<header class="topbar">
+
+    <div class="brand">
+
+        <div class="brand-logo">
+            CC
+        </div>
+
+        <div class="brand-text">
+            <h1>CampusConnect</h1>
+            <span>University Notes Marketplace</span>
+        </div>
+
+    </div>
+
+    <button
+        class="profile-button"
+        onclick="showPage('profile')"
+        id="profileInitials"
+    >
+        CC
+    </button>
+
+</header>
+
+
+<main>
+
+    <!-- HOME -->
+
+    <section id="homePage">
+
+        <div class="welcome">
+
+            <small>
+                Welcome back 👋
+            </small>
+
+            <h2 id="welcomeName">
+                Student Dashboard
+            </h2>
+
+        </div>
 
 
         <!-- WALLET -->
+
         <section class="wallet-card">
 
             <div class="wallet-top">
 
                 <div>
-                    <div class="wallet-label">Wallet Balance</div>
-                    <div class="wallet-balance">₦0.00</div>
+
+                    <div class="wallet-label">
+                        Wallet Balance
+                    </div>
+
+                    <div
+                        id="walletBalance"
+                        class="wallet-balance"
+                    >
+                        ₦0.00
+                    </div>
+
                 </div>
 
-                <button class="wallet-button">
+                <button
+                    class="wallet-button"
+                    onclick="fundWallet()"
+                >
                     + Fund Wallet
                 </button>
 
@@ -465,460 +900,1897 @@
 
 
         <!-- QUICK ACTIONS -->
+
         <div class="section-title">
             <h3>Quick Actions</h3>
         </div>
 
         <section class="quick-actions">
 
-            <button class="quick-card">
+            <button
+                class="quick-card"
+                onclick="showPage('courses')"
+            >
                 <div class="quick-icon">📚</div>
                 <p>Courses</p>
             </button>
 
-            <button class="quick-card">
+            <button
+                class="quick-card"
+                onclick="showPage('notes')"
+            >
                 <div class="quick-icon">📄</div>
                 <p>Notes</p>
             </button>
 
-            <button class="quick-card">
+            <button
+                class="quick-card"
+                onclick="showPage('library')"
+            >
                 <div class="quick-icon">📥</div>
                 <p>My Library</p>
             </button>
 
-            <button class="quick-card">
-                <div class="quick-icon">💳</div>
-                <p>Transactions</p>
+            <button
+                class="quick-card"
+                onclick="showPage('profile')"
+            >
+                <div class="quick-icon">👤</div>
+                <p>Profile</p>
             </button>
 
         </section>
 
 
         <!-- SEARCH -->
+
         <div class="search-box">
+
             <span>🔎</span>
+
             <input
+                id="searchInput"
                 type="search"
-                placeholder="Search courses, notes or materials..."
+                placeholder="Search courses or notes..."
+                oninput="searchEverything()"
             >
+
         </div>
 
 
         <!-- COURSES -->
+
         <div class="section-title">
-            <h3>Popular Courses</h3>
-            <span>View all</span>
+
+            <h3>Courses</h3>
+
+            <span onclick="showPage('courses')">
+                View all
+            </span>
+
         </div>
 
-        <section class="courses">
-
-            <article class="course-card">
-                <div class="course-code">CSC 101</div>
-                <h4>Introduction to Computer Science</h4>
-                <p>Study materials and lecture notes</p>
-                <button class="view-course">View Course</button>
-            </article>
-
-            <article class="course-card">
-                <div class="course-code">CSC 202</div>
-                <h4>Data Structures</h4>
-                <p>Study materials and lecture notes</p>
-                <button class="view-course">View Course</button>
-            </article>
-
-            <article class="course-card">
-                <div class="course-code">CSC 204</div>
-                <h4>Database Systems</h4>
-                <p>Study materials and lecture notes</p>
-                <button class="view-course">View Course</button>
-            </article>
-
-            <article class="course-card">
-                <div class="course-code">MTH 202</div>
-                <h4>Mathematics</h4>
-                <p>Study materials and lecture notes</p>
-                <button class="view-course">View Course</button>
-            </article>
-
+        <section
+            id="homeCourses"
+            class="courses"
+        >
+            <div class="loader">
+                Loading courses...
+            </div>
         </section>
 
 
         <!-- NOTES -->
+
         <div class="section-title">
+
             <h3>Latest Notes</h3>
-            <span>View all</span>
+
+            <span onclick="showPage('notes')">
+                View all
+            </span>
+
         </div>
 
-        <section class="notes">
-
-            <article class="note-card">
-
-                <div class="pdf-icon">PDF</div>
-
-                <div class="note-info">
-                    <h4>CSC 101 Complete Lecture Notes</h4>
-                    <p>Introduction to Computer Science</p>
-                    <div class="note-price">₦1,000</div>
-                </div>
-
-                <button class="buy-button">
-                    Buy
-                </button>
-
-            </article>
-
-
-            <article class="note-card">
-
-                <div class="pdf-icon">PDF</div>
-
-                <div class="note-info">
-                    <h4>CSC 202 Data Structures</h4>
-                    <p>Complete lecture materials</p>
-                    <div class="note-price">₦1,500</div>
-                </div>
-
-                <button class="buy-button">
-                    Buy
-                </button>
-
-            </article>
-
+        <section
+            id="homeNotes"
+            class="notes"
+        >
+            <div class="loader">
+                Loading notes...
+            </div>
         </section>
 
-
-        <footer>
-            Created by Muhammad Bin Ali, popularly known as GCR.
-            <br>
-            © 2026 CampusConnect
-        </footer>
-
-    </main>
+    </section>
 
 
-    <!-- BOTTOM NAVIGATION -->
-    <nav class="bottom-nav">
+    <!-- COURSES PAGE -->
 
-        <button class="nav-item active">
-            <span class="nav-icon">🏠</span>
-            Home
-        </button>
+    <section
+        id="coursesPage"
+        class="hidden"
+    >
 
-        <button class="nav-item">
-            <span class="nav-icon">📚</span>
-            Courses
-        </button>
+        <div class="section-title">
+            <h3>All Courses</h3>
+        </div>
 
-        <button class="nav-item">
-            <span class="nav-icon">📥</span>
-            Library
-        </button>
+        <section
+            id="allCourses"
+            class="courses"
+        ></section>
 
-        <button class="nav-item">
-            <span class="nav-icon">👤</span>
-            Profile
-        </button>
+    </section>
 
-    </nav>
+
+    <!-- NOTES PAGE -->
+
+    <section
+        id="notesPage"
+        class="hidden"
+    >
+
+        <div class="section-title">
+            <h3>Available Notes</h3>
+        </div>
+
+        <section
+            id="allNotes"
+            class="notes"
+        ></section>
+
+    </section>
+
+
+    <!-- LIBRARY PAGE -->
+
+    <section
+        id="libraryPage"
+        class="hidden"
+    >
+
+        <div class="section-title">
+            <h3>My Library</h3>
+        </div>
+
+        <section
+            id="libraryList"
+            class="library-list"
+        ></section>
+
+    </section>
+
+
+    <!-- PROFILE PAGE -->
+
+    <section
+        id="profilePage"
+        class="hidden"
+    >
+
+        <div class="section-title">
+            <h3>My Profile</h3>
+        </div>
+
+        <div class="profile-card">
+
+            <div
+                id="profileAvatar"
+                class="profile-avatar"
+            >
+                CC
+            </div>
+
+            <h3 id="profileName">
+                Student
+            </h3>
+
+            <p id="profileEmail">
+                —
+            </p>
+
+            <p id="profilePhone">
+                —
+            </p>
+
+            <button
+                class="logout-btn"
+                onclick="logoutStudent()"
+            >
+                🚪 Logout
+            </button>
+
+        </div>
+
+    </section>
+
+    <footer>
+        Created by Muhammad Bin Ali, popularly known as GCR.
+        <br>
+        © 2026 CampusConnect
+    </footer>
+
+</main>
+
+
+<!-- BOTTOM NAV -->
+
+<nav class="bottom-nav">
+
+    <button
+        id="navHome"
+        class="nav-item active"
+        onclick="showPage('home')"
+    >
+        <span class="nav-icon">🏠</span>
+        Home
+    </button>
+
+    <button
+        id="navCourses"
+        class="nav-item"
+        onclick="showPage('courses')"
+    >
+        <span class="nav-icon">📚</span>
+        Courses
+    </button>
+
+    <button
+        id="navLibrary"
+        class="nav-item"
+        onclick="showPage('library')"
+    >
+        <span class="nav-icon">📥</span>
+        Library
+    </button>
+
+    <button
+        id="navProfile"
+        class="nav-item"
+        onclick="showPage('profile')"
+    >
+        <span class="nav-icon">👤</span>
+        Profile
+    </button>
+
+</nav>
 
 </div>
+
+
+<div id="toast" class="toast"></div>
+
+
 <script>
-    /*
-    ==========================================
-       CAMPUSCONNECT FRONTEND CONFIGURATION
-    ==========================================
-    */
 
-    const API_URL = "https://campusconnect-backend-ggru.onrender.com";
+/* =====================================================
+   CAMPUSCONNECT API
+===================================================== */
 
-    /*
-    ==========================================
-       APPLICATION STATE
-    ==========================================
-    */
+const API_URL =
+    "https://campusconnect-backend-ggru.onrender.com";
 
-    const CampusConnect = {
-        user: null,
-        token: localStorage.getItem("campusconnect_token"),
-        walletBalance: 0,
-        courses: [],
-        notes: [],
-        library: []
+
+/* =====================================================
+   APPLICATION STATE
+===================================================== */
+
+const CampusConnect = {
+
+    token:
+        localStorage.getItem(
+            "campusconnect_token"
+        ),
+
+    user:null,
+
+    courses:[],
+
+    notes:[],
+
+    library:[],
+
+    walletBalance:0
+
+};
+
+
+/* =====================================================
+   TOAST
+===================================================== */
+
+function showToast(message){
+
+    const toast =
+        document.getElementById("toast");
+
+    toast.textContent = message;
+
+    toast.classList.add("show");
+
+    setTimeout(() => {
+
+        toast.classList.remove("show");
+
+    },3000);
+}
+
+
+/* =====================================================
+   API REQUEST
+===================================================== */
+
+async function apiRequest(
+    endpoint,
+    options={}
+){
+
+    const headers = {
+
+        "Content-Type":
+            "application/json",
+
+        ...(options.headers || {})
+
     };
 
+    if(CampusConnect.token){
 
-    /*
-    ==========================================
-       API HELPER
-    ==========================================
-    */
+        headers.Authorization =
+            `Bearer ${CampusConnect.token}`;
 
-    async function apiRequest(endpoint, options = {}) {
+    }
 
-        const headers = {
-            "Content-Type": "application/json",
-            ...(options.headers || {})
-        };
+    const response =
+        await fetch(
+            API_URL + endpoint,
+            {
+                ...options,
+                headers
+            }
+        );
 
-        if (CampusConnect.token) {
-            headers.Authorization =
-                `Bearer ${CampusConnect.token}`;
-        }
+    let data;
 
-        try {
+    try{
 
-            const response = await fetch(
-                API_URL + endpoint,
+        data =
+            await response.json();
+
+    }catch{
+
+        data = {};
+
+    }
+
+    if(!response.ok){
+
+        throw new Error(
+            data.message ||
+            data.error ||
+            "Request failed"
+        );
+
+    }
+
+    return data;
+
+}
+
+
+/* =====================================================
+   AUTH SCREEN
+===================================================== */
+
+function showRegister(){
+
+    document
+        .getElementById("loginForm")
+        .classList.add("hidden");
+
+    document
+        .getElementById("registerForm")
+        .classList.remove("hidden");
+
+    clearMessages();
+
+}
+
+
+function showLogin(){
+
+    document
+        .getElementById("registerForm")
+        .classList.add("hidden");
+
+    document
+        .getElementById("loginForm")
+        .classList.remove("hidden");
+
+    clearMessages();
+
+}
+
+
+function clearMessages(){
+
+    [
+        "loginMessage",
+        "registerMessage"
+    ].forEach(id=>{
+
+        const el =
+            document.getElementById(id);
+
+        el.className =
+            "auth-message";
+
+        el.textContent = "";
+
+    });
+
+}
+
+
+function showMessage(
+    id,
+    message,
+    type="error"
+){
+
+    const el =
+        document.getElementById(id);
+
+    el.textContent = message;
+
+    el.className =
+        `auth-message ${type}`;
+
+}
+
+
+/* =====================================================
+   STUDENT REGISTRATION
+===================================================== */
+
+async function registerStudent(){
+
+    const name =
+        document
+        .getElementById("registerName")
+        .value.trim();
+
+    const email =
+        document
+        .getElementById("registerEmail")
+        .value.trim();
+
+    const phone =
+        document
+        .getElementById("registerPhone")
+        .value.trim();
+
+    const password =
+        document
+        .getElementById("registerPassword")
+        .value;
+
+
+    if(!name || !email || !password){
+
+        showMessage(
+            "registerMessage",
+            "Please fill in your name, email and password."
+        );
+
+        return;
+
+    }
+
+
+    if(password.length < 6){
+
+        showMessage(
+            "registerMessage",
+            "Password must be at least 6 characters."
+        );
+
+        return;
+
+    }
+
+
+    const button =
+        document.getElementById(
+            "registerButton"
+        );
+
+    button.disabled = true;
+    button.textContent =
+        "Creating account...";
+
+
+    try{
+
+        const result =
+            await apiRequest(
+                "/api/auth/register",
                 {
-                    ...options,
-                    headers
+                    method:"POST",
+
+                    body:JSON.stringify({
+
+                        full_name:name,
+
+                        email:email,
+
+                        phone:phone,
+
+                        password:password
+
+                    })
+
                 }
             );
 
-            const data = await response.json();
 
-            if (!response.ok) {
-                throw new Error(
-                    data.message || "Something went wrong"
-                );
-            }
+        /*
+         The backend may return a token
+         immediately or require login.
+        */
 
-            return data;
+        if(result.token){
 
-        } catch (error) {
+            CampusConnect.token =
+                result.token;
 
-            console.error(
-                "CampusConnect API Error:",
-                error
+            localStorage.setItem(
+                "campusconnect_token",
+                result.token
             );
 
-            throw error;
-        }
-    }
+            await startApplication();
 
+        }else{
 
-    /*
-    ==========================================
-       LOAD CURRENT USER
-    ==========================================
-    */
-
-    async function loadCurrentUser() {
-
-        if (!CampusConnect.token) {
-            console.log("No student session found.");
-            return;
-        }
-
-        try {
-
-            const result =
-                await apiRequest("/api/auth/me");
-
-            CampusConnect.user =
-                result.user || result;
-
-            console.log(
-                "Logged in user:",
-                CampusConnect.user
+            showMessage(
+                "registerMessage",
+                "Account created successfully. Please login.",
+                "success"
             );
 
-        } catch (error) {
+            document
+                .getElementById("loginEmail")
+                .value = email;
 
-            console.log(
-                "Session expired or unavailable."
+            setTimeout(
+                showLogin,
+                900
             );
 
-            localStorage.removeItem(
-                "campusconnect_token"
-            );
-
-            CampusConnect.token = null;
-            CampusConnect.user = null;
-        }
-    }
-
-
-    /*
-    ==========================================
-       LOAD COURSES
-    ==========================================
-    */
-
-    async function loadCourses() {
-
-        try {
-
-            const result =
-                await apiRequest("/api/courses");
-
-            CampusConnect.courses =
-                result.courses || result || [];
-
-            console.log(
-                "Courses loaded:",
-                CampusConnect.courses
-            );
-
-        } catch (error) {
-
-            console.error(
-                "Unable to load courses:",
-                error.message
-            );
-        }
-    }
-
-
-    /*
-    ==========================================
-       LOAD NOTES
-    ==========================================
-    */
-
-    async function loadNotes() {
-
-        if (!CampusConnect.token) {
-            console.log(
-                "Student login required for notes."
-            );
-            return;
         }
 
-        try {
+    }catch(error){
 
-            const result =
-                await apiRequest("/api/notes");
-
-            CampusConnect.notes =
-                result.notes || result || [];
-
-            console.log(
-                "Notes loaded:",
-                CampusConnect.notes
-            );
-
-        } catch (error) {
-
-            console.error(
-                "Unable to load notes:",
-                error.message
-            );
-        }
-    }
-
-
-    /*
-    ==========================================
-       LOAD WALLET
-    ==========================================
-    */
-
-    async function loadWallet() {
-
-        if (!CampusConnect.token) {
-            return;
-        }
-
-        try {
-
-            const result =
-                await apiRequest(
-                    "/api/student/wallet"
-                );
-
-            CampusConnect.walletBalance =
-                result.balance_kobo
-                ? result.balance_kobo / 100
-                : 0;
-
-            console.log(
-                "Wallet:",
-                CampusConnect.walletBalance
-            );
-
-        } catch (error) {
-
-            console.error(
-                "Unable to load wallet:",
-                error.message
-            );
-        }
-    }
-
-
-    /*
-    ==========================================
-       LOAD LIBRARY
-    ==========================================
-    */
-
-    async function loadLibrary() {
-
-        if (!CampusConnect.token) {
-            return;
-        }
-
-        try {
-
-            const result =
-                await apiRequest(
-                    "/api/student/library"
-                );
-
-            CampusConnect.library =
-                result.library || result || [];
-
-            console.log(
-                "Library:",
-                CampusConnect.library
-            );
-
-        } catch (error) {
-
-            console.error(
-                "Unable to load library:",
-                error.message
-            );
-        }
-    }
-
-
-    /*
-    ==========================================
-       INITIALIZE CAMPUSCONNECT
-    ==========================================
-    */
-
-    async function initializeCampusConnect() {
-
-        console.log(
-            "🚀 Starting CampusConnect..."
+        showMessage(
+            "registerMessage",
+            error.message
         );
+
+    }finally{
+
+        button.disabled = false;
+
+        button.textContent =
+            "Create Account";
+
+    }
+
+}
+
+
+/* =====================================================
+   STUDENT LOGIN
+===================================================== */
+
+async function loginStudent(){
+
+    const email =
+        document
+        .getElementById("loginEmail")
+        .value.trim();
+
+    const password =
+        document
+        .getElementById("loginPassword")
+        .value;
+
+
+    if(!email || !password){
+
+        showMessage(
+            "loginMessage",
+            "Please enter your email and password."
+        );
+
+        return;
+
+    }
+
+
+    const button =
+        document.getElementById(
+            "loginButton"
+        );
+
+    button.disabled = true;
+
+    button.textContent =
+        "Logging in...";
+
+
+    try{
+
+        const result =
+            await apiRequest(
+                "/api/auth/login",
+                {
+                    method:"POST",
+
+                    body:JSON.stringify({
+
+                        email:email,
+
+                        password:password
+
+                    })
+
+                }
+            );
+
+
+        /*
+         Admin accounts must not enter
+         the student application.
+        */
+
+        if(
+            result.role === "admin" ||
+            result.user?.role === "admin"
+        ){
+
+            throw new Error(
+                "This is an admin account. Please use the Admin Portal."
+            );
+
+        }
+
+
+        const token =
+            result.token ||
+            result.access_token;
+
+
+        if(!token){
+
+            throw new Error(
+                "Login succeeded but no session token was returned."
+            );
+
+        }
+
+
+        CampusConnect.token =
+            token;
+
+        localStorage.setItem(
+            "campusconnect_token",
+            token
+        );
+
+
+        await startApplication();
+
+
+    }catch(error){
+
+        showMessage(
+            "loginMessage",
+            error.message
+        );
+
+    }finally{
+
+        button.disabled = false;
+
+        button.textContent =
+            "Login";
+
+    }
+
+}
+
+
+/* =====================================================
+   START APPLICATION
+===================================================== */
+
+async function startApplication(){
+
+    document
+        .getElementById("authScreen")
+        .classList.add("hidden");
+
+    document
+        .getElementById("app")
+        .classList.remove("hidden");
+
+
+    try{
 
         await loadCurrentUser();
-        await loadCourses();
-        await loadNotes();
-        await loadWallet();
-        await loadLibrary();
 
-        console.log(
-            "✅ CampusConnect initialized."
+        await Promise.all([
+            loadCourses(),
+            loadNotes(),
+            loadWallet(),
+            loadLibrary()
+        ]);
+
+        renderEverything();
+
+    }catch(error){
+
+        console.error(error);
+
+        showToast(
+            "Unable to load some CampusConnect data."
         );
+
     }
+
+}
+
+
+/* =====================================================
+   CURRENT USER
+===================================================== */
+
+async function loadCurrentUser(){
+
+    const result =
+        await apiRequest(
+            "/api/auth/me"
+        );
+
+    CampusConnect.user =
+        result.user ||
+        result.student ||
+        result;
 
 
     /*
-    ==========================================
-       START APPLICATION
-    ==========================================
+     Extra protection against an admin
+     accidentally using the student app.
     */
 
-    document.addEventListener(
-        "DOMContentLoaded",
-        initializeCampusConnect
+    if(
+        CampusConnect.user.role === "admin"
+    ){
+
+        logoutStudent();
+
+        throw new Error(
+            "Admin accounts cannot use the student portal."
+        );
+
+    }
+
+}
+
+
+/* =====================================================
+   COURSES
+===================================================== */
+
+async function loadCourses(){
+
+    const result =
+        await apiRequest(
+            "/api/courses"
+        );
+
+    CampusConnect.courses =
+        result.courses ||
+        result.data ||
+        result ||
+        [];
+
+}
+
+
+function renderCourses(){
+
+    const containers = [
+
+        document.getElementById(
+            "homeCourses"
+        ),
+
+        document.getElementById(
+            "allCourses"
+        )
+
+    ];
+
+
+    if(!CampusConnect.courses.length){
+
+        containers.forEach(container=>{
+
+            if(container){
+
+                container.innerHTML =
+                    `<div class="empty">
+                        No courses available yet.
+                    </div>`;
+
+            }
+
+        });
+
+        return;
+
+    }
+
+
+    const html =
+        CampusConnect.courses
+        .map(course=>`
+
+            <article class="course-card">
+
+                <div class="course-code">
+                    ${escapeHTML(
+                        course.course_code || ""
+                    )}
+                </div>
+
+                <h4>
+                    ${escapeHTML(
+                        course.course_title || ""
+                    )}
+                </h4>
+
+                <p>
+                    ${
+                        escapeHTML(
+                            course.description ||
+                            "Study materials and lecture notes"
+                        )
+                    }
+                </p>
+
+                <button
+                    class="view-course"
+                    onclick="filterCourse('${escapeAttribute(course.id)}')"
+                >
+                    View Notes
+                </button>
+
+            </article>
+
+        `)
+        .join("");
+
+
+    containers.forEach(container=>{
+
+        if(container){
+
+            container.innerHTML = html;
+
+        }
+
+    });
+
+}
+
+
+/* =====================================================
+   NOTES
+===================================================== */
+
+async function loadNotes(){
+
+    if(!CampusConnect.token){
+
+        return;
+
+    }
+
+
+    const result =
+        await apiRequest(
+            "/api/notes"
+        );
+
+    CampusConnect.notes =
+        result.notes ||
+        result.data ||
+        result ||
+        [];
+
+}
+
+
+function renderNotes(){
+
+    const containers = [
+
+        document.getElementById(
+            "homeNotes"
+        ),
+
+        document.getElementById(
+            "allNotes"
+        )
+
+    ];
+
+
+    if(!CampusConnect.notes.length){
+
+        containers.forEach(container=>{
+
+            if(container){
+
+                container.innerHTML =
+                    `<div class="empty">
+                        No notes are available yet.
+                    </div>`;
+
+            }
+
+        });
+
+        return;
+
+    }
+
+
+    const html =
+        CampusConnect.notes
+        .map(note=>{
+
+            const price =
+                Number(
+                    note.price_kobo || 0
+                ) / 100;
+
+
+            return `
+
+            <article class="note-card">
+
+                <div class="pdf-icon">
+                    PDF
+                </div>
+
+                <div class="note-info">
+
+                    <h4>
+                        ${escapeHTML(
+                            note.title || "Untitled Note"
+                        )}
+                    </h4>
+
+                    <p>
+                        ${
+                            escapeHTML(
+                                note.description ||
+                                getCourseName(
+                                    note.course_id
+                                )
+                            )
+                        }
+                    </p>
+
+                    <div class="note-price">
+                        ₦${price.toLocaleString(
+                            "en-NG",
+                            {
+                                minimumFractionDigits:2
+                            }
+                        )}
+                    </div>
+
+                </div>
+
+                <button
+                    class="buy-button"
+                    onclick="buyNote('${escapeAttribute(note.id)}')"
+                >
+                    Buy
+                </button>
+
+            </article>
+
+            `;
+
+        })
+        .join("");
+
+
+    containers.forEach(container=>{
+
+        if(container){
+
+            container.innerHTML = html;
+
+        }
+
+    });
+
+}
+
+
+/* =====================================================
+   WALLET
+===================================================== */
+
+async function loadWallet(){
+
+    if(!CampusConnect.token){
+
+        return;
+
+    }
+
+
+    const result =
+        await apiRequest(
+            "/api/student/wallet"
+        );
+
+
+    const balanceKobo =
+        Number(
+            result.balance_kobo ||
+            result.wallet_balance_kobo ||
+            0
+        );
+
+
+    CampusConnect.walletBalance =
+        balanceKobo / 100;
+
+}
+
+
+function renderWallet(){
+
+    document
+        .getElementById(
+            "walletBalance"
+        )
+        .textContent =
+            "₦" +
+            CampusConnect.walletBalance
+            .toLocaleString(
+                "en-NG",
+                {
+                    minimumFractionDigits:2
+                }
+            );
+
+}
+
+
+/* =====================================================
+   LIBRARY
+===================================================== */
+
+async function loadLibrary(){
+
+    if(!CampusConnect.token){
+
+        return;
+
+    }
+
+
+    const result =
+        await apiRequest(
+            "/api/student/library"
+        );
+
+
+    CampusConnect.library =
+        result.library ||
+        result.data ||
+        result ||
+        [];
+
+}
+
+
+function renderLibrary(){
+
+    const container =
+        document.getElementById(
+            "libraryList"
+        );
+
+
+    if(!CampusConnect.library.length){
+
+        container.innerHTML =
+            `<div class="empty">
+                Your library is empty.<br>
+                Purchase notes to see them here.
+            </div>`;
+
+        return;
+
+    }
+
+
+    container.innerHTML =
+        CampusConnect.library
+        .map(item=>{
+
+            const note =
+                item.note ||
+                item;
+
+
+            return `
+
+            <div class="library-item">
+
+                <div class="pdf-icon">
+                    PDF
+                </div>
+
+                <div class="library-item-info">
+
+                    <h4>
+                        ${escapeHTML(
+                            note.title ||
+                            "Purchased Note"
+                        )}
+                    </h4>
+
+                    <p>
+                        ${escapeHTML(
+                            note.description ||
+                            "Available in your library"
+                        )}
+                    </p>
+
+                </div>
+
+            </div>
+
+            `;
+
+        })
+        .join("");
+
+}
+
+
+/* =====================================================
+   RENDER EVERYTHING
+===================================================== */
+
+function renderEverything(){
+
+    renderUser();
+
+    renderWallet();
+
+    renderCourses();
+
+    renderNotes();
+
+    renderLibrary();
+
+}
+
+
+/* =====================================================
+   USER UI
+===================================================== */
+
+function renderUser(){
+
+    if(!CampusConnect.user){
+
+        return;
+
+    }
+
+
+    const name =
+        CampusConnect.user.full_name ||
+        CampusConnect.user.name ||
+        "Student";
+
+
+    const email =
+        CampusConnect.user.email ||
+        "";
+
+
+    const phone =
+        CampusConnect.user.phone ||
+        "Phone number not provided";
+
+
+    document
+        .getElementById(
+            "welcomeName"
+        )
+        .textContent =
+            `Hello, ${name.split(" ")[0]} 👋`;
+
+
+    document
+        .getElementById(
+            "profileName"
+        )
+        .textContent = name;
+
+
+    document
+        .getElementById(
+            "profileEmail"
+        )
+        .textContent = email;
+
+
+    document
+        .getElementById(
+            "profilePhone"
+        )
+        .textContent = phone;
+
+
+    const initials =
+        getInitials(name);
+
+
+    document
+        .getElementById(
+            "profileInitials"
+        )
+        .textContent = initials;
+
+
+    document
+        .getElementById(
+            "profileAvatar"
+        )
+        .textContent = initials;
+
+}
+
+
+/* =====================================================
+   PAGE NAVIGATION
+===================================================== */
+
+function showPage(page){
+
+    const pages = [
+
+        "homePage",
+        "coursesPage",
+        "notesPage",
+        "libraryPage",
+        "profilePage"
+
+    ];
+
+
+    pages.forEach(id=>{
+
+        document
+            .getElementById(id)
+            .classList.add("hidden");
+
+    });
+
+
+    const target =
+        document.getElementById(
+            page + "Page"
+        );
+
+
+    if(target){
+
+        target.classList.remove(
+            "hidden"
+        );
+
+    }
+
+
+    document
+        .querySelectorAll(".nav-item")
+        .forEach(item=>{
+
+            item.classList.remove(
+                "active"
+            );
+
+        });
+
+
+    if(page === "home"){
+
+        document
+            .getElementById("navHome")
+            .classList.add("active");
+
+    }
+
+    if(page === "courses"){
+
+        document
+            .getElementById("navCourses")
+            .classList.add("active");
+
+    }
+
+    if(page === "library"){
+
+        document
+            .getElementById("navLibrary")
+            .classList.add("active");
+
+    }
+
+    if(page === "profile"){
+
+        document
+            .getElementById("navProfile")
+            .classList.add("active");
+
+    }
+
+
+    window.scrollTo({
+        top:0,
+        behavior:"smooth"
+    });
+
+}
+
+
+/* =====================================================
+   SEARCH
+===================================================== */
+
+function searchEverything(){
+
+    const query =
+        document
+        .getElementById(
+            "searchInput"
+        )
+        .value
+        .toLowerCase()
+        .trim();
+
+
+    if(!query){
+
+        renderCourses();
+
+        renderNotes();
+
+        return;
+
+    }
+
+
+    const courses =
+        CampusConnect.courses
+        .filter(course=>{
+
+            return (
+
+                String(
+                    course.course_code || ""
+                )
+                .toLowerCase()
+                .includes(query)
+
+                ||
+
+                String(
+                    course.course_title || ""
+                )
+                .toLowerCase()
+                .includes(query)
+
+            );
+
+        });
+
+
+    const notes =
+        CampusConnect.notes
+        .filter(note=>{
+
+            return (
+
+                String(
+                    note.title || ""
+                )
+                .toLowerCase()
+                .includes(query)
+
+                ||
+
+                String(
+                    note.description || ""
+                )
+                .toLowerCase()
+                .includes(query)
+
+            );
+
+        });
+
+
+    renderCourseResults(
+        courses,
+        document.getElementById(
+            "homeCourses"
+        )
     );
 
+
+    renderNoteResults(
+        notes,
+        document.getElementById(
+            "homeNotes"
+        )
+    );
+
+}
+
+
+function renderCourseResults(
+    courses,
+    container
+){
+
+    if(!courses.length){
+
+        container.innerHTML =
+            `<div class="empty">
+                No matching courses.
+            </div>`;
+
+        return;
+
+    }
+
+
+    container.innerHTML =
+        courses.map(course=>`
+
+        <article class="course-card">
+
+            <div class="course-code">
+                ${escapeHTML(
+                    course.course_code || ""
+                )}
+            </div>
+
+            <h4>
+                ${escapeHTML(
+                    course.course_title || ""
+                )}
+            </h4>
+
+            <p>
+                ${escapeHTML(
+                    course.description ||
+                    "Study materials available"
+                )}
+            </p>
+
+        </article>
+
+        `).join("");
+
+}
+
+
+function renderNoteResults(
+    notes,
+    container
+){
+
+    if(!notes.length){
+
+        container.innerHTML =
+            `<div class="empty">
+                No matching notes.
+            </div>`;
+
+        return;
+
+    }
+
+
+    container.innerHTML =
+        notes.map(note=>{
+
+            const price =
+                Number(
+                    note.price_kobo || 0
+                ) / 100;
+
+
+            return `
+
+            <article class="note-card">
+
+                <div class="pdf-icon">
+                    PDF
+                </div>
+
+                <div class="note-info">
+
+                    <h4>
+                        ${escapeHTML(
+                            note.title || ""
+                        )}
+                    </h4>
+
+                    <p>
+                        ${escapeHTML(
+                            note.description || ""
+                        )}
+                    </p>
+
+                    <div class="note-price">
+                        ₦${price.toLocaleString(
+                            "en-NG",
+                            {
+                                minimumFractionDigits:2
+                            }
+                        )}
+                    </div>
+
+                </div>
+
+                <button
+                    class="buy-button"
+                    onclick="buyNote('${escapeAttribute(note.id)}')"
+                >
+                    Buy
+                </button>
+
+            </article>
+
+            `;
+
+        }).join("");
+
+}
+
+
+/* =====================================================
+   COURSE FILTER
+===================================================== */
+
+function filterCourse(courseId){
+
+    showPage("notes");
+
+    const filtered =
+        CampusConnect.notes.filter(
+            note =>
+                String(
+                    note.course_id
+                ) === String(courseId)
+        );
+
+
+    const container =
+        document.getElementById(
+            "allNotes"
+        );
+
+
+    renderNoteResults(
+        filtered,
+        container
+    );
+
+}
+
+
+/* =====================================================
+   BUY NOTE
+===================================================== */
+
+async function buyNote(noteId){
+
+    const note =
+        CampusConnect.notes.find(
+            item =>
+                String(item.id) ===
+                String(noteId)
+        );
+
+
+    if(!note){
+
+        showToast(
+            "Note not found."
+        );
+
+        return;
+
+    }
+
+
+    const price =
+        Number(
+            note.price_kobo || 0
+        ) / 100;
+
+
+    const confirmed =
+        confirm(
+            `Purchase "${note.title}" for ₦${price.toLocaleString("en-NG")}?`
+        );
+
+
+    if(!confirmed){
+
+        return;
+
+    }
+
+
+    try{
+
+        showToast(
+            "Processing purchase..."
+        );
+
+
+        await apiRequest(
+            "/api/student/purchases",
+            {
+                method:"POST",
+
+                body:JSON.stringify({
+
+                    note_id:noteId
+
+                })
+
+            }
+        );
+
+
+        await loadWallet();
+
+        await loadLibrary();
+
+        renderWallet();
+
+        renderLibrary();
+
+
+        showToast(
+            "Note purchased successfully! 🎉"
+        );
+
+
+    }catch(error){
+
+        showToast(
+            error.message
+        );
+
+    }
+
+}
+
+
+/* =====================================================
+   FUND WALLET
+===================================================== */
+
+function fundWallet(){
+
+    /*
+     Real Paystack funding will be connected
+     in the next stage.
+    */
+
+    showToast(
+        "Wallet funding is being connected to Paystack next."
+    );
+
+}
+
+
+/* =====================================================
+   LOGOUT
+===================================================== */
+
+function logoutStudent(){
+
+    localStorage.removeItem(
+        "campusconnect_token"
+    );
+
+    CampusConnect.token = null;
+
+    CampusConnect.user = null;
+
+    CampusConnect.courses = [];
+
+    CampusConnect.notes = [];
+
+    CampusConnect.library = [];
+
+    CampusConnect.walletBalance = 0;
+
+
+    document
+        .getElementById("app")
+        .classList.add("hidden");
+
+    document
+        .getElementById("authScreen")
+        .classList.remove("hidden");
+
+
+    showLogin();
+
+}
+
+
+/* =====================================================
+   HELPERS
+===================================================== */
+
+function getInitials(name){
+
+    const parts =
+        String(name)
+        .trim()
+        .split(/\s+/)
+        .filter(Boolean);
+
+
+    if(!parts.length){
+
+        return "CC";
+
+    }
+
+
+    if(parts.length === 1){
+
+        return parts[0]
+            .substring(0,2)
+            .toUpperCase();
+
+    }
+
+
+    return (
+        parts[0][0] +
+        parts[parts.length-1][0]
+    ).toUpperCase();
+
+}
+
+
+function getCourseName(courseId){
+
+    const course =
+        CampusConnect.courses.find(
+            item =>
+                String(item.id) ===
+                String(courseId)
+        );
+
+
+    if(!course){
+
+        return "University study material";
+
+    }
+
+
+    return (
+        course.course_code +
+        " — " +
+        course.course_title
+    );
+
+}
+
+
+function escapeHTML(value){
+
+    return String(value ?? "")
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;")
+        .replace(/"/g,"&quot;")
+        .replace(/'/g,"&#039;");
+
+}
+
+
+function escapeAttribute(value){
+
+    return String(value ?? "")
+        .replace(/\\/g,"\\\\")
+        .replace(/'/g,"\\'");
+
+}
+
+
+/* =====================================================
+   AUTO LOGIN
+===================================================== */
+
+async function initialize(){
+
+    if(!CampusConnect.token){
+
+        return;
+
+    }
+
+
+    try{
+
+        await startApplication();
+
+    }catch(error){
+
+        console.error(
+            "Automatic login failed:",
+            error
+        );
+
+        logoutStudent();
+
+    }
+
+}
+
+
+/* =====================================================
+   START
+===================================================== */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    initialize
+);
+
 </script>
+
 </body>
 </html>
